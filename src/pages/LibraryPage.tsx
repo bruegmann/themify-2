@@ -1,38 +1,40 @@
-import React from 'react'
-import { Page, Header, HeaderTitle, Body, Actions, MenuItem } from 'blue-react';
+import React, { useState, useEffect } from 'react'
+import { Page, Header, HeaderTitle, Body } from 'blue-react';
 import { appLogo, appTitle, getPhrase as _ } from '../shared';
 
 
-export default function LibraryPage() {
+import LibraryNoLogin from '../components/LibraryNoLogin';
+import LibraryLogin from '../components/LibraryLogin';
 
-    const Login = () => {
-        fetch("https://cors-anywhere.herokuapp.com/https://github.com/login/oauth/authorize", {
-            headers: {
-                method: "GET",
-                "client_id": "6ab44e0352f595ed3e",
-                "redirect_uri": "http://localhost:3000/#/library",
-                "Content-Type": "application/json",
-                "scope": "user"
-            }
-        })
-            .then(response => console.log(response))
-    }
+export default function LibraryPage(props: any) {
 
+    const [showPage, setShowPage] = useState<Boolean>(false);
+
+    useEffect(() => {
+        if (props.user) {
+            setShowPage(true);
+        }
+    }, [props.user])
+
+  
     return (
         <Page>
             <Header>
                 <HeaderTitle logo={appLogo} appTitle={appTitle}>Library</HeaderTitle>
             </Header>
-
-            <Actions>
-                <MenuItem
-                    onClick={() => Login()}
-                    label="Login Github"
-                />
-            </Actions>
-
-
             <Body>
+                {showPage === true ?
+                    <div>
+                        <LibraryLogin
+                            user={props.user}
+                            access_token={props.access_token}
+                        />
+                    </div>
+                    :
+                    <div>
+                        <LibraryNoLogin />
+                    </div>
+                }
             </Body>
         </Page>
     )

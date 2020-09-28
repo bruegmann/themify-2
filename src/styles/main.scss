@@ -13,3 +13,10 @@
 .bi {
     @extend .mb-1;
 }
+
+.avatar {
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }

@@ -1,19 +1,20 @@
 import React, { useState } from "react";
-import { Page, Header, HeaderTitle, Body, Actions, MenuItem, DropdownMenuItem, ActionMenu, ActionMenuItem, HeaderActions } from "blue-react";
-import { BoxArrowInDown, BoxArrowUp, Collection, Image, Share, ArrowReturnLeft, Gear, Brush, Sim, Folder, FileZip } from "react-bootstrap-icons"
+import { Page, Header, HeaderTitle, Body, Actions, MenuItem, DropdownMenuItem } from "blue-react";
+import { BoxArrowUp, Collection, Share, ArrowReturnLeft, Gear, Brush, Sim, FileZip } from "react-bootstrap-icons"
 
 import { appLogo, appTitle, getPhrase as _ } from "../shared";
 import ThemesHome from "../components/ThemesHome";
-import FlorenceConfigHome from "../components/FlorenceConfigHome";
-import GithubLogin from "../components/GithubLogin";
+import ConfigHome from "../components/ConfigHome";
 
 
 
-function HomePage() {
+
+function HomePage(props:any) {
+
     const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(0);
 
     const getClassSelectedThemeConfig = (value: number) => {
-        if (value == SelectedThemeConfig) {
+        if (value === SelectedThemeConfig) {
             return "btn-primary"
         }
         else {
@@ -22,13 +23,15 @@ function HomePage() {
     }
 
     const saveFileToZip = () => {
+
     }
+
+  
 
     return (
         <Page hasActions={true} >
             <Header>
                 <HeaderTitle logo={appLogo} appTitle={appTitle}>Customizer</HeaderTitle>
-
             </Header>
 
 
@@ -72,19 +75,17 @@ function HomePage() {
                     <div className="row mt-3 d-flex justify-content-center">
                         <div className="btn-group" role="group" aria-label="Basic example">
                             <button type="button" className={"btn " + getClassSelectedThemeConfig(0)} onClick={() => { setSelectedThemeConfig(0) }}><Brush /> Theme</button>
-                            <button type="button" className={"btn " + getClassSelectedThemeConfig(1)} onClick={() => { setSelectedThemeConfig(1) }}><Gear /> Florence Config</button>
+                            <button type="button" className={"btn " + getClassSelectedThemeConfig(1)} onClick={() => { setSelectedThemeConfig(1) }}><Gear /> Config</button>
                         </div>
                     </div>
-
                     <hr />
-                 <GithubLogin/>
                     <div>
-                        {SelectedThemeConfig == 0 ?
-                        <ThemesHome />
-                        :
-                        <FlorenceConfigHome />
-                    }
-                </div>
+                        {SelectedThemeConfig === 0 ?
+                            <ThemesHome />
+                            :
+                            <ConfigHome />
+                        }
+                    </div>
                 </div>
 
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid, SidebarMenu, MenuItem } from "blue-react";
 import { Brush, List, Collection, Image, FileText } from "react-bootstrap-icons";
 
@@ -8,22 +8,28 @@ import "./styles/main.scss";
 import HomePage from "./pages/HomePage";
 import LibraryPage from "./pages/LibraryPage";
 import LocalThemesPage from "./pages/LocalThemesPage";
+import GithubLogin from "./components/GithubLogin";
+
 
 function App() {
+
+    const [user, setUser] = useState<any>();
+    const [access_token, setAccessToken] = useState<string>("");
 
     const openBlueDocs = () => {
         window.open("https://bruegmann.github.io/blue-react/", "_blank")
     }
 
-
     return (
+
         <Grid
             expandSidebar
             sidebarToggleIconComponent={<List />}
             pages={[
                 {
                     name: "home",
-                    component: <HomePage />
+                    component:
+                        <HomePage />
                 },
                 {
                     name: "local-themes",
@@ -31,11 +37,25 @@ function App() {
                 },
                 {
                     name: "library",
-                    component: <LibraryPage />
+                    component:
+                        <LibraryPage
+                            user={user}
+                            access_token={access_token}
+                        />
                 }
             ]}
         >
-            <SidebarMenu>
+            <SidebarMenu
+                bottomContent={
+                    <>
+                        <GithubLogin
+                            onChange={(usr: any, token: string) => {
+                                setUser(usr);
+                                setAccessToken(token)
+                            }}
+                        />
+                    </>
+                }>
                 <MenuItem href="#/home" icon={<Brush />} label="Customizer" isHome />
                 <MenuItem href="#/local-themes" icon={<Image />} label="Local Themes" />
                 <MenuItem href="#/library" icon={<Collection />} label="Library" />
