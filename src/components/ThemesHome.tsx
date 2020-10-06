@@ -5,11 +5,10 @@ import { BrightnessAltHigh } from "react-bootstrap-icons";
 
 
 
-
 let varibales = require("../data/bootstrap.variables.json")
 let btTypes = require("../data/bootstrap.types.json")
 
-const bootstrapStyle = require("../../node_modules/blue-react/dist/style.scss").toString();
+const bootstrapStyle = require("blue-react/dist/style.scss");
 
 
 const { Sass } = require("../lib/sass")
@@ -37,7 +36,7 @@ export default function ThemesHome() {
             Object.keys(tempbtVariable).map((item: any) => {
                 tempbtVariable[item] = {}
             })
-            console.log(bootstrapStyle)
+            console.log(JSON.stringify(ThemeName))
 
             setVarType();
             setVariables(varibales);
@@ -131,8 +130,6 @@ export default function ThemesHome() {
 
     const compile = () => {
         //          var style = outputStyle;
-
-         console.log(bootstrapStyle)
 
         // sass.compile(style, (result:any) => {
         //     console.log(result)

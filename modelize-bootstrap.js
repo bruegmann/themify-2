@@ -119,6 +119,7 @@ lines.forEach(line => {
     i++;
 });
 
+
 console.log("Write file to " + bootstrapVariablesOutputPath);
 fs.writeFileSync(bootstrapVariablesOutputPath, JSON.stringify(outputObjects));
 
