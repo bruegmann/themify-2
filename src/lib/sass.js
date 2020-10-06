@@ -1,17 +1,17 @@
-/*! sass.js - v0.11.1 (f286436) - built 2019-10-20
-  providing libsass 3.6.2 (4da7c4bd)
-  via emscripten 1.38.31 (040e49a)
+/*! sass.js - v0.10.8 (eb28f5f) - built 2018-01-21
+  providing libsass 3.4.8 (a1f13edf)
+  via emscripten 1.37.0 ()
  */
 
 (function (root, factory) {
   'use strict';
-  if (typeof define === 'function' && define.amd) {
-    define([], factory);
-  } else if (typeof exports === 'object') {
-    module.exports = factory();
-  } else {
+  // if (typeof define === 'function' && define.amd) {
+  //   define([], factory);
+  // } else if (typeof exports === 'object') {
+  //   module.exports = factory();
+  // } else {
     root.Sass = factory();
-  }
+  // }
 }(this, function () {/*global document*/
 // identify the path sass.js is located at in case we're loaded by a simple
 // <script src="path/to/sass.js"></script>
@@ -24,8 +24,7 @@ var SASSJS_RELATIVE_PATH = (function() {
   'use strict';
 
   // in Node things are rather simple
-  var hasDir = typeof __dirname !== 'undefined';
-  if (hasDir) {
+  if (typeof __dirname !== 'undefined') {
     return __dirname;
   }
 
@@ -60,7 +59,7 @@ var SASSJS_RELATIVE_PATH = (function() {
 })() || '.';
 
 /*global Worker, SASSJS_RELATIVE_PATH*/
-'use strict';
+// 'use strict';
 
 var noop = function(){};
 var slice = [].slice;

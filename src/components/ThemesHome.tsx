@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
 import VariableGroup from "./VariableGroup";
 import ThemeName from "./ThemeName";
+import { BrightnessAltHigh } from "react-bootstrap-icons";
+
+
 
 
 let varibales = require("../data/bootstrap.variables.json")
 let btTypes = require("../data/bootstrap.types.json")
 
-const bootstrapStyle = require("blue-react/dist/style.scss").toString();
+const bootstrapStyle = require("../../node_modules/blue-react/dist/style.scss").toString();
 
 
-const Sass = require("../../node_modules/sass.js/dist/sass.js");
-Sass.setWorkerUrl("sass.worker.js");
+const { Sass } = require("../lib/sass")
+Sass.setWorkerUrl("sass.worker.js")
 
-const sass = new Sass();
+const sass = new Sass()
 sass.options({
     style: Sass.style.compressed
-});
+})
+
 
 export default function ThemesHome() {
 
@@ -33,6 +37,7 @@ export default function ThemesHome() {
             Object.keys(tempbtVariable).map((item: any) => {
                 tempbtVariable[item] = {}
             })
+            console.log(bootstrapStyle)
 
             setVarType();
             setVariables(varibales);
@@ -125,15 +130,13 @@ export default function ThemesHome() {
     }
 
     const compile = () => {
-        let style = outputStyle;
+        //          var style = outputStyle;
 
-        style += ` body { color: $fluent-halo-color; }`
+         console.log(bootstrapStyle)
 
-        console.log(style)
-
-        sass.compile(style, (result: any) => {
-            console.log(result)
-        });
+        // sass.compile(style, (result:any) => {
+        //     console.log(result)
+        //   })
 
     }
 
