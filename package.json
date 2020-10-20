@@ -7,7 +7,7 @@
     "@types/react-color": "^3.0.4",
     "@types/react-dom": "^16.9.8",
     "@types/reactstrap": "^8.5.1",
-    "blue-react": "^6.14.1",
+    "blue-react": "^6.15.0",
     "dir-to-json": "0.0.3",
     "fs": "0.0.1-security",
     "node-sass": "^4.14.1",

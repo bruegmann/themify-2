@@ -14,6 +14,7 @@ export default function ConfigAttribute(props: any) {
 
 
     useEffect(() => {
+        console.log(type)
         setType(props.type);
     }, [props.type]);
 
@@ -125,15 +126,24 @@ export default function ConfigAttribute(props: any) {
         }
     }
 
+    const isDisabled = () => {
+        if (props.editable === true) {
+            return false
+        }
+        else {
+            return true
+        }
+    }
+
 
     return (
         <div>
             <div className="row">
                 <div className="col-5 d-flex align-items-center">
-                    <button className="btn btn-outline-danger mr-1" title="Löschen" onClick={() => deleteAttribute()}>
+                    <button className="btn btn-danger mr-1" title="Löschen" onClick={() => deleteAttribute()} disabled={isDisabled()}>
                         <Trash />
                     </button>
-                    <button className="btn btn-outline-primary mr-3" title="Name ändern" onClick={() => setEdit(true)}>
+                    <button className="btn btn-primary mr-3" title="Name ändern" onClick={() => setEdit(true)} disabled={isDisabled()}>
                         <Pencil />
                     </button>
                     <span className="mr-1" title={props.description}>
@@ -213,17 +223,19 @@ export default function ConfigAttribute(props: any) {
                                 </button>
                             </div>
                         }
-                        <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggle} >
-                            <DropdownToggle caret>
-                                Type
+                        {props.editable === true &&
+                            <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggle} >
+                                <DropdownToggle caret>
+                                    Type
                             </DropdownToggle>
-                            <DropdownMenu>
-                                <DropdownItem onClick={() => changeType("")}>Text</DropdownItem>
-                                <DropdownItem onClick={() => changeType("file")}>File</DropdownItem>
-                                <DropdownItem onClick={() => changeType("color")}>Color</DropdownItem>
-                                <DropdownItem onClick={() => changeType("boolean")}>Boolean</DropdownItem>
-                            </DropdownMenu>
-                        </InputGroupButtonDropdown >
+                                <DropdownMenu>
+                                    <DropdownItem onClick={() => changeType("")}>Text</DropdownItem>
+                                    <DropdownItem onClick={() => changeType("file")}>File</DropdownItem>
+                                    <DropdownItem onClick={() => changeType("color")}>Color</DropdownItem>
+                                    <DropdownItem onClick={() => changeType("boolean")}>Boolean</DropdownItem>
+                                </DropdownMenu>
+                            </InputGroupButtonDropdown >
+                        }
 
                     </InputGroup>
                 </div>

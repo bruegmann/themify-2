@@ -29,7 +29,10 @@ function App() {
                 {
                     name: "home",
                     component:
-                        <HomePage />
+                        <HomePage
+                            user={user}
+                            access_token={access_token}
+                        />
                 },
                 {
                     name: "local-themes",

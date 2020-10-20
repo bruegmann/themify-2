@@ -53,6 +53,7 @@ export default function GithubLogin(props: any) {
 
     const Login = (acces_token: string) => {
         (window as any).access_token = acces_token;
+        localStorage.setItem("access_token", acces_token);
 
         fetch(`${(window as any).proxy}https://api.github.com/user`, {
             headers: {
@@ -88,7 +89,7 @@ export default function GithubLogin(props: any) {
                             Login(access.access_token);
                         }}
                         onFailure={(response: any) => console.error(response)}
-                        scope={['user', 'repo']}
+                        scope={['user', 'repo', 'write:org']}
                         buttonText={<p className="m-0"> <GithubIcon /> Login mit Github</p>}
                     />
                 </div>

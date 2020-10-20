@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { Plus } from "react-bootstrap-icons";
+import { isGetAccessor } from 'typescript';
 import ConfigAttribute from './ConfigAttribute';
 
-export default function ConfigHome() {
+export default function ConfigHome(props: any) {
     const [attribute, setAttribute] = useState<any>([]);
     const [values, setValues] = useState<any>();
     const [attributeTemplate, setAttributeTemplate] = useState<Object>({});
     const [change, setChange] = useState<boolean>(false);
+    const [user, setUser] = useState<any>();
 
     useEffect(() => {
         if (Object.keys(attribute).length === 0) {
@@ -14,13 +16,67 @@ export default function ConfigHome() {
         }
     }, [attribute])
 
+    useEffect(() => {
+        getAttributeTemplate(() => {
+
+        })
+    }, [props.user && props.access_token])
+
     const SetUp = () => {
         getAttributeTemplate(() => {
             setStartValue();
         })
     }
 
-    const getAttributeTemplate = (callback: any) => {
+
+    const getAttributeTemplate = async (callback: any) => {
+        if (props.user && props.access_token) {
+            const res = await fetch(`${(window as any).proxy}${props.user.organizations_url}`, {
+                headers: {
+                    Authorization: `token ${props.access_token}`,
+                    method: "get",
+                    "Content-Type": "application/json"
+                }
+            });
+
+            await res
+                .json()
+                .then(org => {
+                    console.log(org)
+                    for (var i = 0; i < org.length; i++) {
+                        fetch(`${(window as any).proxy}https://api.github.com/repos/${org[i].login}/themify-library/git/trees/main`, {
+                            headers: {
+                                Authorization: `token ${props.access_token}`,
+                                method: "get",
+                                "Content-Type": "application/json"
+                            }
+                        })
+                            .then(resRepo => resRepo.json())
+                            .then(files => {
+                                console.log(files);
+
+                                files.tree.findIndex((item: any) => {
+                                    if (item.path === "themify-library-template.json") {
+                                        fetch(`${(window as any).proxy}${item.url}`, {
+                                            headers: {
+                                                Authorization: `token ${props.access_token}`,
+                                                method: "get",
+                                                "Content-Type": "application/json"
+                                            }
+                                        })
+                                            .then(res => res.json())
+                                            .then(data => {
+                                                var attr = JSON.parse(atob(data.content));
+                                                setAttribute(attr);
+                                            })
+                                    }
+                                })
+
+                            });
+                    }
+                })
+        }
+
         //getAttribute from GitHub (Template)
         if (callback) {
             callback();
@@ -36,7 +92,7 @@ export default function ConfigHome() {
             var temp = {
                 "name": Object.keys(attribute)[i],
                 "value": "",
-                "description": ""
+                "description": "",
             }
             add.push(temp);
         }
@@ -46,10 +102,9 @@ export default function ConfigHome() {
                 "encoding": "utf-8"
             }
         }
-        appSettings = { add }
-        item = { appSettings, _declaration }
+        appSettings = { add };
+        item = { appSettings, _declaration };
         setValues(item);
-        console.log(item)
     }
 
 
@@ -59,6 +114,7 @@ export default function ConfigHome() {
             "type": "",
             "description": "",
             "default": "",
+            "editable": true
         }
         attribute.push(temp);
         setChange(!change)
@@ -101,6 +157,7 @@ export default function ConfigHome() {
                                     default={item.default}
                                     value={item.value}
                                     type={item.type}
+                                    editable={item?.editable}
                                     onChange={(attrb: string, value: string) => { onChangeValue(attrb, value, i) }}
                                 />
                             )
