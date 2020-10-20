@@ -11,7 +11,7 @@ import ConfigHome from "../components/ConfigHome";
 
 function HomePage(props:any) {
 
-    const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(0);
+    const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(1);
 
     const getClassSelectedThemeConfig = (value: number) => {
         if (value === SelectedThemeConfig) {
