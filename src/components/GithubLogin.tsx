@@ -4,14 +4,11 @@ import GitHubLogin from 'react-github-login';
 
 import GithubIcon from "../icons/GitHub";
 
-import superagent from "superagent";
-
-
 
 export var GithubUserContext = React.createContext("das dfgigh")
 
 
-export default function GithubLogin(props:any) {
+export default function GithubLogin(props: any) {
 
     const [user, setUser] = useState<any>();
 
@@ -26,26 +23,37 @@ export default function GithubLogin(props:any) {
         }
     })
 
-    const getAccessToken = (code: string) => {
-
-        superagent
-            .post(`${(window as any).proxy}https://github.com/login/oauth/access_token`)
-            .send({
-                client_id: "6ab44e0352f595edf63e",
-                client_secret: "b1ebee004cc141cef47e2e68e91e530571b5c143",
-                code: code
-            })
-            .set('Accept', 'application/json')
-            .then((response) => {
-                var acces_token = response.body.access_token;
-                localStorage.setItem("access_token", acces_token);
-                Login(acces_token)
+    const getAccessToken = async (code: string) => {
+        var gitHubOauthUrl = "http://localhost:4000/login/oauth/access_token"
+        fetch(`${gitHubOauthUrl}?code=${code}`)
+            .then(res => res.json())
+            .then(data => {
+                //localStorage.setItem("access_token", data.acces_token);
+                Login(data.access_token);
             })
 
+        // fetch(`${(window as any).proxy}https://github.com/login/oauth/access_token`, {
+        //     method: "POST",
+        //     headers: {
+        //         "Accept": "application/json",
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify({
+        //         client_id: "6ab44e0352f595edf63e",
+        //         client_secret: "b1ebee004cc141cef47e2e68e91e530571b5c143",
+        //         code
+        //     })
+        // })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         //localStorage.setItem("access_token", data.acces_token);
+        //         Login(data.access_token);
+        //     })
     }
 
     const Login = (acces_token: string) => {
         (window as any).access_token = acces_token;
+        localStorage.setItem("access_token", acces_token);
 
         fetch(`${(window as any).proxy}https://api.github.com/user`, {
             headers: {
@@ -57,7 +65,7 @@ export default function GithubLogin(props:any) {
             .then(response => response.json())
             .then(data => {
                 setUser(data);
-                props.onChange(data,acces_token);
+                props.onChange(data, acces_token);
                 (window as any).githubuser = data;
             })
     }
@@ -74,11 +82,15 @@ export default function GithubLogin(props:any) {
                     <GitHubLogin
                         className="blue-app-toggle-page blue-app-sidebar-btn btn blue-app-sidebar-dropdown-toggle has-label btghlogin"
                         clientId="6ab44e0352f595edf63e"
-                        redirectUri="http://localhost:3000"
-                        scope={['user', 'repo']}
-                       
+                        redirectUri=""
+                        onSuccess={async ({ code }: { code: string }) => {
+                            const res = await fetch(`${(window as any).oauth}?code=${code}`)
+                            const access = await res.json();
+                            Login(access.access_token);
+                        }}
+                        onFailure={(response: any) => console.error(response)}
+                        scope={['user', 'repo', 'write:org']}
                         buttonText={<p className="m-0"> <GithubIcon /> Login mit Github</p>}
-                        onSuccess={(response: any) => { getAccessToken(response.code) }}
                     />
                 </div>
             }

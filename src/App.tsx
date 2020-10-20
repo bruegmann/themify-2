@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Grid, SidebarMenu, MenuItem } from "blue-react";
-import { Brush, List, Collection, Image, FileText } from "react-bootstrap-icons";
+import { Brush, List, Collection, Image, FileText, Gear } from "react-bootstrap-icons";
 
 import "./styles/main.scss";
 
@@ -29,7 +29,10 @@ function App() {
                 {
                     name: "home",
                     component:
-                        <HomePage />
+                        <HomePage
+                            user={user}
+                            access_token={access_token}
+                        />
                 },
                 {
                     name: "local-themes",
@@ -43,6 +46,7 @@ function App() {
                             access_token={access_token}
                         />
                 }
+
             ]}
         >
             <SidebarMenu

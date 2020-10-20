@@ -9,9 +9,9 @@ import ConfigHome from "../components/ConfigHome";
 
 
 
-function HomePage(props:any) {
+function HomePage(props: any) {
 
-    const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(0);
+    const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(1);
 
     const getClassSelectedThemeConfig = (value: number) => {
         if (value === SelectedThemeConfig) {
@@ -26,7 +26,7 @@ function HomePage(props:any) {
 
     }
 
-  
+
 
     return (
         <Page hasActions={true} >
@@ -83,7 +83,10 @@ function HomePage(props:any) {
                         {SelectedThemeConfig === 0 ?
                             <ThemesHome />
                             :
-                            <ConfigHome />
+                            <ConfigHome
+                                user={props.user}
+                                access_token={props.access_token}
+                            />
                         }
                     </div>
                 </div>
