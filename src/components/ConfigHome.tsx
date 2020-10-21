@@ -6,12 +6,8 @@ export default function ConfigHome(props: any) {
     const [attribute, setAttribute] = useState<any>({});
     const [selected, setSelected] = useState<string>("none");
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-
-
     const [values, setValues] = useState<any>();
-    const [attributeTemplate, setAttributeTemplate] = useState<Object>({});
     const [change, setChange] = useState<boolean>(false);
-    const [user, setUser] = useState<any>();
 
     useEffect(() => {
         if (Object.keys(attribute).length === 0) {
@@ -23,7 +19,17 @@ export default function ConfigHome(props: any) {
         getAttributeTemplate(() => {
 
         })
-    }, [props.user && props.access_token])
+    }, [props.user && props.access_token]);
+
+    useEffect(() => {
+        var ls = String(localStorage.getItem("template"));
+
+        console.log(props.user)
+        if (ls !== null && props.user !== undefined) {
+            setSelected(ls);
+        }
+
+    }, [props])
 
     const toggle = () => setDropdownOpen(!dropdownOpen);
 
@@ -75,7 +81,6 @@ export default function ConfigHome(props: any) {
                                             .json()
                                             .then((data) => {
                                                 var attr = JSON.parse(atob(data.content));
-                                                console.log(attribute)
                                                 attribute[company] = attr;
                                                 setChange(!change);
                                             }
@@ -118,6 +123,13 @@ export default function ConfigHome(props: any) {
 
     const setTemplate = (name: string) => {
         setSelected(name);
+
+        if (name !== "none") {
+            localStorage.setItem("template", name);
+        }
+        else {
+            localStorage.removeItem("template");
+        }
     }
 
 
