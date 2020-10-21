@@ -41,11 +41,11 @@ export default function ConfigAttribute(props: any) {
         }
     }, [type])
 
-    useEffect(()=>{
-        if(props.editable === true){
+    useEffect(() => {
+        if (props.editable === true) {
             setEditable(true)
         }
-    },[props.editable])
+    }, [props.editable])
 
 
     const toggle = () => setDropdownOpen(!dropdownOpen);
@@ -189,12 +189,12 @@ export default function ConfigAttribute(props: any) {
                         </div>
                     }
                 </div>
-                <div className="col ">
+                <div className="col">
                     <InputGroup>
                         {type === "file" ?
                             <div className="custom-file">
                                 <CustomInput
-                                    // className="form-control default custom-file-input"
+                                    onDoubleClick={() => { setValue(props.default) }}
                                     onChange={onChangeFile}
                                     type="file"
                                     value={value}
@@ -204,7 +204,7 @@ export default function ConfigAttribute(props: any) {
                             <input
                                 className="form-control default"
                                 onChange={onChangeValue}
-                                // onDoubleClick={() => { this.placeholder_to_value() }}
+                                onDoubleClick={() => { setValue(props.default) }}
                                 placeholder={`/* ${props.default} */`}
                                 value={value}
                                 aria-describedby="emailHelp"
@@ -228,7 +228,6 @@ export default function ConfigAttribute(props: any) {
                                 <button
                                     className="btn btn-outline-secondary"
                                     onClick={() => setShowColorPicker(!showColorPicker)}
-
                                 >
                                     <span ><DropletHalf /></span>
                                 </button>
