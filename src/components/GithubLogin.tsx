@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import {Utilities} from "blue-react";
 
 import GitHubLogin from 'react-github-login';
-
 import GithubIcon from "../icons/GitHub";
 
 
@@ -22,6 +22,10 @@ export default function GithubLogin(props: any) {
         }
     })
 
+    const ErrorLogin = () =>{
+        Utilities.setAlertMessage("Fehler beim Anmelden", "danger", true, "Es konnte keine Verbindung mit Github aufgebaut werden")
+    }
+
     const Login = (acces_token: string) => {
         (window as any).access_token = acces_token;
         localStorage.setItem("access_token", acces_token);
@@ -39,6 +43,7 @@ export default function GithubLogin(props: any) {
                 props.onChange(data, acces_token);
                 (window as any).githubuser = data;
             })
+            .catch(() =>{ ErrorLogin()})
     }
 
     return (
@@ -55,11 +60,16 @@ export default function GithubLogin(props: any) {
                         clientId="6ab44e0352f595edf63e"
                         redirectUri=""
                         onSuccess={async ({ code }: { code: string }) => {
-                            const res = await fetch(`${(window as any).oauth}?code=${code}`)
-                            const access = await res.json();
-                            Login(access.access_token);
+                            try{
+                                const res = await fetch(`${(window as any).oauth}?code=${code}`);
+                                const access = await res.json()
+                                Login(access.access_token);
+                            }
+                            catch(error){
+                                ErrorLogin();
+                            }
                         }}
-                        onFailure={(response: any) => console.error(response)}
+                        onFailure={() =>  ErrorLogin()}
                         scope={['user', 'repo', 'write:org']}
                         buttonText={<p className="m-0"> <GithubIcon /> Login mit Github</p>}
                     />
