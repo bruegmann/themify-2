@@ -43,6 +43,7 @@ export default function GithubLogin(props: any) {
                 props.onChange(data, acces_token);
                 (window as any).githubuser = data;
             })
+            .catch(() =>{ ErrorLogin()})
     }
 
     return (
