@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Page, Header, HeaderTitle, Body, Actions, MenuItem, DropdownMenuItem } from "blue-react";
-import { BoxArrowUp, Collection, Share, ArrowReturnLeft, Gear, Brush, Sim, FileZip } from "react-bootstrap-icons"
+import { BoxArrowUp, Collection, Share, FileEarmarkPlus, Gear, Brush, Sim, FileZip } from "react-bootstrap-icons"
 
 import { appLogo, appTitle, getPhrase as _ } from "../shared";
 import ThemesHome from "../components/ThemesHome";
@@ -65,8 +65,8 @@ function HomePage(props: any) {
                     label={_("SHARE_THIS_CONFIG")}
                 />
                 <MenuItem
-                    icon={<ArrowReturnLeft />}
-                    label={_("RESET_TO_DEFAULT")}
+                    icon={<FileEarmarkPlus />}
+                    label={_("NEW")}
                 />
             </Actions>
 
