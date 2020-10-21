@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Plus } from "react-bootstrap-icons";
-import { isGetAccessor } from 'typescript';
-import ConfigAttribute from './ConfigAttribute';
+import { DropdownItem, DropdownMenu, DropdownToggle, InputGroupButtonDropdown } from 'reactstrap';
+import ConfigSection from './ConfigSection';
 
 export default function ConfigHome(props: any) {
-    const [attribute, setAttribute] = useState<any>([]);
+    const [attribute, setAttribute] = useState<any>({});
+    const [selected, setSelected] = useState<string>("none");
+    const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+
+
     const [values, setValues] = useState<any>();
     const [attributeTemplate, setAttributeTemplate] = useState<Object>({});
     const [change, setChange] = useState<boolean>(false);
@@ -22,7 +25,10 @@ export default function ConfigHome(props: any) {
         })
     }, [props.user && props.access_token])
 
-    const SetUp = () => {
+    const toggle = () => setDropdownOpen(!dropdownOpen);
+
+    const SetUp = async () => {
+        await setAttribute({ "none": [] });
         getAttributeTemplate(() => {
             setStartValue();
         })
@@ -41,43 +47,46 @@ export default function ConfigHome(props: any) {
 
             await res
                 .json()
-                .then(org => {
-                    console.log(org)
+                .then(async org => {
                     for (var i = 0; i < org.length; i++) {
-                        fetch(`${(window as any).proxy}https://api.github.com/repos/${org[i].login}/themify-library/git/trees/main`, {
+                        var company = org[i].login;
+                        var repo = await fetch(`${(window as any).proxy}https://api.github.com/repos/${org[i].login}/themify-library/git/trees/main`, {
                             headers: {
                                 Authorization: `token ${props.access_token}`,
                                 method: "get",
                                 "Content-Type": "application/json"
                             }
                         })
-                            .then(resRepo => resRepo.json())
-                            .then(files => {
-                                console.log(files);
 
-                                files.tree.findIndex((item: any) => {
+                        await repo
+                            .json()
+                            .then(async files => {
+                                await files.tree.findIndex(async (item: any) => {
                                     if (item.path === "themify-library-template.json") {
-                                        fetch(`${(window as any).proxy}${item.url}`, {
+                                        var file = await fetch(`${(window as any).proxy}${item.url}`, {
                                             headers: {
                                                 Authorization: `token ${props.access_token}`,
                                                 method: "get",
                                                 "Content-Type": "application/json"
                                             }
                                         })
-                                            .then(res => res.json())
-                                            .then(data => {
+
+                                        await file
+                                            .json()
+                                            .then((data) => {
                                                 var attr = JSON.parse(atob(data.content));
-                                                setAttribute(attr);
-                                            })
+                                                console.log(attribute)
+                                                attribute[company] = attr;
+                                                setChange(!change);
+                                            }
+                                            );
                                     }
                                 })
-
-                            });
+                            })
                     }
                 })
         }
 
-        //getAttribute from GitHub (Template)
         if (callback) {
             callback();
         }
@@ -107,65 +116,37 @@ export default function ConfigHome(props: any) {
         setValues(item);
     }
 
-
-    const AddAttribute = () => {
-        var temp = {
-            "name": "Attribute",
-            "type": "",
-            "description": "",
-            "default": "",
-            "editable": true
-        }
-        attribute.push(temp);
-        setChange(!change)
+    const setTemplate = (name: string) => {
+        setSelected(name);
     }
 
-
-    const onChangeValue = (attrb: string, value: string, i: number) => {
-        if (attrb === "delete") {
-            delete attribute[i];
-            setChange(!change)
-        }
-        else if (attrb === "value") {
-            if (value !== "") {
-                attribute[i].value = value;
-            }
-            else {
-                delete attribute[i].value;
-            }
-            setChange(!change)
-        }
-        else {
-            attribute[i][attrb] = value;
-            setChange(!change)
-        }
-    }
 
     return (
         <div>
             <div className="d-flex justify-content-center">
-                <button className="btn btn-outline-primary" onClick={() => AddAttribute()}><Plus /> Add</button>
-            </div>
-            <div className="d-flex justify-content-center">
-                {attribute &&
-                    <div className="col-9">
-                        <div className="card pl-3 pr-3 pt-4 pb-2 mt-3">
-                            {attribute.map((item: any, i: number) =>
-                                <ConfigAttribute
-                                    key={i}
-                                    name={item.name}
-                                    default={item.default}
-                                    value={item.value}
-                                    type={item.type}
-                                    editable={item?.editable}
-                                    onChange={(attrb: string, value: string) => { onChangeValue(attrb, value, i) }}
-                                />
+                <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggle} >
+                    <DropdownToggle caret color="outline-primary">
+                        Template: {selected}
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        {
+                            Object.keys(attribute).map((item: any) =>
+                                <DropdownItem onClick={() => setTemplate(item)}>{item}</DropdownItem>
                             )
-                            }
-                        </div>
-                    </div>
-                }
+                        }
+                    </DropdownMenu>
+                </InputGroupButtonDropdown >
             </div>
+            {
+                Object.keys(attribute).map((item: any, i: number) =>
+                    <ConfigSection
+                        keys={i}
+                        attribute={attribute[item]}
+                        name={item}
+                        selected={selected}
+                    />
+                )
+            }
         </div>
     )
 }
