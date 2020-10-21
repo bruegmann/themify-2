@@ -5,6 +5,7 @@ import { BoxArrowUp, Collection, Share, FileEarmarkPlus, Gear, Brush, Sim, FileZ
 import { appLogo, appTitle, getPhrase as _ } from "../shared";
 import ThemesHome from "../components/ThemesHome";
 import ConfigHome from "../components/ConfigHome";
+import NewModal from "../components/NewModal";
 
 
 
@@ -12,6 +13,7 @@ import ConfigHome from "../components/ConfigHome";
 function HomePage(props: any) {
 
     const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(1);
+    const [modalNew, setModalNew] = useState<boolean>(false);
 
     const getClassSelectedThemeConfig = (value: number) => {
         if (value === SelectedThemeConfig) {
@@ -67,6 +69,7 @@ function HomePage(props: any) {
                 <MenuItem
                     icon={<FileEarmarkPlus />}
                     label={_("NEW")}
+                    onClick={() => setModalNew(!modalNew)}
                 />
             </Actions>
 
@@ -90,6 +93,12 @@ function HomePage(props: any) {
                         }
                     </div>
                 </div>
+                <NewModal
+                    open={modalNew}
+                    onChange={() => setModalNew(!modalNew)}
+                    user={props.user}
+                    access_token={props.access_token}
+                />
 
 
             </Body>

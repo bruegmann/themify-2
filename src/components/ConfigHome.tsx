@@ -24,7 +24,6 @@ export default function ConfigHome(props: any) {
     useEffect(() => {
         var ls = String(localStorage.getItem("template"));
 
-        console.log(ls)
         if (ls !== "null" && props.user !== undefined) {
             setSelected(ls);
         }
