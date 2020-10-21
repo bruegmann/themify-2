@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { InfoCircle, Pencil, Trash, X, Check, DropletHalf, CaretDown } from "react-bootstrap-icons";
 import { InputGroupButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, CustomInput } from 'reactstrap';
 import { SketchPicker } from "react-color";
+import { isGetAccessor } from 'typescript';
 
 export default function ConfigAttribute(props: any) {
     const [value, setValue] = useState<string>("");
@@ -11,10 +12,10 @@ export default function ConfigAttribute(props: any) {
     const [showColorPicker, setShowColorPicker] = useState<boolean>(false);
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const [changedType, setChangedType] = useState<boolean>(false);
+    const [editable, setEditable] = useState<boolean>(false);
 
 
     useEffect(() => {
-        console.log(type)
         setType(props.type);
     }, [props.type]);
 
@@ -40,25 +41,33 @@ export default function ConfigAttribute(props: any) {
         }
     }, [type])
 
+    useEffect(()=>{
+        if(props.editable === true){
+            setEditable(true)
+        }
+    },[props.editable])
+
 
     const toggle = () => setDropdownOpen(!dropdownOpen);
 
 
     const CheckType = (checkValue: string) => {
-        if (String(checkValue) === "true" || String(checkValue) === "false") {
-            if (type !== "boolean") {
-                props.onChange("type", "boolean")
+        if (editable === true) {
+            if (String(checkValue) === "true" || String(checkValue) === "false") {
+                if (type !== "boolean") {
+                    props.onChange("type", "boolean")
+                }
             }
-        }
-        else {
-            if (changedType === false) {
-                props.onChange("type", "")
+            else {
+                if (changedType === false) {
+                    props.onChange("type", "")
+                }
             }
-        }
 
-        if (checkValue) {
-            if (checkValue.includes("#") || checkValue.includes("rgb")) {
-                props.onChange("type", "color")
+            if (checkValue) {
+                if (checkValue.includes("#") || checkValue.includes("rgb")) {
+                    props.onChange("type", "color")
+                }
             }
         }
     }
@@ -73,25 +82,27 @@ export default function ConfigAttribute(props: any) {
     }
 
     const changeType = (value: string) => {
-        if (value === String("file")) {
-            setValue("");
-            props.onChange("value", "")
-        }
-        else if (value === String("boolean")) {
-            props.onChange("value", String(true))
-        }
-        else if (value === String("color")) {
-            props.onChange("value", "#000000")
-        }
+        if (editable === true) {
+            if (value === String("file")) {
+                setValue("");
+                props.onChange("value", "")
+            }
+            else if (value === String("boolean")) {
+                props.onChange("value", String(true))
+            }
+            else if (value === String("color")) {
+                props.onChange("value", "#000000")
+            }
 
-        props.onChange("type", value);
+            props.onChange("type", value);
 
-        if (value !== "") {
-            setChangedType(true);
-        }
-        else {
+            if (value !== "") {
+                setChangedType(true);
+            }
+            else {
 
-            setChangedType(false);
+                setChangedType(false);
+            }
         }
     }
 
@@ -127,7 +138,7 @@ export default function ConfigAttribute(props: any) {
     }
 
     const isDisabled = () => {
-        if (props.editable === true) {
+        if (editable === true) {
             return false
         }
         else {
@@ -223,7 +234,7 @@ export default function ConfigAttribute(props: any) {
                                 </button>
                             </div>
                         }
-                        {props.editable === true &&
+                        {editable === true &&
                             <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggle} >
                                 <DropdownToggle caret>
                                     Type

@@ -12,7 +12,6 @@ export default function GithubLogin(props: any) {
 
     const [user, setUser] = useState<any>();
 
-
     useEffect(() => {
         if (user == null) {
             var access_toke = localStorage.getItem("access_token");
@@ -22,34 +21,6 @@ export default function GithubLogin(props: any) {
             }
         }
     })
-
-    const getAccessToken = async (code: string) => {
-        var gitHubOauthUrl = "http://localhost:4000/login/oauth/access_token"
-        fetch(`${gitHubOauthUrl}?code=${code}`)
-            .then(res => res.json())
-            .then(data => {
-                //localStorage.setItem("access_token", data.acces_token);
-                Login(data.access_token);
-            })
-
-        // fetch(`${(window as any).proxy}https://github.com/login/oauth/access_token`, {
-        //     method: "POST",
-        //     headers: {
-        //         "Accept": "application/json",
-        //         "Content-Type": "application/json"
-        //     },
-        //     body: JSON.stringify({
-        //         client_id: "6ab44e0352f595edf63e",
-        //         client_secret: "b1ebee004cc141cef47e2e68e91e530571b5c143",
-        //         code
-        //     })
-        // })
-        //     .then(res => res.json())
-        //     .then(data => {
-        //         //localStorage.setItem("access_token", data.acces_token);
-        //         Login(data.access_token);
-        //     })
-    }
 
     const Login = (acces_token: string) => {
         (window as any).access_token = acces_token;
