@@ -20,6 +20,7 @@ export default function NewModal(props: any) {
 
 
     const getOrganizations = async () => {
+        console.log(props.user)
         const res = await fetch(`${(window as any).proxy}${props.user.organizations_url}`, {
             headers: {
                 Authorization: `token ${props.access_token}`,
@@ -39,14 +40,84 @@ export default function NewModal(props: any) {
         setAccount(value);
     }
 
-    const cancel = () =>{
+    const cancel = () => {
         setLoad(false);
         props.onChange()
     }
 
+    const createRepo = async () => {
+        var repo = {
+            "name": "Themify_DB",
+            "description": "The DB for Themify",
+            "homepage": "https://github.com",
+            "private": true
+        }
+
+        if (props.user.login === account) {
+            let response = await fetch(`https://api.github.com/user/repos`, {
+                method: "POST",
+                headers: {
+                    Authorization: `token ${props.access_token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(repo)
+
+            });
+
+            let res = await response.json();
+            console.log(res)
+        }
+        else {
+            let response = await fetch(`https://api.github.com/orgs/${account}/repos`, {
+                method: "POST",
+                headers: {
+                    Authorization: `token ${props.access_token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(repo)
+
+            });
+
+            let res = await response.json();
+            console.log(res)
+        }
+
+    }
+
+    const CheckForDBRepo = async () => {
+        if (props.user.login === account) {
+            let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB`, {
+                method: "Get",
+                headers: {
+                    Authorization: `token ${props.access_token}`,
+                    "Content-Type": "application/json"
+                }
+
+            });
+
+            if (response.status === 200) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+
+        }
+    }
+
     const createTheme = async () => {
         await setLoad(true);
-        console.log("d")
+        if (await CheckForDBRepo() === false) {
+            if (window.confirm('Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?')) {
+                await createRepo();
+            }
+            else {
+
+            }
+        }
+        await setLoad(false);
     }
     return (
         <div>
@@ -56,19 +127,23 @@ export default function NewModal(props: any) {
                 </ModalHeader>
                 <ModalBody>
                     <input className="form-control default mb-3" type="text" placeholder="Name" />
-                    <UncontrolledButtonDropdown>
-                        <DropdownToggle caret color="outline-secondary">
-                            Account: {account}
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            <DropdownItem onClick={() => onChangeAccount(props.user.login)}><img className="avatar mr-2" alt={props.user?.login} src={props.user?.avatar_url} />{props.user?.login}</DropdownItem>
-                            {
-                                organizations.map((item: any) =>
-                                    <DropdownItem onClick={() => onChangeAccount(item.login)}><img className="avatar mr-2" alt={item.login} src={item.avatar_url} />{item.login}</DropdownItem>
-                                )
-                            }
-                        </DropdownMenu>
-                    </UncontrolledButtonDropdown>
+                    {props.user ?
+                        <UncontrolledButtonDropdown>
+                            <DropdownToggle caret color="outline-secondary">
+                                Account: {account}
+                            </DropdownToggle>
+                            <DropdownMenu>
+                                <DropdownItem onClick={() => onChangeAccount(props.user.login)}><img className="avatar mr-2" alt={props.user?.login} src={props.user?.avatar_url} />{props.user?.login}</DropdownItem>
+                                {
+                                    organizations.map((item: any) =>
+                                        <DropdownItem onClick={() => onChangeAccount(item.login)}><img className="avatar mr-2" alt={item.login} src={item.avatar_url} />{item.login}</DropdownItem>
+                                    )
+                                }
+                            </DropdownMenu>
+                        </UncontrolledButtonDropdown>
+                        :
+                        <p>Online Speichern nicht möglich. Du musst bei Github angemeldet sein</p>
+                    }
                 </ModalBody>
                 <ModalFooter>
                     <button className="btn btn-outline-danger mr-2" onClick={() => cancel()}>Cancel</button>
