@@ -20,7 +20,6 @@ export default function NewModal(props: any) {
 
 
     const getOrganizations = async () => {
-        console.log(props.user)
         const res = await fetch(`${(window as any).proxy}${props.user.organizations_url}`, {
             headers: {
                 Authorization: `token ${props.access_token}`,
@@ -65,7 +64,6 @@ export default function NewModal(props: any) {
             });
 
             let res = await response.json();
-            console.log(res)
         }
         else {
             let response = await fetch(`https://api.github.com/orgs/${account}/repos`, {
@@ -79,31 +77,25 @@ export default function NewModal(props: any) {
             });
 
             let res = await response.json();
-            console.log(res)
         }
 
     }
 
     const CheckForDBRepo = async () => {
-        if (props.user.login === account) {
-            let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB`, {
-                method: "Get",
-                headers: {
-                    Authorization: `token ${props.access_token}`,
-                    "Content-Type": "application/json"
-                }
-
-            });
-
-            if (response.status === 200) {
-                return true;
+        let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB`, {
+            method: "Get",
+            headers: {
+                Authorization: `token ${props.access_token}`,
+                "Content-Type": "application/json"
             }
-            else {
-                return false;
-            }
+
+        });
+
+        if (response.status === 200) {
+            return true;
         }
         else {
-
+            return false;
         }
     }
 
