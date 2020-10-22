@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
+import ConfigSection from './ConfigSection';
 
 export default function NewModal(props: any) {
     const [organizations, setOrganizations] = useState<any>([]);
     const [account, setAccount] = useState<string>("");
     const [load, setLoad] = useState<boolean>(false);
+    const [themeName, setThemeName] = useState<string>("");
 
     useEffect(() => {
         if (props.user && props.access_token) {
@@ -35,8 +37,43 @@ export default function NewModal(props: any) {
             })
     }
 
+    const createFile = async (body: string, file:string) => {
+        let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}/${file}`, {
+            method: "PUT",
+            headers: {
+                Authorization: `token ${props.access_token}`,
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json"
+            },
+            body: body
+
+        });
+        let res = await response.json()
+        console.log(res)
+    }
+
+    const createAllFiles = async () => {
+        let config = {
+            "content": btoa(""),
+            "message": `Add ${themeName} config`,
+            "branch": "main"
+        }
+
+        let json = {
+            "content": btoa(""),
+            "message": `Add ${themeName} css`,
+            "branch": "main"
+        }
+        await createFile(JSON.stringify(config), "AppSettings.config");
+        await createFile(JSON.stringify(json) , "Theme.json");
+    }
+
     const onChangeAccount = (value: string) => {
         setAccount(value);
+    }
+
+    const onChangeThemeName = (e:any) =>{
+        setThemeName(e.target.value);
     }
 
     const cancel = () => {
@@ -90,7 +127,7 @@ export default function NewModal(props: any) {
             }
 
         });
-
+        let res = await response.json()
         if (response.status === 200) {
             return true;
         }
@@ -109,6 +146,8 @@ export default function NewModal(props: any) {
 
             }
         }
+
+        await createAllFiles();
         await setLoad(false);
     }
     return (
@@ -118,7 +157,7 @@ export default function NewModal(props: any) {
                     Create new Theme
                 </ModalHeader>
                 <ModalBody>
-                    <input className="form-control default mb-3" type="text" placeholder="Name" />
+                    <input className="form-control default mb-3" type="text" placeholder="Name" onChange={onChangeThemeName}/>
                     {props.user ?
                         <UncontrolledButtonDropdown>
                             <DropdownToggle caret color="outline-secondary">
