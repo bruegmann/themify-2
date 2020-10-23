@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Grid, SidebarMenu, MenuItem } from "blue-react";
-import { Brush, List, Collection, Image, FileText, Gear } from "react-bootstrap-icons";
+import { Brush, List, Collection, Image, FileText, XCircleFill, InfoCircleFill, CheckCircleFill, ExclamationCircleFill } from "react-bootstrap-icons";
 
 import "./styles/main.scss";
 
@@ -48,6 +48,12 @@ function App() {
                 }
 
             ]}
+            statusIcons={{
+                danger: <XCircleFill />,
+                info: <InfoCircleFill />,
+                success: <CheckCircleFill />,
+                warning: <ExclamationCircleFill />
+            }}
         >
             <SidebarMenu
                 bottomContent={

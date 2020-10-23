@@ -14,7 +14,8 @@ export const phrases: IPhrases = {
     "EXPORT_ZIP": ["Export as zip", "Als Zip exportieren"],
     "IMPORT_CONFIG": ["Import config", "Konfig importieren"],
     "EXPORT":["Export ... ","Exportieren ... " ],
-    "NEED_GITHUB_LOGIN":["To use Themify/Library you need to login with Github.","Um Themify/Library zu benutzen, musst du dich mit Github anmelden."]
+    "NEED_GITHUB_LOGIN":["To use Themify/Library you need to login with Github.","Um Themify/Library zu benutzen, musst du dich mit Github anmelden."],
+    "NEW": ["New", "Neu"]
 };
 
 export function getPhrase(keyword: string, countryCode: string | undefined = undefined, _phrases: IPhrases | undefined = undefined) {

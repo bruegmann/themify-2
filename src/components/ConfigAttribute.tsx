@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { InfoCircle, Pencil, Trash, X, Check, DropletHalf, CaretDown } from "react-bootstrap-icons";
 import { InputGroupButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, CustomInput } from 'reactstrap';
 import { SketchPicker } from "react-color";
-import { isGetAccessor } from 'typescript';
 
 export default function ConfigAttribute(props: any) {
     const [value, setValue] = useState<string>("");
