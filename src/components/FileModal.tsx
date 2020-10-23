@@ -1,9 +1,8 @@
 import { Utilities } from 'blue-react';
 import React, { useEffect, useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
-import ConfigSection from './ConfigSection';
 
-export default function NewModal(props: any) {
+export default function FileModal(props: any) {
     const [organizations, setOrganizations] = useState<any>([]);
     const [account, setAccount] = useState<string>("");
     const [load, setLoad] = useState<boolean>(false);
@@ -15,12 +14,35 @@ export default function NewModal(props: any) {
         }
     }, [props])
 
+    useEffect(()=>{
+        if (props.themeName) {
+            setThemeName(props.themeName);
+        }   
+    },[props.themeName])
+
     useEffect(() => {
-        if (props.user) {
+        if (props.account) {
+            setAccount(props.account);
+        }
+    }, [props.account])
+
+    useEffect(() => {
+        if (props.user && props.keys === 0) {
             setAccount(props.user.login);
         }
     }, [props.user])
 
+
+
+    const submit = async () => {
+        await setLoad(true);
+        if (props.keys === 0) {
+            console.log("create")
+        }
+        else if (props.keys === 1) {
+            console.log("sace")
+        }
+    }
 
     const getOrganizations = async () => {
         const res = await fetch(`${(window as any).proxy}${props.user.organizations_url}`, {
@@ -64,15 +86,15 @@ export default function NewModal(props: any) {
             "message": `Add ${themeName} css`,
             "branch": "main"
         }
-        try{
+        try {
             await createFile(JSON.stringify(config), "AppSettings.config");
             await createFile(JSON.stringify(json), "Theme.json");
             Utilities.showSuccess();
             setTimeout(Utilities.hideSuccess, 2000);
-           
+
             props.onChange(themeName, account) //TODO return name an save location
         }
-        catch{
+        catch {
             Utilities.setAlertMessage("Fehler", "warning", true, "Es konnte kein neues Theme erstellt werden")
         }
     }
@@ -146,22 +168,22 @@ export default function NewModal(props: any) {
     }
 
     const createTheme = async () => {
-        await setLoad(true);
-        if(themeName !== ""){
+
+        if (themeName !== "") {
             if (await CheckForDBRepo() === false) {
                 if (window.confirm('Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?')) {
                     await createRepo();
                     await createAllFiles();
                 }
                 else {
-    
+
                 }
             }
             else {
                 await createAllFiles();
             }
         }
-        else{
+        else {
             alert("Bitte ein Name eingeben")
         }
         await setLoad(false);
@@ -170,10 +192,10 @@ export default function NewModal(props: any) {
         <div>
             <Modal isOpen={props.open}>
                 <ModalHeader>
-                    Create new Theme
+                    {props.title}
                 </ModalHeader>
                 <ModalBody>
-                    <input className="form-control default mb-3" type="text" placeholder="Name" onChange={onChangeThemeName} />
+                    <input className="form-control default mb-3" type="text" placeholder="Name" value={themeName} onChange={onChangeThemeName} />
                     {props.user ?
                         <UncontrolledButtonDropdown>
                             <DropdownToggle caret color="outline-secondary">
@@ -196,7 +218,7 @@ export default function NewModal(props: any) {
                     {load === false ?
                         <div>
                             <button className="btn btn-outline-danger mr-2" onClick={() => cancel()}>Cancel</button>
-                            <button className="btn btn-outline-primary" onClick={() => createTheme()}>Submit</button>
+                            <button className="btn btn-outline-primary" onClick={() => submit()}>Submit</button>
                         </div>
                         :
                         <div className="spinner-border text-primary" role="status">
