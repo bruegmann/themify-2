@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Page, Header, HeaderTitle, Body, Actions, MenuItem, DropdownMenuItem } from "blue-react";
 import { BoxArrowUp, Collection, Share, FileEarmarkPlus, Gear, Brush, Sim, FileZip } from "react-bootstrap-icons"
 
@@ -14,6 +14,29 @@ function HomePage(props: any) {
 
     const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(1);
     const [modalNew, setModalNew] = useState<boolean>(false);
+    const [themeName, setThemeName] = useState<string>("");
+    const [saveAcount, setSaveAccount] = useState<string>("");
+
+    useEffect(() => {
+        if (themeName === "") {
+            let hash = window.location.hash;
+            console.log(hash)
+            if (hash) {
+                let hashObject = JSON.parse(decodeURIComponent(hash.replace("#/home/", "")));
+                console.log(hashObject)
+                setThemeName(hashObject.name);
+                setSaveAccount(hashObject.account)
+            }
+            else{
+                setThemeName("Theme Name");
+            }
+            //Example from Themify (1)
+            //console.log(JSON.parse(decodeURIComponent(`%7B"name"%3A"hallo"%2C"btHashVars"%3A%7B"%24theme"%3A"%23923434"%2C"%24fluent-halo-color"%3A"white"%2C"%24shimmering"%3A".9"%7D%7D`)))
+          
+        }
+        
+    }, [themeName])
+
 
     const getClassSelectedThemeConfig = (value: number) => {
         if (value === SelectedThemeConfig) {
@@ -28,6 +51,21 @@ function HomePage(props: any) {
 
     }
 
+
+    const changeNewModel = (themename: string, account: string) => {
+        if (themename && account) {
+            var url = {
+                name: themename,
+                account: account
+            }
+
+            window.location.hash = "/home/" + encodeURIComponent(JSON.stringify(url));
+            window.location.reload();
+        }
+        else {
+            setModalNew(!modalNew)
+        }
+    }
 
 
     return (
@@ -84,7 +122,10 @@ function HomePage(props: any) {
                     <hr />
                     <div>
                         {SelectedThemeConfig === 0 ?
-                            <ThemesHome />
+                            <ThemesHome 
+                            name={themeName}
+                            onChange={(value:string) => setThemeName(value)}
+                            />
                             :
                             <ConfigHome
                                 user={props.user}
@@ -95,7 +136,7 @@ function HomePage(props: any) {
                 </div>
                 <NewModal
                     open={modalNew}
-                    onChange={() => setModalNew(!modalNew)}
+                    onChange={(themename: string, account: string) => changeNewModel(themename, account)}
                     user={props.user}
                     access_token={props.access_token}
                 />

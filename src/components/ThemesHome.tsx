@@ -8,7 +8,7 @@ import { BrightnessAltHigh } from "react-bootstrap-icons";
 let varibales = require("../data/bootstrap.variables.json")
 let btTypes = require("../data/bootstrap.types.json")
 
-const bootstrapStyle = require("blue-react/dist/style.scss");
+//const bootstrapStyle = require("blue-react/dist/style.scss");
 
 
 const { Sass } = require("../lib/sass")
@@ -20,7 +20,7 @@ sass.options({
 })
 
 
-export default function ThemesHome() {
+export default function ThemesHome(props: any) {
 
     const [Variables, setVariables] = useState<any[]>([]);
     const [btVariables, setbtVariables] = useState<any[]>([]);
@@ -28,7 +28,7 @@ export default function ThemesHome() {
     const [customStyle, setCustomStyle] = useState<string>("");
     const [btHashVars, setbtHashVars] = useState<any[]>([]);
     const [compileBusy, setCompileBusy] = useState<Boolean>(false);
-    const [name, setName] = useState<String>("Theme Name");
+    const [themeName, setThemeName] = useState<String>("");
 
     useEffect(() => {
         if (Variables.length === 0) {
@@ -44,6 +44,10 @@ export default function ThemesHome() {
         }
 
     }, [Variables])
+
+    useEffect(() => {
+        setThemeName(props.name);
+    }, [props.name])
 
     const setVarType = () => {
         Object.keys(varibales).map((item: any) => {
@@ -78,7 +82,7 @@ export default function ThemesHome() {
         })
 
         const hashObject = {
-            name: name,
+            name: themeName,
             btHashVars: btHashVars
         }
 
@@ -142,8 +146,8 @@ export default function ThemesHome() {
         <div>
             <div className="col-md-5">
                 <ThemeName
-                    name={name}
-                    onChange={(value: string) => { setName(value) }}
+                    name={themeName}
+                    onChange={(value: string) => { props.onChange(value) }}
                 />
 
                 {Object.keys(Variables).map((item: any) =>

@@ -1,3 +1,4 @@
+import { Utilities } from 'blue-react';
 import React, { useEffect, useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import ConfigSection from './ConfigSection';
@@ -37,7 +38,7 @@ export default function NewModal(props: any) {
             })
     }
 
-    const createFile = async (body: string, file:string) => {
+    const createFile = async (body: string, file: string) => {
         let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}/${file}`, {
             method: "PUT",
             headers: {
@@ -49,7 +50,6 @@ export default function NewModal(props: any) {
 
         });
         let res = await response.json()
-        console.log(res)
     }
 
     const createAllFiles = async () => {
@@ -64,15 +64,24 @@ export default function NewModal(props: any) {
             "message": `Add ${themeName} css`,
             "branch": "main"
         }
-        await createFile(JSON.stringify(config), "AppSettings.config");
-        await createFile(JSON.stringify(json) , "Theme.json");
+        try{
+            await createFile(JSON.stringify(config), "AppSettings.config");
+            await createFile(JSON.stringify(json), "Theme.json");
+            Utilities.showSuccess();
+            setTimeout(Utilities.hideSuccess, 2000);
+           
+            props.onChange(themeName, account) //TODO return name an save location
+        }
+        catch{
+            Utilities.setAlertMessage("Fehler", "warning", true, "Es konnte kein neues Theme erstellt werden")
+        }
     }
 
     const onChangeAccount = (value: string) => {
         setAccount(value);
     }
 
-    const onChangeThemeName = (e:any) =>{
+    const onChangeThemeName = (e: any) => {
         setThemeName(e.target.value);
     }
 
@@ -138,16 +147,23 @@ export default function NewModal(props: any) {
 
     const createTheme = async () => {
         await setLoad(true);
-        if (await CheckForDBRepo() === false) {
-            if (window.confirm('Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?')) {
-                await createRepo();
+        if(themeName !== ""){
+            if (await CheckForDBRepo() === false) {
+                if (window.confirm('Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?')) {
+                    await createRepo();
+                    await createAllFiles();
+                }
+                else {
+    
+                }
             }
             else {
-
+                await createAllFiles();
             }
         }
-
-        await createAllFiles();
+        else{
+            alert("Bitte ein Name eingeben")
+        }
         await setLoad(false);
     }
     return (
@@ -157,7 +173,7 @@ export default function NewModal(props: any) {
                     Create new Theme
                 </ModalHeader>
                 <ModalBody>
-                    <input className="form-control default mb-3" type="text" placeholder="Name" onChange={onChangeThemeName}/>
+                    <input className="form-control default mb-3" type="text" placeholder="Name" onChange={onChangeThemeName} />
                     {props.user ?
                         <UncontrolledButtonDropdown>
                             <DropdownToggle caret color="outline-secondary">
@@ -177,9 +193,9 @@ export default function NewModal(props: any) {
                     }
                 </ModalBody>
                 <ModalFooter>
-                    <button className="btn btn-outline-danger mr-2" onClick={() => cancel()}>Cancel</button>
                     {load === false ?
                         <div>
+                            <button className="btn btn-outline-danger mr-2" onClick={() => cancel()}>Cancel</button>
                             <button className="btn btn-outline-primary" onClick={() => createTheme()}>Submit</button>
                         </div>
                         :
