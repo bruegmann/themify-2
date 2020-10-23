@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Page, Header, HeaderTitle, Body, Actions, MenuItem, DropdownMenuItem } from "blue-react";
-import { BoxArrowUp, Collection, Share, FileEarmarkPlus, Gear, Brush, Sim, FileZip } from "react-bootstrap-icons"
+import { BoxArrowUp, Share, FileEarmarkPlus, Gear, Brush, FileZip, CloudUpload } from "react-bootstrap-icons"
 
 import { appLogo, appTitle, getPhrase as _ } from "../shared";
 import ThemesHome from "../components/ThemesHome";
@@ -15,7 +15,7 @@ function HomePage(props: any) {
     const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(1);
     const [modalNew, setModalNew] = useState<boolean>(false);
     const [themeName, setThemeName] = useState<string>("");
-    const [saveAcount, setSaveAccount] = useState<string>("");
+    const [acount, setAccount] = useState<string>("");
 
     useEffect(() => {
         if (themeName === "") {
@@ -25,7 +25,7 @@ function HomePage(props: any) {
                 let hashObject = JSON.parse(decodeURIComponent(hash.replace("#/home/", "")));
                 console.log(hashObject)
                 setThemeName(hashObject.name);
-                setSaveAccount(hashObject.account)
+                setAccount(hashObject.account)
             }
             else{
                 setThemeName("Theme Name");
@@ -92,12 +92,12 @@ function HomePage(props: any) {
                     />
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                    icon={<Collection />}
-                    label={_("SAVE_TO_LIB")}
+                    icon={<CloudUpload />}
+                    label={_("SAVE")}
                 >
                     <MenuItem
-                        icon={<Sim />}
-                        label={_("SAVE_THEME_LOCAL")}
+                        icon={<CloudUpload />}
+                        label={_("SAVE_AS")}
                     />
                 </DropdownMenuItem>
                 <MenuItem
