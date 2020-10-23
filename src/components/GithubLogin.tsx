@@ -74,7 +74,7 @@ export default function GithubLogin(props: any) {
         <div>
             {user ?
                 <div className="blue-app-toggle-page blue-app-sidebar-btn btn blue-app-sidebar-dropdown-toggle has-label">
-                    <img className="avatar mr-2" alt={user.login} src={user.avatar_url} ></img>
+                    <img style={{ width: "30px", height: "30px" }} className="rounded-circle align-middle mr-2" alt={user.login} src={user.avatar_url} ></img>
                     {user.login}
                 </div>
                 :
