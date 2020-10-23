@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Grid, SidebarMenu, MenuItem, Utilities } from "blue-react";
 import { Brush, List, Collection, Image, FileText, Gear } from "react-bootstrap-icons";
 
-import "./styles/main.scss";
+
 //Pages
 import HomePage from "./pages/HomePage";
 import LibraryPage from "./pages/LibraryPage";
@@ -116,13 +116,13 @@ function App() {
                     <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label="Blue Documentation" />
                     <MenuItem href="#/settings" icon={<Gear />} label="Settings" />
                 </SidebarMenu>
-                {/* <style
+                <style
                     type="text/css"
                     dangerouslySetInnerHTML={{
                         __html: `${!localStorage.getItem("css") ? default_CSS : JSON.parse(localStorage.getItem("css") as string)}`
 
                     }}
-                /> */}
+                />
             </Grid>
             :
             <></>
