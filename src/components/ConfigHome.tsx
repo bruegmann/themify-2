@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { DropdownItem, DropdownMenu, DropdownToggle, InputGroupButtonDropdown } from 'reactstrap';
 import ConfigSection from './ConfigSection';
+import { getPhrase as _ } from '../shared';
 
 export default function ConfigHome(props: any) {
     const [attribute, setAttribute] = useState<any>({});
@@ -27,7 +28,7 @@ export default function ConfigHome(props: any) {
         if (ls !== "null" && props.user !== undefined) {
             setSelected(ls);
         }
-        else{
+        else {
             setSelected("none");
         }
 
@@ -140,7 +141,7 @@ export default function ConfigHome(props: any) {
             <div className="d-flex justify-content-center">
                 <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggle} >
                     <DropdownToggle caret color="outline-primary">
-                        Template: {selected}
+                        {_("TEMPLATE")}: {selected}
                     </DropdownToggle>
                     <DropdownMenu>
                         {

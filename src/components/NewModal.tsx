@@ -2,6 +2,7 @@ import { Utilities } from 'blue-react';
 import React, { useEffect, useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
 import ConfigSection from './ConfigSection';
+import { getPhrase as _ } from '../shared';
 
 export default function NewModal(props: any) {
     const [organizations, setOrganizations] = useState<any>([]);
@@ -64,15 +65,15 @@ export default function NewModal(props: any) {
             "message": `Add ${themeName} css`,
             "branch": "main"
         }
-        try{
+        try {
             await createFile(JSON.stringify(config), "AppSettings.config");
             await createFile(JSON.stringify(json), "Theme.json");
             Utilities.showSuccess();
             setTimeout(Utilities.hideSuccess, 2000);
-           
+
             props.onChange(themeName, account) //TODO return name an save location
         }
-        catch{
+        catch {
             Utilities.setAlertMessage("Fehler", "warning", true, "Es konnte kein neues Theme erstellt werden")
         }
     }
@@ -147,21 +148,21 @@ export default function NewModal(props: any) {
 
     const createTheme = async () => {
         await setLoad(true);
-        if(themeName !== ""){
+        if (themeName !== "") {
             if (await CheckForDBRepo() === false) {
                 if (window.confirm('Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?')) {
                     await createRepo();
                     await createAllFiles();
                 }
                 else {
-    
+
                 }
             }
             else {
                 await createAllFiles();
             }
         }
-        else{
+        else {
             alert("Bitte ein Name eingeben")
         }
         await setLoad(false);
@@ -170,14 +171,14 @@ export default function NewModal(props: any) {
         <div>
             <Modal isOpen={props.open}>
                 <ModalHeader>
-                    Create new Theme
+                    {_("CREATE_NEW_THEME")}
                 </ModalHeader>
                 <ModalBody>
                     <input className="form-control default mb-3" type="text" placeholder="Name" onChange={onChangeThemeName} />
                     {props.user ?
                         <UncontrolledButtonDropdown>
                             <DropdownToggle caret color="outline-secondary">
-                                Account: {account}
+                                {_("ACCOUNT")}: {account}
                             </DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem onClick={() => onChangeAccount(props.user.login)}><img className="avatar mr-2" alt={props.user?.login} src={props.user?.avatar_url} />{props.user?.login}</DropdownItem>
@@ -189,14 +190,14 @@ export default function NewModal(props: any) {
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
                         :
-                        <p>Online Speichern nicht möglich. Du musst bei Github angemeldet sein</p>
+                        <p>{_("NOT_ONLINE_STORAGE")}</p>
                     }
                 </ModalBody>
                 <ModalFooter>
                     {load === false ?
                         <div>
-                            <button className="btn btn-outline-danger mr-2" onClick={() => cancel()}>Cancel</button>
-                            <button className="btn btn-outline-primary" onClick={() => createTheme()}>Submit</button>
+                            <button className="btn btn-outline-danger mr-2" onClick={() => cancel()}>{_("CANCEL")}</button>
+                            <button className="btn btn-outline-primary" onClick={() => createTheme()}>{_("SUBMIT")}</button>
                         </div>
                         :
                         <div className="spinner-border text-primary" role="status">

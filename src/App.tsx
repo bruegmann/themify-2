@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Grid, SidebarMenu, MenuItem } from "blue-react";
 import { Brush, List, Collection, Image, FileText, XCircleFill, InfoCircleFill, CheckCircleFill, ExclamationCircleFill } from "react-bootstrap-icons";
-
+import { getPhrase as _ } from './shared';
 import "./styles/main.scss";
 
 //Pages
@@ -66,10 +66,10 @@ function App() {
                         />
                     </>
                 }>
-                <MenuItem href="#/home" icon={<Brush />} label="Customizer" isHome />
-                <MenuItem href="#/local-themes" icon={<Image />} label="Local Themes" />
-                <MenuItem href="#/library" icon={<Collection />} label="Library" />
-                <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label="Blue Documentation" />
+                <MenuItem href="#/home" icon={<Brush />} label={_("CUSTOMIZER")} isHome />
+                <MenuItem href="#/local-themes" icon={<Image />} label={_("LOCAL_THEME")} />
+                <MenuItem href="#/library" icon={<Collection />} label={_("LIBRARY")} />
+                <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label={_("BLUE_DOCUMENTATION")} />
             </SidebarMenu>
         </Grid>
     );

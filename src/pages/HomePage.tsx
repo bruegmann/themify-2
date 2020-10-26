@@ -27,14 +27,14 @@ function HomePage(props: any) {
                 setThemeName(hashObject.name);
                 setSaveAccount(hashObject.account)
             }
-            else{
+            else {
                 setThemeName("Theme Name");
             }
             //Example from Themify (1)
             //console.log(JSON.parse(decodeURIComponent(`%7B"name"%3A"hallo"%2C"btHashVars"%3A%7B"%24theme"%3A"%23923434"%2C"%24fluent-halo-color"%3A"white"%2C"%24shimmering"%3A".9"%7D%7D`)))
-          
+
         }
-        
+
     }, [themeName])
 
 
@@ -71,7 +71,7 @@ function HomePage(props: any) {
     return (
         <Page hasActions={true} >
             <Header>
-                <HeaderTitle logo={appLogo} appTitle={appTitle}>Customizer</HeaderTitle>
+                <HeaderTitle logo={appLogo} appTitle={appTitle}>{_("CUSTOMIZER")}</HeaderTitle>
             </Header>
 
 
@@ -115,16 +115,16 @@ function HomePage(props: any) {
                 <div id="homePage">
                     <div className="row mt-3 d-flex justify-content-center">
                         <div className="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className={"btn " + getClassSelectedThemeConfig(0)} onClick={() => { setSelectedThemeConfig(0) }}><Brush /> Theme</button>
-                            <button type="button" className={"btn " + getClassSelectedThemeConfig(1)} onClick={() => { setSelectedThemeConfig(1) }}><Gear /> Config</button>
+                            <button type="button" className={"btn " + getClassSelectedThemeConfig(0)} onClick={() => { setSelectedThemeConfig(0) }}><Brush /> {_("THEME")}</button>
+                            <button type="button" className={"btn " + getClassSelectedThemeConfig(1)} onClick={() => { setSelectedThemeConfig(1) }}><Gear /> {_("CONFIG")}</button>
                         </div>
                     </div>
                     <hr />
                     <div>
                         {SelectedThemeConfig === 0 ?
-                            <ThemesHome 
-                            name={themeName}
-                            onChange={(value:string) => setThemeName(value)}
+                            <ThemesHome
+                                name={themeName}
+                                onChange={(value: string) => setThemeName(value)}
                             />
                             :
                             <ConfigHome
