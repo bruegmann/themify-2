@@ -8,17 +8,20 @@ export default function FileModal(props: any) {
     const [load, setLoad] = useState<boolean>(false);
     const [themeName, setThemeName] = useState<string>("");
 
+
+    let files: any = [];
+
     useEffect(() => {
         if (props.user && props.access_token) {
             getOrganizations();
         }
     }, [props])
 
-    useEffect(()=>{
+    useEffect(() => {
         if (props.themeName) {
             setThemeName(props.themeName);
-        }   
-    },[props.themeName])
+        }
+    }, [props.themeName])
 
     useEffect(() => {
         if (props.account) {
@@ -37,7 +40,7 @@ export default function FileModal(props: any) {
     const submit = async () => {
         await setLoad(true);
         if (props.keys === 0) {
-            console.log("create")
+            FilesToGithub();
         }
         else if (props.keys === 1) {
             console.log("sace")
@@ -60,7 +63,7 @@ export default function FileModal(props: any) {
             })
     }
 
-    const createFile = async (body: string, file: string) => {
+    const putFile = async (body: string, file: string) => {
         let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}/${file}`, {
             method: "PUT",
             headers: {
@@ -74,28 +77,77 @@ export default function FileModal(props: any) {
         let res = await response.json()
     }
 
-    const createAllFiles = async () => {
+    const editFile = async () => {
+        let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
+        let shaTheme = files.find((o: any) => o.name === "Theme.json");
         let config = {
             "content": btoa(""),
-            "message": `Add ${themeName} config`,
-            "branch": "main"
+            "message": `Update ${themeName} config`,
+            "branch": "main",
+            "sha": shaConfig.sha
         }
 
         let json = {
             "content": btoa(""),
-            "message": `Add ${themeName} css`,
-            "branch": "main"
+            "message": `Update ${themeName} css`,
+            "branch": "main",
+            "sha": shaTheme.sha
         }
-        try {
-            await createFile(JSON.stringify(config), "AppSettings.config");
-            await createFile(JSON.stringify(json), "Theme.json");
-            Utilities.showSuccess();
-            setTimeout(Utilities.hideSuccess, 2000);
 
-            props.onChange(themeName, account) //TODO return name an save location
+        await putFile(JSON.stringify(config), "AppSettings.config");
+        await putFile(JSON.stringify(json), "Theme.json");
+
+    }
+
+    const checkFileExist = async () => {
+        let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}`, {
+            method: "GET",
+            headers: {
+                Authorization: `token ${props.access_token}`,
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json"
+            }
+
+        });
+
+        let res = await response.json();
+        files = res;
+        if (response.status === 404) {
+            return false;
         }
-        catch {
-            Utilities.setAlertMessage("Fehler", "warning", true, "Es konnte kein neues Theme erstellt werden")
+        else {
+            return true;
+        }
+    }
+
+    const FilesToGithub = async () => {
+        if (await checkFileExist() === true) {
+            editFile();
+        }
+        else {
+            try {
+                let config = {
+                    "content": btoa(""),
+                    "message": `Add ${themeName} config`,
+                    "branch": "main"
+                }
+        
+                let json = {
+                    "content": btoa(""),
+                    "message": `Add ${themeName} css`,
+                    "branch": "main"
+                }
+
+                await putFile(JSON.stringify(config), "AppSettings.config");
+                await putFile(JSON.stringify(json), "Theme.json");
+                Utilities.showSuccess();
+                setTimeout(Utilities.hideSuccess, 2000);
+
+                props.onChange(themeName, account);
+            }
+            catch {
+                Utilities.setAlertMessage("Fehler", "warning", true, "Es konnte kein neues Theme erstellt werden")
+            }
         }
     }
 
@@ -173,14 +225,14 @@ export default function FileModal(props: any) {
             if (await CheckForDBRepo() === false) {
                 if (window.confirm('Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?')) {
                     await createRepo();
-                    await createAllFiles();
+                    await FilesToGithub();
                 }
                 else {
 
                 }
             }
             else {
-                await createAllFiles();
+                await FilesToGithub();
             }
         }
         else {
