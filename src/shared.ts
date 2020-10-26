@@ -37,6 +37,7 @@ export const phrases: IPhrases = {
     "DELETE": ["Delete", "Löschen"],
     "LOCAL_THEME": ["Local Theme", "Lokales Theme"],
     "BLUE_DOCUMENTATION": ["Blue Documentation", "Blue Dokumentation"],
+    "NO_DATABASE": ["There doesn't seem to be a database yet. Do you want to create a database?", "Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?"],
 };
 
 export function getPhrase(keyword: string, countryCode: string | undefined = undefined, _phrases: IPhrases | undefined = undefined) {

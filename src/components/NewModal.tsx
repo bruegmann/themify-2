@@ -150,7 +150,7 @@ export default function NewModal(props: any) {
         await setLoad(true);
         if (themeName !== "") {
             if (await CheckForDBRepo() === false) {
-                if (window.confirm('Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?')) {
+                if (window.confirm(_("NO_DATABASE"))) {
                     await createRepo();
                     await createAllFiles();
                 }
