@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap"
-import {TrashFill} from "react-bootstrap-icons"
+import { TrashFill } from "react-bootstrap-icons"
+import { getPhrase as _ } from '../shared';
 
 export default function ThemeItem(props: any) {
 
@@ -15,7 +16,7 @@ export default function ThemeItem(props: any) {
                         {props.name}
                     </a>
                 </h5>
-                <button className="btn btn-outline-danger mr-1"><TrashFill/> Löschen</button>
+                <button className="btn btn-outline-danger mr-1"><TrashFill /> {_("DELETE")}</button>
             </div>
         </div>
     )

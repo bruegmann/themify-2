@@ -148,7 +148,7 @@ function HomePage(props: any) {
     return (
         <Page hasActions={true} >
             <Header>
-                <HeaderTitle logo={appLogo} appTitle={appTitle}>Customizer</HeaderTitle>
+                <HeaderTitle logo={appLogo} appTitle={appTitle}>{_("CUSTOMIZER")}</HeaderTitle>
             </Header>
 
             <Actions break="xl">
@@ -191,8 +191,8 @@ function HomePage(props: any) {
                 <div id="homePage">
                     <div className="row mt-3 d-flex justify-content-center">
                         <div className="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" className={"btn " + getClassSelectedThemeConfig(0)} onClick={() => { setSelectedThemeConfig(0) }}><Brush /> Theme</button>
-                            <button type="button" className={"btn " + getClassSelectedThemeConfig(1)} onClick={() => { setSelectedThemeConfig(1) }}><Gear /> Config</button>
+                            <button type="button" className={"btn " + getClassSelectedThemeConfig(0)} onClick={() => { setSelectedThemeConfig(0) }}><Brush /> {_("THEME")}</button>
+                            <button type="button" className={"btn " + getClassSelectedThemeConfig(1)} onClick={() => { setSelectedThemeConfig(1) }}><Gear /> {_("CONFIG")}</button>
                         </div>
                     </div>
                     <hr />
@@ -216,7 +216,7 @@ function HomePage(props: any) {
                     onChange={(themename: string, account: string) => changeNewModel(themename, account)}
                     user={props.user}
                     access_token={props.access_token}
-                    title="Neues Theme erstellen"
+                    title={_("CREATE_NEW_THEME")}
                 />
                 <FileModal
                     keys={1}
@@ -224,7 +224,7 @@ function HomePage(props: any) {
                     user={props.user}
                     onChange={() => setModalSave(!modalSave)}
                     access_token={props.access_token}
-                    title="Speichern unter"
+                    title={_("SAVE_AS")}
                     contentConfig="test"
                     contentTheme="test22"
                     themeName={themeName}

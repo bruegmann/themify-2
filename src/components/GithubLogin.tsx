@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import {Utilities} from "blue-react";
-
+import { Utilities } from "blue-react";
+import { getPhrase as _ } from '../shared';
 import GitHubLogin from 'react-github-login';
 import GithubIcon from "../icons/GitHub";
 
@@ -22,7 +22,7 @@ export default function GithubLogin(props: any) {
         }
     })
 
-    const ErrorLogin = () =>{
+    const ErrorLogin = () => {
         Utilities.setAlertMessage("Fehler beim Anmelden", "danger", true, "Es konnte keine Verbindung mit Github aufgebaut werden")
     }
 
@@ -43,7 +43,7 @@ export default function GithubLogin(props: any) {
                 props.onChange(data, acces_token);
                 (window as any).githubuser = data;
             })
-            .catch(() =>{ ErrorLogin()})
+            .catch(() => { ErrorLogin() })
     }
 
     return (
@@ -60,18 +60,18 @@ export default function GithubLogin(props: any) {
                         clientId="48bc2750433ca7444fa7"
                         redirectUri=""
                         onSuccess={async ({ code }: { code: string }) => {
-                            try{
+                            try {
                                 const res = await fetch(`${(window as any).oauth}?code=${code}`);
                                 const access = await res.json()
                                 Login(access.access_token);
                             }
-                            catch(error){
+                            catch (error) {
                                 ErrorLogin();
                             }
                         }}
-                        onFailure={() =>  ErrorLogin()}
+                        onFailure={() => ErrorLogin()}
                         scope={['user', 'repo', 'write:org']}
-                        buttonText={<p className="m-0"> <GithubIcon /> Login mit Github</p>}
+                        buttonText={<p className="m-0"> <GithubIcon /> {_("LOGIN_WITH_GITHUB")}</p>}
                     />
                 </div>
             }

@@ -1,6 +1,7 @@
 import { Utilities } from 'blue-react';
 import React, { useEffect, useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
+import { getPhrase as _ } from '../shared';
 
 export default function FileModal(props: any) {
     const [organizations, setOrganizations] = useState<any>([]);
@@ -241,7 +242,7 @@ export default function FileModal(props: any) {
         if (themeName !== "") {
             if (account !== "") {
                 if (await CheckForDBRepo() === false) {
-                    if (window.confirm('Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?')) {
+                    if (window.confirm(_("NO_DATABASE"))) {
                         await createRepo();
                         await FilesToGithub();
                     }
@@ -270,7 +271,7 @@ export default function FileModal(props: any) {
                     {props.user ?
                         <UncontrolledButtonDropdown>
                             <DropdownToggle caret color="outline-secondary">
-                                Account: {account}
+                                {_("ACCOUNT")}: {account}
                             </DropdownToggle>
                             <DropdownMenu>
                                 <DropdownItem onClick={() => onChangeAccount(props.user.login)}><img className="avatar mr-2" alt={props.user?.login} src={props.user?.avatar_url} />{props.user?.login}</DropdownItem>
@@ -282,14 +283,14 @@ export default function FileModal(props: any) {
                             </DropdownMenu>
                         </UncontrolledButtonDropdown>
                         :
-                        <p>Online Speichern nicht möglich. Du musst bei Github angemeldet sein</p>
+                        <p>{_("NOT_ONLINE_STORAGE")}</p>
                     }
                 </ModalBody>
                 <ModalFooter>
                     {load === false ?
                         <div>
-                            <button className="btn btn-outline-danger mr-2" onClick={() => cancel()}>Cancel</button>
-                            <button className="btn btn-outline-primary" onClick={() => submit()}>Submit</button>
+                            <button className="btn btn-outline-danger mr-2" onClick={() => cancel()}>{_("CANCEL")}</button>
+                            <button className="btn btn-outline-primary" onClick={() => createTheme()}>{_("SUBMIT")}</button>
                         </div>
                         :
                         <div className="spinner-border text-primary" role="status">

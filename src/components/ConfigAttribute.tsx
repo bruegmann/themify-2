@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { InfoCircle, Pencil, Trash, X, Check, DropletHalf, CaretDown } from "react-bootstrap-icons";
 import { InputGroupButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, InputGroup, CustomInput } from 'reactstrap';
 import { SketchPicker } from "react-color";
+import { getPhrase as _ } from '../shared';
 
 export default function ConfigAttribute(props: any) {
     const [value, setValue] = useState<string>("");
@@ -238,10 +239,10 @@ export default function ConfigAttribute(props: any) {
                                     Type
                             </DropdownToggle>
                                 <DropdownMenu>
-                                    <DropdownItem onClick={() => changeType("")}>Text</DropdownItem>
-                                    <DropdownItem onClick={() => changeType("file")}>File</DropdownItem>
-                                    <DropdownItem onClick={() => changeType("color")}>Color</DropdownItem>
-                                    <DropdownItem onClick={() => changeType("boolean")}>Boolean</DropdownItem>
+                                    <DropdownItem onClick={() => changeType("")}>{_("TEXT")}</DropdownItem>
+                                    <DropdownItem onClick={() => changeType("file")}>{_("FILE")}</DropdownItem>
+                                    <DropdownItem onClick={() => changeType("color")}>{_("COLOR")}</DropdownItem>
+                                    <DropdownItem onClick={() => changeType("boolean")}>{_("BOOLEAN")}</DropdownItem>
                                 </DropdownMenu>
                             </InputGroupButtonDropdown >
                         }

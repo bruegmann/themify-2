@@ -16,11 +16,11 @@ export default function LibraryPage(props: any) {
         }
     }, [props.user])
 
-  
+
     return (
         <Page>
             <Header>
-                <HeaderTitle logo={appLogo} appTitle={appTitle}>Library</HeaderTitle>
+                <HeaderTitle logo={appLogo} appTitle={appTitle}>{_("LIBRARY")}</HeaderTitle>
             </Header>
             <Body>
                 {showPage === true ?

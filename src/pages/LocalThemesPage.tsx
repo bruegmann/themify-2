@@ -8,7 +8,7 @@ export default function LocalThemesPage() {
   return (
     <Page>
       <Header>
-        <HeaderTitle logo={appLogo} appTitle={appTitle}>Library</HeaderTitle>
+        <HeaderTitle logo={appLogo} appTitle={appTitle}>{_("LIBRARY")}</HeaderTitle>
       </Header>
 
       <Body>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Plus } from "react-bootstrap-icons";
+import { getPhrase as _ } from '../shared';
 
 import ConfigAttribute from './ConfigAttribute';
 
@@ -17,7 +18,7 @@ export default function ConfigSection(props: any) {
 
     const onChangeValue = (attrb: string, value: string, i: number) => {
         if (attrb === "delete") {
-            attribute.splice(i,1);
+            attribute.splice(i, 1);
             setChange(!change)
         }
         else if (attrb === "value") {
@@ -68,10 +69,10 @@ export default function ConfigSection(props: any) {
                                         />
                                     )
                                     :
-                                    <p className="text-center">Es sind keine Attributen vorhanden. Fügen Sie Attributen hinzu oder wählen sie ein Template</p>
+                                    <p className="text-center">{_("NO_ATTRIBUTES")}</p>
 
                                 }
-                                <button className="btn btn-outline-primary mb-3 mt-3" onClick={() => AddAttribute()}><Plus /> Add</button>
+                                <button className="btn btn-outline-primary mb-3 mt-3" onClick={() => AddAttribute()}><Plus /> {_("ADD")}</button>
                             </div>
                         </div>
                     </div>
