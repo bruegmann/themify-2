@@ -57,7 +57,7 @@ export default function GithubLogin(props: any) {
                 <div>
                     <GitHubLogin
                         className="blue-app-toggle-page blue-app-sidebar-btn btn blue-app-sidebar-dropdown-toggle has-label btghlogin"
-                        clientId="6ab44e0352f595edf63e"
+                        clientId="48bc2750433ca7444fa7"
                         redirectUri=""
                         onSuccess={async ({ code }: { code: string }) => {
                             try {

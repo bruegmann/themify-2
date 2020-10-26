@@ -1,14 +1,18 @@
 import { Utilities } from 'blue-react';
 import React, { useEffect, useState } from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle } from "reactstrap";
-import ConfigSection from './ConfigSection';
 import { getPhrase as _ } from '../shared';
 
-export default function NewModal(props: any) {
+export default function FileModal(props: any) {
     const [organizations, setOrganizations] = useState<any>([]);
     const [account, setAccount] = useState<string>("");
     const [load, setLoad] = useState<boolean>(false);
     const [themeName, setThemeName] = useState<string>("");
+    const [contentConfig, setContentConfig] = useState<string>("");
+    const [contentTheme, setContentTheme] = useState<string>("");
+
+
+    let files: any = [];
 
     useEffect(() => {
         if (props.user && props.access_token) {
@@ -17,11 +21,41 @@ export default function NewModal(props: any) {
     }, [props])
 
     useEffect(() => {
-        if (props.user) {
+        if (props.themeName) {
+            setThemeName(props.themeName);
+        }
+    }, [props.themeName])
+
+    useEffect(() => {
+        if (props.account) {
+            setAccount(props.account);
+        }
+    }, [props.account])
+
+    useEffect(() => {
+        if (props.user && props.keys === 0) {
             setAccount(props.user.login);
         }
     }, [props.user])
 
+    useEffect(() => {
+        if (contentConfig === "") {
+            setContentConfig(props.contentConfig);
+        }
+    }, [props.contentConfig])
+
+    useEffect(() => {
+        if (contentTheme === "") {
+            setContentTheme(props.contentTheme);
+        }
+    }, [props.contentTheme])
+
+
+
+    const submit = async () => {
+        await setLoad(true);
+        createTheme();
+    }
 
     const getOrganizations = async () => {
         const res = await fetch(`${(window as any).proxy}${props.user.organizations_url}`, {
@@ -39,7 +73,7 @@ export default function NewModal(props: any) {
             })
     }
 
-    const createFile = async (body: string, file: string) => {
+    const putFile = async (body: string, file: string) => {
         let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}/${file}`, {
             method: "PUT",
             headers: {
@@ -53,28 +87,85 @@ export default function NewModal(props: any) {
         let res = await response.json()
     }
 
-    const createAllFiles = async () => {
+    const editFile = async () => {
+        let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
+        let shaTheme = files.find((o: any) => o.name === "Theme.json");
         let config = {
-            "content": btoa(""),
-            "message": `Add ${themeName} config`,
-            "branch": "main"
+            "content": btoa(contentConfig),
+            "message": `Update ${themeName} config`,
+            "branch": "main",
+            "sha": shaConfig.sha
         }
 
         let json = {
-            "content": btoa(""),
-            "message": `Add ${themeName} css`,
-            "branch": "main"
+            "content": btoa(contentTheme),
+            "message": `Update ${themeName} css`,
+            "branch": "main",
+            "sha": shaTheme.sha
         }
-        try {
-            await createFile(JSON.stringify(config), "AppSettings.config");
-            await createFile(JSON.stringify(json), "Theme.json");
-            Utilities.showSuccess();
-            setTimeout(Utilities.hideSuccess, 2000);
 
-            props.onChange(themeName, account) //TODO return name an save location
+        await putFile(JSON.stringify(config), "AppSettings.config");
+        await putFile(JSON.stringify(json), "Theme.json");
+
+    }
+
+    const checkFileExist = async () => {
+        let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}`, {
+            method: "GET",
+            headers: {
+                Authorization: `token ${props.access_token}`,
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json"
+            }
+
+        });
+
+        let res = await response.json();
+        if (response.status === 404) {
+            return false;
         }
-        catch {
-            Utilities.setAlertMessage("Fehler", "warning", true, "Es konnte kein neues Theme erstellt werden")
+        else {
+            files = res;
+            return true;
+        }
+    }
+
+    const FilesToGithub = async () => {
+        if (await checkFileExist() === true) {
+            editFile();
+        }
+        else {
+            try {
+                let config = {
+                    "content": btoa(contentConfig),
+                    "message": `Add ${themeName} config`,
+                    "branch": "main"
+                }
+
+                let json = {
+                    "content": btoa(contentTheme),
+                    "message": `Add ${themeName} css`,
+                    "branch": "main"
+                }
+
+                await putFile(JSON.stringify(config), "AppSettings.config");
+                await putFile(JSON.stringify(json), "Theme.json");
+                Utilities.showSuccess();
+                setTimeout(Utilities.hideSuccess, 2000);
+
+
+
+            }
+            catch {
+                Utilities.setAlertMessage("Fehler", "warning", true, "Es konnte kein neues Theme erstellt werden")
+            }
+        }
+
+        if (props.keys === 0) {
+            props.onChange(themeName, account);
+        }
+        else if (props.keys === 1) {
+            props.onChange();
         }
     }
 
@@ -147,19 +238,21 @@ export default function NewModal(props: any) {
     }
 
     const createTheme = async () => {
-        await setLoad(true);
+
         if (themeName !== "") {
-            if (await CheckForDBRepo() === false) {
-                if (window.confirm(_("NO_DATABASE"))) {
-                    await createRepo();
-                    await createAllFiles();
+            if (account !== "") {
+                if (await CheckForDBRepo() === false) {
+                    if (window.confirm(_("NO_DATABASE"))) {
+                        await createRepo();
+                        await FilesToGithub();
+                    }
                 }
                 else {
-
+                    await FilesToGithub();
                 }
             }
             else {
-                await createAllFiles();
+                alert("Bitte account angeben")
             }
         }
         else {
@@ -171,10 +264,10 @@ export default function NewModal(props: any) {
         <div>
             <Modal isOpen={props.open}>
                 <ModalHeader>
-                    {_("CREATE_NEW_THEME")}
+                    {props.title}
                 </ModalHeader>
                 <ModalBody>
-                    <input className="form-control default mb-3" type="text" placeholder="Name" onChange={onChangeThemeName} />
+                    <input className="form-control default mb-3" type="text" placeholder="Name" value={themeName} onChange={onChangeThemeName} />
                     {props.user ?
                         <UncontrolledButtonDropdown>
                             <DropdownToggle caret color="outline-secondary">
