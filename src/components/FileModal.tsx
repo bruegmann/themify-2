@@ -81,14 +81,14 @@ export default function FileModal(props: any) {
         let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
         let shaTheme = files.find((o: any) => o.name === "Theme.json");
         let config = {
-            "content": btoa(""),
+            "content": btoa(props.content),
             "message": `Update ${themeName} config`,
             "branch": "main",
             "sha": shaConfig.sha
         }
 
         let json = {
-            "content": btoa(""),
+            "content": btoa(props.content),
             "message": `Update ${themeName} css`,
             "branch": "main",
             "sha": shaTheme.sha
