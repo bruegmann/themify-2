@@ -7,10 +7,10 @@ interface IPhrases {
 
 export const phrases: IPhrases = {
     "HELLO_WORLD": ["Hello World!", "Hallo Welt!"],
-    "SAVE_THEME_LOCAL": ["Save theme locally", "Theme lokal speichern"],
+    "SAVE_AS": ["Save as", "Speichern unter"],
     "RESET_TO_DEFAULT": ["Reset to default", "Zurücksetzen"],
     "SHARE_THIS_CONFIG": ["Share this config", "Diese Konfig teilen"],
-    "SAVE_TO_LIB":["Save to Library", "Speichern in Library"],
+    "SAVE":["Save", "Speichern"],
     "EXPORT_ZIP": ["Export as zip", "Als Zip exportieren"],
     "IMPORT_CONFIG": ["Import config", "Konfig importieren"],
     "EXPORT":["Export ... ","Exportieren ... " ],

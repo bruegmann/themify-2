@@ -37,9 +37,6 @@ export default function LibraryLogin(props: any) {
                 tree = res.tree
             })
 
-
-        console.log(tree)
-
         for (var i = 0; i < tree.length; i++) {
             console.log(i)
             const res = await fetch(`${(window as any).proxy}${tree[i].url}`, {
