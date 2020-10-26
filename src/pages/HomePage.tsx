@@ -216,7 +216,7 @@ function HomePage(props: any) {
                     onChange={(themename: string, account: string) => changeNewModel(themename, account)}
                     user={props.user}
                     access_token={props.access_token}
-                    title="Neues Theme erstellen"
+                    title={_("CREATE_NEW_THEME")}
                 />
                 <FileModal
                     keys={1}
@@ -224,7 +224,7 @@ function HomePage(props: any) {
                     user={props.user}
                     onChange={() => setModalSave(!modalSave)}
                     access_token={props.access_token}
-                    title="Speichern unter"
+                    title={_("SAVE_AS")}
                     contentConfig="test"
                     contentTheme="test22"
                     themeName={themeName}
