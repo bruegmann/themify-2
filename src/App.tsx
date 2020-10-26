@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Grid, SidebarMenu, MenuItem, Utilities } from "blue-react";
 import { Brush, List, Collection, Image, FileText, Gear } from "react-bootstrap-icons";
 
@@ -18,6 +18,7 @@ function App() {
     const [default_CSS, setdefault_CSS] = useState<any>();
     const [default_Version, setdefault_Version] = useState<any>();
 
+
     useEffect(() => {
         if (!default_CSS && !localStorage.getItem("css")) {
             defaultCSS();
@@ -26,8 +27,6 @@ function App() {
         if (!default_Version && !localStorage.getItem("version")) {
             defaultVersion();
         }
-
-
     })
 
     const openBlueDocs = () => {
@@ -102,6 +101,7 @@ function App() {
                 <SidebarMenu
                     bottomContent={
                         <>
+                            <MenuItem href="#/settings" icon={<Gear />} label="Settings" />
                             <GithubLogin
                                 onChange={(usr: any, token: string) => {
                                     setUser(usr);
@@ -114,7 +114,6 @@ function App() {
                     <MenuItem href="#/local-themes" icon={<Image />} label="Local Themes" />
                     <MenuItem href="#/library" icon={<Collection />} label="Library" />
                     <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label="Blue Documentation" />
-                    <MenuItem href="#/settings" icon={<Gear />} label="Settings" />
                 </SidebarMenu>
                 <style
                     type="text/css"

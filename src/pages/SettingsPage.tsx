@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Page, Header, HeaderTitle, Body, Actions, Utilities } from "blue-react";
+import { Page, Header, HeaderTitle, Body, Actions, Utilities, Switch } from "blue-react";
 import { appLogo, appTitle, getPhrase as _ } from "../shared";
 
 
@@ -7,6 +7,7 @@ import { appLogo, appTitle, getPhrase as _ } from "../shared";
 function SettingsPage(props: any) {
     const [BlueReactVersionen, setBlueReactVersionen] = useState<any>();
     const [CSS, setCSS] = useState<any>();
+    const [Checked, setChecked] = useState<any>();
 
     useEffect(() => {
         if (!BlueReactVersionen) {
@@ -70,8 +71,8 @@ function SettingsPage(props: any) {
     }
 
 
-    const getCSS = (version: any, callback?: (e?: any) => void) => {
-        fetch((window as any).themify_proxy + "scss_to_css?version=" + version, {
+    const getCSS = (version: any, css?: any, callback?: (e?: any) => void) => {
+        fetch((window as any).themify_proxy + "scss_to_css?version=" + version + "&css=" + css, {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         })
@@ -95,6 +96,17 @@ function SettingsPage(props: any) {
         console.log(localStorage.getItem("version"));
     }
 
+    const AutoLogin = () => {
+
+        if (!localStorage.getItem("auto_login")) {
+            localStorage.setItem("auto_login", "true")
+            window.location.reload();
+        } else {
+            localStorage.removeItem("auto_login")
+            window.location.reload();
+        }
+    }
+
 
     return (
         <Page hasActions={true} >
@@ -115,6 +127,12 @@ function SettingsPage(props: any) {
                                 item
                             ))}
                         </select>
+                    </div>
+                </div>
+                <div>
+                    <div className="custom-control custom-switch">
+                        <input type="checkbox" className="custom-control-input" id="customSwitch1" onChange={() => AutoLogin()} checked={localStorage.getItem("auto_login") ? true : false} />
+                        <label className="custom-control-label font-weight-normal" htmlFor="customSwitch1">{localStorage.getItem("auto_login") ? "Auto-Login Enabled" : "Auto-Login Disabled"}</label>
                     </div>
                 </div>
             </Body>
