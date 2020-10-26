@@ -8,7 +8,6 @@ import { BrightnessAltHigh } from "react-bootstrap-icons";
 let varibales = require("../data/bootstrap.variables.json")
 let btTypes = require("../data/bootstrap.types.json")
 
-//const bootstrapStyle = require("blue-react/dist/style.scss");
 
 
 const { Sass } = require("../lib/sass")
