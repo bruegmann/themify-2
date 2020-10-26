@@ -92,10 +92,8 @@ function SettingsPage(props: any) {
 
     const installBlueReact = (e: any) => {
         localStorage.setItem("version", e.target.value);
-        const a = `.blue-app-sidebar-label {
-            color: red;
-        }`
-        getCSS(e.target.value, a);
+        const changedCSS = "//"
+        getCSS(e.target.value, changedCSS);
         console.log(localStorage.getItem("version"));
     }
 
