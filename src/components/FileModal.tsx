@@ -7,6 +7,8 @@ export default function FileModal(props: any) {
     const [account, setAccount] = useState<string>("");
     const [load, setLoad] = useState<boolean>(false);
     const [themeName, setThemeName] = useState<string>("");
+    const [contentConfig, setContentConfig] = useState<string>("");
+    const [contentTheme, setContentTheme] = useState<string>("");
 
 
     let files: any = [];
@@ -35,16 +37,23 @@ export default function FileModal(props: any) {
         }
     }, [props.user])
 
+    useEffect(() => {
+        if (contentConfig === "") {
+            setContentConfig(props.contentConfig);
+        }
+    }, [props.contentConfig])
+
+    useEffect(() => {
+        if (contentTheme === "") {
+            setContentTheme(props.contentTheme);
+        }
+    }, [props.contentTheme])
+
 
 
     const submit = async () => {
         await setLoad(true);
-        if (props.keys === 0) {
-            FilesToGithub();
-        }
-        else if (props.keys === 1) {
-            console.log("sace")
-        }
+        createTheme();
     }
 
     const getOrganizations = async () => {
@@ -81,14 +90,14 @@ export default function FileModal(props: any) {
         let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
         let shaTheme = files.find((o: any) => o.name === "Theme.json");
         let config = {
-            "content": btoa(props.content),
+            "content": btoa(contentConfig),
             "message": `Update ${themeName} config`,
             "branch": "main",
             "sha": shaConfig.sha
         }
 
         let json = {
-            "content": btoa(props.content),
+            "content": btoa(contentTheme),
             "message": `Update ${themeName} css`,
             "branch": "main",
             "sha": shaTheme.sha
@@ -111,11 +120,11 @@ export default function FileModal(props: any) {
         });
 
         let res = await response.json();
-        files = res;
         if (response.status === 404) {
             return false;
         }
         else {
+            files = res;
             return true;
         }
     }
@@ -127,13 +136,13 @@ export default function FileModal(props: any) {
         else {
             try {
                 let config = {
-                    "content": btoa(""),
+                    "content": btoa(contentConfig),
                     "message": `Add ${themeName} config`,
                     "branch": "main"
                 }
-        
+
                 let json = {
-                    "content": btoa(""),
+                    "content": btoa(contentTheme),
                     "message": `Add ${themeName} css`,
                     "branch": "main"
                 }
@@ -143,11 +152,19 @@ export default function FileModal(props: any) {
                 Utilities.showSuccess();
                 setTimeout(Utilities.hideSuccess, 2000);
 
-                props.onChange(themeName, account);
+
+
             }
             catch {
                 Utilities.setAlertMessage("Fehler", "warning", true, "Es konnte kein neues Theme erstellt werden")
             }
+        }
+
+        if (props.keys === 0) {
+            props.onChange(themeName, account);
+        }
+        else if (props.keys === 1) {
+            props.onChange();
         }
     }
 
@@ -222,17 +239,19 @@ export default function FileModal(props: any) {
     const createTheme = async () => {
 
         if (themeName !== "") {
-            if (await CheckForDBRepo() === false) {
-                if (window.confirm('Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?')) {
-                    await createRepo();
-                    await FilesToGithub();
+            if (account !== "") {
+                if (await CheckForDBRepo() === false) {
+                    if (window.confirm('Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?')) {
+                        await createRepo();
+                        await FilesToGithub();
+                    }
                 }
                 else {
-
+                    await FilesToGithub();
                 }
             }
             else {
-                await FilesToGithub();
+                alert("Bitte account angeben")
             }
         }
         else {

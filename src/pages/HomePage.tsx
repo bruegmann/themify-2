@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Page, Header, HeaderTitle, Body, Actions, MenuItem, DropdownMenuItem } from "blue-react";
+import { Page, Header, HeaderTitle, Body, Actions, MenuItem, DropdownMenuItem, Utilities } from "blue-react";
 import { BoxArrowUp, Share, FileEarmarkPlus, Gear, Brush, FileZip, CloudUpload } from "react-bootstrap-icons"
 
 import { appLogo, appTitle, getPhrase as _ } from "../shared";
@@ -17,6 +17,10 @@ function HomePage(props: any) {
     const [modalSave, setModalSave] = useState<boolean>(false);
     const [themeName, setThemeName] = useState<string>("");
     const [account, setAccount] = useState<string>("");
+    const [valueConfig, setValueConfig] = useState<string>("");
+    const [valueTheme, setValueTheme] = useState<string>("");
+
+    let files: any = [];
 
     useEffect(() => {
         if (themeName === "") {
@@ -52,6 +56,46 @@ function HomePage(props: any) {
 
     }
 
+    const putFile = async (body: string, file: string) => {
+        let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}/${file}`, {
+            method: "PUT",
+            headers: {
+                Authorization: `token ${props.access_token}`,
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json"
+            },
+            body: body
+
+        });
+        let res = await response.json()
+    }
+
+    const editFile = async () => {
+        let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
+        let shaTheme = files.find((o: any) => o.name === "Theme.json");
+        let config = {
+            "content": btoa(valueConfig),
+            "message": `Update ${themeName} config`,
+            "branch": "main",
+            "sha": shaConfig.sha
+        }
+
+        let json = {
+            "content": btoa(valueTheme),
+            "message": `Update ${themeName} css`,
+            "branch": "main",
+            "sha": shaTheme.sha
+        }
+
+        await putFile(JSON.stringify(config), "AppSettings.config");
+        await putFile(JSON.stringify(json), "Theme.json");
+
+        Utilities.finishLoading();
+        Utilities.showSuccess();
+        setTimeout(Utilities.hideSuccess, 2000);
+
+    }
+
 
     const changeNewModel = (themename: string, account: string) => {
         if (themename && account) {
@@ -68,14 +112,44 @@ function HomePage(props: any) {
         }
     }
 
+    const checkFileExist = async () => {
+        let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}`, {
+            method: "GET",
+            headers: {
+                Authorization: `token ${props.access_token}`,
+                "Content-Type": "application/json",
+                "Accept": "application/vnd.github.v3+json"
+            }
+
+        });
+
+        let res = await response.json();
+        if (response.status === 404) {
+            return false;
+        }
+        else {
+            files = res;
+            return true;
+        }
+    }
+
+    const save = async () => {
+        Utilities.startLoading();
+        if (account !== "" && themeName !== "" && await checkFileExist() === true) {
+            editFile();
+        }
+        else {
+            Utilities.finishLoading();
+            setModalSave(!modalSave);
+        }
+    }
+
 
     return (
         <Page hasActions={true} >
             <Header>
                 <HeaderTitle logo={appLogo} appTitle={appTitle}>Customizer</HeaderTitle>
             </Header>
-
-
 
             <Actions break="xl">
                 {/*  <MenuItem
@@ -92,16 +166,16 @@ function HomePage(props: any) {
                         onClick={() => saveFileToZip()}
                     />
                 </DropdownMenuItem>
-                <DropdownMenuItem
+                <MenuItem
                     icon={<CloudUpload />}
                     label={_("SAVE")}
-                >
-                    <MenuItem
-                        icon={<CloudUpload />}
-                        label={_("SAVE_AS")}
-                        onClick={() => setModalSave(!modalSave)}
-                    />
-                </DropdownMenuItem>
+                    onClick={() => save()}
+                />
+                <MenuItem
+                    icon={<CloudUpload />}
+                    label={_("SAVE_AS")}
+                    onClick={() => setModalSave(!modalSave)}
+                />
                 <MenuItem
                     icon={<Share />}
                     label={_("SHARE_THIS_CONFIG")}
@@ -151,6 +225,8 @@ function HomePage(props: any) {
                     onChange={() => setModalSave(!modalSave)}
                     access_token={props.access_token}
                     title="Speichern unter"
+                    contentConfig="test"
+                    contentTheme="test22"
                     themeName={themeName}
                     account={account}
                 />
