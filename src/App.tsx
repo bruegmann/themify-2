@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Grid, SidebarMenu, MenuItem,Utilities } from "blue-react";
-import { Brush, List, Collection, Image, FileText, XCircleFill, InfoCircleFill, CheckCircleFill, ExclamationCircleFill,Gear } from "react-bootstrap-icons";
-import { getPhrase as _ } from './shared';
+import React, { useEffect, useState, useRef } from "react";
+import { Grid, SidebarMenu, MenuItem, Utilities } from "blue-react";
+import { Brush, List, Collection, Image, FileText, Gear } from "react-bootstrap-icons";
+
 
 //Pages
 import HomePage from "./pages/HomePage";
@@ -97,12 +97,6 @@ function App() {
                     }
 
                 ]}
-                statusIcons={{
-                    danger: <XCircleFill />,
-                    info: <InfoCircleFill />,
-                    success: <CheckCircleFill />,
-                    warning: <ExclamationCircleFill />
-                }}
             >
                 <SidebarMenu
                     bottomContent={
@@ -116,10 +110,10 @@ function App() {
                             />
                         </>
                     }>
-                     <MenuItem href="#/home" icon={<Brush />} label={_("CUSTOMIZER")} isHome />
-                <MenuItem href="#/local-themes" icon={<Image />} label={_("LOCAL_THEME")} />
-                <MenuItem href="#/library" icon={<Collection />} label={_("LIBRARY")} />
-                <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label={_("BLUE_DOCUMENTATION")} />
+                    <MenuItem href="#/home" icon={<Brush />} label="Customizer" isHome />
+                    <MenuItem href="#/local-themes" icon={<Image />} label="Local Themes" />
+                    <MenuItem href="#/library" icon={<Collection />} label="Library" />
+                    <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label="Blue Documentation" />
                 </SidebarMenu>
                 <style
                     type="text/css"
