@@ -12,7 +12,7 @@ export default function LibraryLogin(props: any) {
     useEffect(() => {
         if (props.user) {
             getLibraryItems(props.user.login);
-            getBruegmannLibarys();
+            getBruegmannLibraryItems();
         }
     }, [props.user])
 
@@ -61,7 +61,7 @@ export default function LibraryLogin(props: any) {
         Utilities.finishLoading();
     }
 
-    const getBruegmannLibarys = async () => {
+    const getBruegmannLibraryItems = async () => {
         Utilities.startLoading();
         const bruegmann = "bruegmann"
         var TempItems: any = [];
