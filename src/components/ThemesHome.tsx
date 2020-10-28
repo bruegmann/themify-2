@@ -49,6 +49,7 @@ export default function ThemesHome(props: any) {
     }, [props.value])
 
     useEffect(() => {
+        console.log("js")
         compile();
     }, [outputStyle])
 
@@ -138,7 +139,7 @@ export default function ThemesHome(props: any) {
 
     }
 
-    const getCSS = async (version: any, css: any, callback?: (e?: any) => void) => {
+    const getCSS = (version: any, css: any, callback?: (e?: any) => void) => {
 
         fetch((window as any).themify_proxy + "scss_to_css?version=" + version + "&css=" + css, {
             method: "GET",
@@ -148,7 +149,7 @@ export default function ThemesHome(props: any) {
                 return res.json();
             })
             .then(response => {
-                //Utilities.startLoading();
+                Utilities.startLoading();
                 localStorage.setItem("css", JSON.stringify(response));
                 
                 callback!(
@@ -157,10 +158,11 @@ export default function ThemesHome(props: any) {
             })
     }
 
-    const compile = async () => {
+    const compile = () => {
        // var style = await outputStyle.toString()
+       console.log("f")
         let version = localStorage.getItem("version")
-        await getCSS(version, outputStyle);
+        getCSS(version, outputStyle);
     }
 
 

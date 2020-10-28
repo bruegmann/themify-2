@@ -274,10 +274,10 @@ export default function FileModal(props: any) {
                                 {_("ACCOUNT")}: {account}
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem onClick={() => onChangeAccount(props.user.login)}><img className="avatar mr-2" alt={props.user?.login} src={props.user?.avatar_url} />{props.user?.login}</DropdownItem>
+                                <DropdownItem onClick={() => onChangeAccount(props.user.login)}><img className="rounded-circle align-middle mr-2" alt={props.user?.login} src={props.user?.avatar_url} style={{ width: "30px", height: "30px" }} />{props.user?.login}</DropdownItem>
                                 {
                                     organizations.map((item: any) =>
-                                        <DropdownItem onClick={() => onChangeAccount(item.login)}><img className="avatar mr-2" alt={item.login} src={item.avatar_url} />{item.login}</DropdownItem>
+                                        <DropdownItem onClick={() => onChangeAccount(item.login)}><img className="rounded-circle align-middle mr-2" alt={item.login} src={item.avatar_url} style={{ width: "30px", height: "30px" }}/>{item.login}</DropdownItem>
                                     )
                                 }
                             </DropdownMenu>
