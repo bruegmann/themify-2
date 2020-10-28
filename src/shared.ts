@@ -10,12 +10,14 @@ export const phrases: IPhrases = {
     "SAVE_THEME_LOCAL": ["Save theme locally", "Theme lokal speichern"],
     "RESET_TO_DEFAULT": ["Reset to default", "Zurücksetzen"],
     "SHARE_THIS_CONFIG": ["Share this config", "Diese Konfig teilen"],
-    "SAVE_TO_LIB":["Save to Library", "Speichern in Library"],
+    "SAVE_TO_LIB": ["Save to Library", "Speichern in Library"],
     "EXPORT_ZIP": ["Export as zip", "Als Zip exportieren"],
     "IMPORT_CONFIG": ["Import config", "Konfig importieren"],
-    "EXPORT":["Export ... ","Exportieren ... " ],
-    "NEED_GITHUB_LOGIN":["To use Themify/Library you need to login with Github.","Um Themify/Library zu benutzen, musst du dich mit Github anmelden."],
-    "NEW": ["New", "Neu"]
+    "EXPORT": ["Export ... ", "Exportieren ... "],
+    "NEED_GITHUB_LOGIN": ["To use Themify/Library you need to login with Github.", "Um Themify/Library zu benutzen, musst du dich mit Github anmelden."],
+    "NEW": ["New", "Neu"],
+    "BRUEGMANN_THEME": ["Brügmann Themes", "Brügmann Themes"],
+    "LOCAL_THEMES": ["Local Themes", "Lokale Themes"]
 };
 
 export function getPhrase(keyword: string, countryCode: string | undefined = undefined, _phrases: IPhrases | undefined = undefined) {

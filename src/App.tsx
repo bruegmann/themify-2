@@ -7,7 +7,6 @@ import "./styles/main.scss";
 //Pages
 import HomePage from "./pages/HomePage";
 import LibraryPage from "./pages/LibraryPage";
-import LocalThemesPage from "./pages/LocalThemesPage";
 import GithubLogin from "./components/GithubLogin";
 
 
@@ -33,10 +32,6 @@ function App() {
                             user={user}
                             access_token={access_token}
                         />
-                },
-                {
-                    name: "local-themes",
-                    component: <LocalThemesPage />
                 },
                 {
                     name: "library",
@@ -67,7 +62,6 @@ function App() {
                     </>
                 }>
                 <MenuItem href="#/home" icon={<Brush />} label="Customizer" isHome />
-                <MenuItem href="#/local-themes" icon={<Image />} label="Local Themes" />
                 <MenuItem href="#/library" icon={<Collection />} label="Library" />
                 <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label="Blue Documentation" />
             </SidebarMenu>
