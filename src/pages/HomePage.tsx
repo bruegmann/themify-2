@@ -18,7 +18,7 @@ function HomePage(props: any) {
     const [themeName, setThemeName] = useState<string>("");
     const [account, setAccount] = useState<string>("");
     const [valueConfig, setValueConfig] = useState<string>("");
-    const [valueTheme, setValueTheme] = useState<string>("");
+    const [valueTheme, setValueTheme] = useState<any>();
     const [hashTheme, setHashTheme] = useState<string>("");
 
     let files: any = [];
@@ -160,6 +160,18 @@ function HomePage(props: any) {
         }
     }
 
+    const onChangeConfigHome = (type:string, value:any) =>{
+        if(type === "name"){
+            setThemeName(value);
+        }
+        else if (type ==="value"){
+            setValueConfig(value);
+        }
+        else if (type === "hash"){
+            setHashTheme(value);
+        }
+    }
+
 
     return (
         <Page hasActions={true} >
@@ -223,6 +235,7 @@ function HomePage(props: any) {
                             <ConfigHome
                                 user={props.user}
                                 access_token={props.access_token}
+                                onChange={(value:any) => onChangeConfigHome("value",JSON.parse(value))}
                             />
                         }
                     </div>
@@ -248,6 +261,7 @@ function HomePage(props: any) {
                     account={account}
                 />
             </Body>
+
         </Page>
     );
 }

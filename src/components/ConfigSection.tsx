@@ -34,6 +34,8 @@ export default function ConfigSection(props: any) {
             attribute[i][attrb] = value;
             setChange(!change)
         }
+
+        props.onChange(JSON.stringify(attribute));
     }
 
     const AddAttribute = () => {

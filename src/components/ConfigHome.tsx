@@ -43,6 +43,10 @@ export default function ConfigHome(props: any) {
         })
     }
 
+    const setToValue = () => {
+        console.log(attribute)
+    }
+
 
     const getAttributeTemplate = async (callback: any) => {
         if (props.user && props.access_token) {
@@ -159,9 +163,14 @@ export default function ConfigHome(props: any) {
                         attribute={attribute[item]}
                         name={item}
                         selected={selected}
+                        onChange={(attr: string) => {
+                            props.onChange(attr)
+                        }}
                     />
                 )
             }
+
+            <button onClick={() => console.log(attribute)}>log</button>
         </div>
     )
 }
