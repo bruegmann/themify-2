@@ -106,7 +106,7 @@ export default function LibraryLogin(props: any) {
     return (
         <div className="container">
             <div className="pt-3 row mx-auto">
-                <div className="col-md-12"><h1 className="page-header">{_("LOCAL_THEMES")}</h1></div>
+                <div className="col-md-12"><h1 className="page-header">{`${props.user.login} ${_("THEMES")}`}</h1></div>
 
                 {
                     libraryItems?.map((item: any) =>

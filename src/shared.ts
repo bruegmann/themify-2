@@ -17,7 +17,7 @@ export const phrases: IPhrases = {
     "NEED_GITHUB_LOGIN": ["To use Themify/Library you need to login with Github.", "Um Themify/Library zu benutzen, musst du dich mit Github anmelden."],
     "NEW": ["New", "Neu"],
     "BRUEGMANN_THEME": ["Brügmann Themes", "Brügmann Themes"],
-    "LOCAL_THEMES": ["Local Themes", "Lokale Themes"]
+    "THEMES": ["Themes", "Themes"]
 };
 
 export function getPhrase(keyword: string, countryCode: string | undefined = undefined, _phrases: IPhrases | undefined = undefined) {
