@@ -102,8 +102,8 @@ export default function ThemesHome(props: any) {
             });
             window.parent.document.dispatchEvent(variablesChangeEvent);
         }
-        props.onChange("value",  "/home/" + encodeURIComponent(JSON.stringify(hashObject)));
-        window.location.hash = "/home/" + encodeURIComponent(JSON.stringify(hashObject));
+        props.onChange("hash",  "/home/" + encodeURIComponent(JSON.stringify(hashObject)));
+        //window.location.hash = "/home/" + encodeURIComponent(JSON.stringify(hashObject));
 
     }
 

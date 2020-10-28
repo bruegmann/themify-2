@@ -165,6 +165,7 @@ export default function ConfigHome(props: any) {
                         selected={selected}
                         onChange={(attr: string) => {
                             props.onChange(attr)
+                            console.log(attr)
                         }}
                     />
                 )
