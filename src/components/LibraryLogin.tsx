@@ -7,13 +7,14 @@ import { getPhrase as _ } from '../shared';
 export default function LibraryLogin(props: any) {
 
     const [libraryItems, setLibraryItems] = useState<any[]>();
-    const [bruegmannItems, setBruegmannItems] = useState<any[]>();
+    const [orgItems, setOrgItems] = useState<any[]>();
 
     useEffect(() => {
         if (props.user) {
             getLibraryItems(props.user.login);
-            getBruegmannLibraryItems();
+            getOrgs(props.user.login);
         }
+
     }, [props.user])
 
 
@@ -23,6 +24,8 @@ export default function LibraryLogin(props: any) {
         Utilities.startLoading();
         var TempItems: any = [];
         var tree: any;
+
+
 
         const res = await fetch(`${(window as any).proxy}https://api.github.com/repos/${org}/Themify_DB/git/trees/main`, {
             headers: {
@@ -37,8 +40,11 @@ export default function LibraryLogin(props: any) {
             .then((res: any) => {
                 tree = res.tree
             })
+            .catch((e: any) => {
+                console.log(e);
+            })
 
-        for (var i = 0; i < tree.length; i++) {
+        for (var i = 0; i < tree?.length; i++) {
             const res = await fetch(`${(window as any).proxy}${tree[i].url}`, {
                 headers: {
                     Authorization: `token ${props.access_token}`,
@@ -61,27 +67,28 @@ export default function LibraryLogin(props: any) {
         Utilities.finishLoading();
     }
 
-    const getBruegmannLibraryItems = async () => {
+    const getOrgLibraryItems = async (orgs: any) => {
         Utilities.startLoading();
-        const bruegmann = "bruegmann"
         var TempItems: any = [];
         var tree: any;
-
-        const res = await fetch(`${(window as any).proxy}https://api.github.com/repos/${bruegmann}/Themify_DB/git/trees/main`, {
+        let res: any;
+        res = await fetch(`${(window as any).proxy}https://api.github.com/repos/${orgs}/Themify_DB/git/trees/main`, {
             headers: {
                 Authorization: `token ${props.access_token}`,
                 method: "get",
                 "Content-Type": "application/json",
             }
         });
-
         await res
             .json()
             .then((res: any) => {
                 tree = res.tree
             })
+            .catch((e: any) => {
+                console.log(e);
+            })
 
-        for (var i = 0; i < tree.length; i++) {
+        for (var i = 0; i < tree?.length; i++) {
             const res = await fetch(`${(window as any).proxy}${tree[i].url}`, {
                 headers: {
                     Authorization: `token ${props.access_token}`,
@@ -93,14 +100,34 @@ export default function LibraryLogin(props: any) {
             await res
                 .json()
                 .then((res: any) => {
+
                     for (let i = 0; i < res.tree.length; i++) {
                         TempItems.push(JSON.parse(JSON.stringify(res.tree[i])))
                     }
 
                 })
         }
-        await setBruegmannItems(TempItems);
+        await setOrgItems(TempItems);
         Utilities.finishLoading();
+    }
+
+    const getOrgs = async (username: any) => {
+
+        const res = await fetch(`${(window as any).proxy}https://api.github.com/users/${username}/orgs`, {
+            headers: {
+                Authorization: `token ${props.access_token}`,
+                method: "get",
+                "Content-Type": "application/json",
+            }
+        });
+
+        await res
+            .json()
+            .then((res: any) => {
+                for (let i = 0; i < res.length; i++) {
+                    getOrgLibraryItems(res[i].login)
+                }
+            })
     }
 
     return (
@@ -109,22 +136,26 @@ export default function LibraryLogin(props: any) {
                 <div className="col-md-12"><h1 className="page-header">{`${props.user.login} ${_("THEMES")}`}</h1></div>
 
                 {
-                    libraryItems?.map((item: any) =>
-                        <div className="col-md-6 " key={item.path}>
+                    libraryItems?.map((item: any, key: any) =>
+                        <div className="col-md-6 " key={key}>
                             <ThemeItem
                                 name={item.path}
                                 hash={item.url}
+                                username={props.user.login}
+                                access_token={props.access_token}
                             />
                         </div>
                     )
                 }
-                <div className="col-md-12"><h1 className="page-header">{_("BRUEGMANN_THEME")}</h1></div>
+                <div className="col-md-12"><h1 className="page-header">{_("ORG_THEME")}</h1></div>
                 {
-                    bruegmannItems?.map((item: any, key: any) =>
+                    orgItems?.map((item: any, key: any) =>
                         <div className="col-md-6" key={key}>
                             <ThemeItem
                                 name={item.path}
                                 hash={item.url}
+                                username={item.url.slice(29, 38)}
+                                access_token={props.access_token}
                             />
                         </div>
                     )

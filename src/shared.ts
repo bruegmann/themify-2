@@ -16,7 +16,7 @@ export const phrases: IPhrases = {
     "EXPORT": ["Export ... ", "Exportieren ... "],
     "NEED_GITHUB_LOGIN": ["To use Themify/Library you need to login with Github.", "Um Themify/Library zu benutzen, musst du dich mit Github anmelden."],
     "NEW": ["New", "Neu"],
-    "BRUEGMANN_THEME": ["Brügmann Themes", "Brügmann Themes"],
+    "ORG_THEME": ["Organisation Themes", "Organisations Themes"],
     "THEMES": ["Themes", "Themes"]
 };
 
