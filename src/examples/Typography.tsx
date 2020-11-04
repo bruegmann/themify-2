@@ -1,8 +1,8 @@
 
 import React from 'react'
 
-let headings: any = [];
-let displays: any = [];
+let headings: any[] = [];
+let displays: any[] = [];
 
 for (let i = 1; i <= 6; i++) {
     headings.push(i);
