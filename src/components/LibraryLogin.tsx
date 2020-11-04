@@ -68,44 +68,51 @@ export default function LibraryLogin(props: any) {
     }
 
     const getOrgLibraryItems = async (orgs: any) => {
-        Utilities.startLoading();
-        var TempItems: any = [];
-        var tree: any;
-        let res: any;
-        res = await fetch(`${(window as any).proxy}https://api.github.com/repos/${orgs}/Themify_DB/git/trees/main`, {
-            headers: {
-                Authorization: `token ${props.access_token}`,
-                method: "get",
-                "Content-Type": "application/json",
-            }
-        });
-        await res
-            .json()
-            .then((res: any) => {
-                tree = res.tree
-            })
-            .catch((e: any) => {
-                console.log(e);
-            })
+        var tree: any[] = [];
+        var TempItems: any[] = [];
+        for (let j = 0; j < orgs.length; j++) {
+            Utilities.startLoading();
 
-        for (var i = 0; i < tree?.length; i++) {
-            const res = await fetch(`${(window as any).proxy}${tree[i].url}`, {
+            let res: any;
+            res = await fetch(`${(window as any).proxy}https://api.github.com/repos/${orgs[j].login}/Themify_DB/git/trees/main`, {
                 headers: {
                     Authorization: `token ${props.access_token}`,
                     method: "get",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 }
             });
-
             await res
                 .json()
                 .then((res: any) => {
-
-                    for (let i = 0; i < res.tree.length; i++) {
-                        TempItems.push(JSON.parse(JSON.stringify(res.tree[i])))
-                    }
-
+                    tree.push(res.tree);
                 })
+                .catch((e: any) => {
+                    console.log(e);
+                })
+
+
+        }
+        for (var i = 0; i < tree?.length; i++) {
+            for (var k = 0; k < tree[i].length; k++) {
+                const res = await fetch(`${(window as any).proxy}${tree[i][k].url}`, {
+                    headers: {
+                        Authorization: `token ${props.access_token}`,
+                        method: "get",
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                await res
+                    .json()
+                    .then((res: any) => {
+
+                        for (let l = 0; l < res.tree.length; l++) {
+                            TempItems.push(JSON.parse(JSON.stringify(res.tree[l])))
+                        }
+
+                    })
+            }
+
         }
         await setOrgItems(TempItems);
         Utilities.finishLoading();
@@ -124,9 +131,7 @@ export default function LibraryLogin(props: any) {
         await res
             .json()
             .then((res: any) => {
-                for (let i = 0; i < res.length; i++) {
-                    getOrgLibraryItems(res[i].login)
-                }
+                getOrgLibraryItems(res)
             })
     }
 
