@@ -142,8 +142,8 @@ export default function ThemesHome(props: any) {
 
 
     return (
-        <div>
-            <div className="col-md-5">
+        <div className="col-md-5">
+            <div>
                 <ThemeName
                     name={themeName}
                     onChange={(value: string) => { props.onChange(value) }}
