@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Grid, SidebarMenu, MenuItem,Utilities } from "blue-react";
-import { Brush, List, Collection, Image, FileText, XCircleFill, InfoCircleFill, CheckCircleFill, ExclamationCircleFill,Gear } from "react-bootstrap-icons";
+import { Grid, SidebarMenu, MenuItem, Utilities } from "blue-react";
+import { Brush, List, Collection, Image, FileText, XCircleFill, InfoCircleFill, CheckCircleFill, ExclamationCircleFill, Gear } from "react-bootstrap-icons";
 import { getPhrase as _ } from './shared';
 
 //Pages
 import HomePage from "./pages/HomePage";
 import LibraryPage from "./pages/LibraryPage";
-import LocalThemesPage from "./pages/LocalThemesPage";
 import GithubLogin from "./components/GithubLogin";
 import SettingsPage from "./pages/SettingsPage";
 
@@ -84,10 +83,6 @@ function App() {
                             <SettingsPage />
                     },
                     {
-                        name: "local-themes",
-                        component: <LocalThemesPage />
-                    },
-                    {
                         name: "library",
                         component:
                             <LibraryPage
@@ -116,10 +111,9 @@ function App() {
                             />
                         </>
                     }>
-                     <MenuItem href="#/home" icon={<Brush />} label={_("CUSTOMIZER")} isHome />
-                <MenuItem href="#/local-themes" icon={<Image />} label={_("LOCAL_THEME")} />
-                <MenuItem href="#/library" icon={<Collection />} label={_("LIBRARY")} />
-                <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label={_("BLUE_DOCUMENTATION")} />
+                    <MenuItem href="#/home" icon={<Brush />} label={_("CUSTOMIZER")} isHome />
+                    <MenuItem href="#/library" icon={<Collection />} label={_("LIBRARY")} />
+                    <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label={_("BLUE_DOCUMENTATION")} />
                 </SidebarMenu>
                 <style
                     type="text/css"
