@@ -6,6 +6,8 @@ import { appLogo, appTitle, getPhrase as _ } from "../shared";
 import ThemesHome from "../components/ThemesHome";
 import ConfigHome from "../components/ConfigHome";
 import FileModal from "../components/FileModal";
+import JSZip from "jszip";
+import { saveAs } from 'file-saver';
 
 
 
@@ -52,8 +54,120 @@ function HomePage(props: any) {
         }
     }
 
-    const saveFileToZip = () => {
 
+    const saveFileToZip = async (org: any) => {
+
+        let array: any;
+
+        const res = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/Library/${themeName}`, {
+            headers: {
+                Authorization: `token ${props.access_token}`,
+                method: "get",
+                "Content-Type": "application/json"
+            }
+        });
+
+        await res
+            .json()
+            .then(res => {
+                array = res;
+            })
+
+        var zip = new JSZip();
+
+        let arr1: any = [];
+        let arr2: any = [];
+        let folder: any;
+
+        for (let i = 0; i < array.length; i++) {
+
+            if (array[i].type === "dir") {
+
+                folder = zip.folder(array[i].name);
+
+                const response = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/${array[i].path}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": `token ${props.access_token}`
+                    }
+                })
+                    .then((res: any) => {
+                        return res.json()
+                    })
+                    .then((resp: any) => {
+                        if (resp.length >= 0) {
+                            for (let a = 0; a < resp.length; a++) {
+                                arr1.push(resp[a]);
+                            }
+                        }
+                    })
+
+            }
+            else {
+
+                const response = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/${array[i].path}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": `token ${props.access_token}`
+                    }
+                })
+                    .then((res: any) => {
+                        return res.json()
+                    })
+                    .then((resp: any) => {
+                        arr2.push(resp);
+                    })
+
+            }
+        }
+
+        for (let k = 0; k < arr1.length; k++) {
+
+            const get = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/${arr1[k].path}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": `token ${props.access_token}`
+                }
+            })
+                .then((res: any) => {
+                    return res.json();
+                })
+                .then((response: any) => {
+                    folder.file(response.name, atob(response.content))
+                })
+
+        }
+
+        for (let j = 0; j < arr2.length; j++) {
+
+            const get = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/${arr2[j].path}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": `token ${props.access_token}`
+                }
+            })
+                .then((res: any) => {
+                    return res.json();
+                })
+                .then((response: any) => {
+                    zip.file(response.name, atob(response.content))
+                })
+
+        }
+
+        if (Object.keys(zip.files).length > 1) {
+            await zip.generateAsync({ type: "blob" }).then((content: any) => {
+                saveAs(content, `${themeName}.zip`);
+            })
+        }
     }
 
     const putFile = async (body: string, file: string) => {
@@ -163,7 +277,7 @@ function HomePage(props: any) {
                     <MenuItem
                         icon={<FileZip />}
                         label={_("EXPORT_ZIP")}
-                        onClick={() => saveFileToZip()}
+                        onClick={() => saveFileToZip(props.user.login)}
                     />
                 </DropdownMenuItem>
                 <MenuItem
