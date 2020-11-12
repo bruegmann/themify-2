@@ -11,7 +11,7 @@ export const phrases: IPhrases = {
     "RESET_TO_DEFAULT": ["Reset to default", "Zurücksetzen"],
     "SHARE_THIS_CONFIG": ["Share this config", "Diese Konfig teilen"],
     "SAVE_TO_LIB": ["Save to Library", "Speichern in Library"],
-    "SAVE":["Save", "Speichern"],
+    "SAVE": ["Save", "Speichern"],
     "EXPORT_ZIP": ["Export as zip", "Als Zip exportieren"],
     "IMPORT_CONFIG": ["Import config", "Konfig importieren"],
     "EXPORT": ["Export ... ", "Exportieren ... "],
@@ -40,7 +40,9 @@ export const phrases: IPhrases = {
     "BLUE_DOCUMENTATION": ["Blue Documentation", "Blue Dokumentation"],
     "NO_DATABASE": ["There doesn't seem to be a database yet. Do you want to create a database?", "Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?"],
     "ORG_THEME": ["Organisation Themes", "Organisations Themes"],
-    "THEMES": ["Themes", "Themes"]
+    "THEMES": ["Themes", "Themes"],
+    "EXPORT_CONFIG": ["Export Config File", "Config Datei exportieren"],
+    "EXPORT_CSS": ["Export CSS File", "CSS Datei exportieren"]
 };
 
 export function getPhrase(keyword: string, countryCode: string | undefined = undefined, _phrases: IPhrases | undefined = undefined) {

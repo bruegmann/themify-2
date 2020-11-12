@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Page, Header, HeaderTitle, Body, Actions, MenuItem, DropdownMenuItem, Utilities } from "blue-react";
-import { BoxArrowUp, Share, FileEarmarkPlus, Gear, Brush, FileZip, CloudUpload } from "react-bootstrap-icons"
+import { BoxArrowUp, Share, FileEarmarkPlus, Gear, Brush, FileZip, CloudUpload, FileCode } from "react-bootstrap-icons"
 
 import { appLogo, appTitle, getPhrase as _ } from "../shared";
 import ThemesHome from "../components/ThemesHome";
@@ -170,6 +170,113 @@ function HomePage(props: any) {
         }
     }
 
+    const getConfig = async (org: any) => {
+
+        let array: any;
+
+        const res = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/Library/${themeName}`, {
+            headers: {
+                Authorization: `token ${props.access_token}`,
+                method: "get",
+                "Content-Type": "application/json"
+            }
+        });
+
+        await res
+            .json()
+            .then(res => {
+                array = res;
+            })
+
+
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].name === "AppSettings.config") {
+                const response = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/${array[i].path}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": `token ${props.access_token}`
+                    }
+                })
+                    .then((res: any) => {
+                        return res.json()
+                    })
+                    .then((resp: any) => {
+
+                        const get = fetch(`${(window as any).themify_proxy}${resp.download_url}`, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json",
+                                "Authorization": `token ${props.access_token}`,
+                            }
+
+                        })
+                            .then((res: any) => {
+                                return res.blob();
+                            })
+                            .then((response: any) => {
+                                saveAs(response, "AppSettings.config")
+                            })
+                    })
+            }
+        }
+    }
+
+    const getThemeCSS = async (org: any) => {
+        let array: any;
+
+        const res = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/Library/${themeName}`, {
+            headers: {
+                Authorization: `token ${props.access_token}`,
+                method: "get",
+                "Content-Type": "application/json"
+            }
+        });
+
+        await res
+            .json()
+            .then(res => {
+                array = res;
+            })
+
+
+        for (let i = 0; i < array.length; i++) {
+            if (array[i].name === "Theme.json") {
+                const response = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/${array[i].path}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "Authorization": `token ${props.access_token}`
+                    }
+                })
+                    .then((res: any) => {
+                        return res.json()
+                    })
+                    .then((resp: any) => {
+
+                        const get = fetch(`${(window as any).themify_proxy}${resp.download_url}`, {
+                            method: "GET",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json",
+                                "Authorization": `token ${props.access_token}`,
+                            }
+
+                        })
+                            .then((res: any) => {
+                                return res.blob();
+                            })
+                            .then((response: any) => {
+                                saveAs(response, "Theme.css")
+                            })
+                    })
+            }
+        }
+    }
+
     const putFile = async (body: string, file: string) => {
         let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}/${file}`, {
             method: "PUT",
@@ -278,6 +385,16 @@ function HomePage(props: any) {
                         icon={<FileZip />}
                         label={_("EXPORT_ZIP")}
                         onClick={() => saveFileToZip(props.user.login)}
+                    />
+                    <MenuItem
+                        icon={<FileCode />}
+                        label={_("EXPORT_CONFIG")}
+                        onClick={() => getConfig(props.user.login)}
+                    />
+                    <MenuItem
+                        icon={<FileCode />}
+                        label={_("EXPORT_CSS")}
+                        onClick={() => getThemeCSS(props.user.login)}
                     />
                 </DropdownMenuItem>
                 <MenuItem
