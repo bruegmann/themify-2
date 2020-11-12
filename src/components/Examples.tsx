@@ -32,7 +32,7 @@ export default function Examples(props: any) {
     )
 
     return (
-        <div className="col-md-7">
+        <div>
 
             <h1 className="display-4 mt-4 mb-3">{"Examples"}</h1>
 

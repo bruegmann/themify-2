@@ -6,7 +6,6 @@ import { appLogo, appTitle, getPhrase as _ } from "../shared";
 import ThemesHome from "../components/ThemesHome";
 import ConfigHome from "../components/ConfigHome";
 import FileModal from "../components/FileModal";
-import Examples from "../components/Examples";
 
 
 
@@ -20,7 +19,6 @@ function HomePage(props: any) {
     const [account, setAccount] = useState<string>("");
     const [valueConfig, setValueConfig] = useState<string>("");
     const [valueTheme, setValueTheme] = useState<string>("");
-    const [activeTab, setActiveTab] = useState<number>(0);
 
     let files: any = [];
 
@@ -199,16 +197,11 @@ function HomePage(props: any) {
                     <hr />
                     <div>
                         {SelectedThemeConfig === 0 ?
-                            <div className="row">
-                                <ThemesHome
-                                    name={themeName}
-                                    onChange={(value: string) => setThemeName(value)}
-                                />
-                                <Examples
-                                    activeTab={activeTab}
-                                    onClick={(i: any) => setActiveTab(i)}
-                                />
-                            </div>
+                            <ThemesHome
+                                name={themeName}
+                                onChange={(value: string) => setThemeName(value)}
+                                defaultCSS={props.defaultCSS}
+                            />
                             :
                             <ConfigHome
                                 user={props.user}

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import VariableGroup from "./VariableGroup";
 import ThemeName from "./ThemeName";
-import { BrightnessAltHigh } from "react-bootstrap-icons";
+import TextFieldWithTimer from "./TextFieldWithTimer";
+import Examples from "./Examples";
+import { getPhrase as _ } from "../shared";
+import { Utilities } from "blue-react";
 
 
 
@@ -28,6 +31,9 @@ export default function ThemesHome(props: any) {
     const [btHashVars, setbtHashVars] = useState<any[]>([]);
     const [compileBusy, setCompileBusy] = useState<Boolean>(false);
     const [themeName, setThemeName] = useState<String>("");
+    const [activeTab, setActiveTab] = useState<number>(0);
+    const [error, setError] = useState<any>();
+    const [resultStyle, setResultStyle] = useState<any>();
 
     useEffect(() => {
         if (Variables.length === 0) {
@@ -40,6 +46,7 @@ export default function ThemesHome(props: any) {
             setVarType();
             setVariables(varibales);
             setbtVariables(tempbtVariable);
+            afterValueChange();
         }
 
     }, [Variables])
@@ -47,6 +54,24 @@ export default function ThemesHome(props: any) {
     useEffect(() => {
         setThemeName(props.name);
     }, [props.name])
+
+    useEffect(() => {
+        if (customStyle) {
+            setCustomStyle(customStyle);
+            afterValueChange();
+        } else {
+            afterValueChange();
+        }
+    }, [customStyle])
+
+
+    useEffect(() => {
+        if (compileBusy) {
+            Utilities.startLoading();
+        } else {
+            Utilities.finishLoading();
+        }
+    }, [compileBusy])
 
     const setVarType = () => {
         Object.keys(varibales).map((item: any) => {
@@ -80,13 +105,18 @@ export default function ThemesHome(props: any) {
             }
         })
 
-        const hashObject = {
+        const hashObject: any = {
             name: themeName,
             btHashVars: btHashVars
         }
 
-        //TODO: if activeTab >> HomePage.js
-        //TODO: if customStyle >> HomePage.js
+        if (activeTab != 0) {
+            hashObject.activeTab = activeTab;
+        }
+
+        if (customStyle != "") {
+            hashObject.customStyle = customStyle;
+        }
 
         if (window.parent) {
             const variablesChangeEvent = new CustomEvent("variablesChangeEvent", {
@@ -103,7 +133,7 @@ export default function ThemesHome(props: any) {
         return `/*\nOpen the following link to edit this config on Themify\n${window.location.href}\n*/\n`;
     }
 
-    const jsVarToSass = async () => {
+    const jsVarToSass = async (callback?: any) => {
         setOutputStyle("");
         var tempOutputStyle: string = "";
 
@@ -128,22 +158,47 @@ export default function ThemesHome(props: any) {
             tempOutputStyle = getComment() + tempOutputStyle
         }
         await setOutputStyle(tempOutputStyle)
+        if (callback!) {
+            callback();
+        }
 
     }
 
-    const compile = () => {
-        //          var style = outputStyle;
+    const compile = (callback?: any) => {
+        // let style: string;
+        // if (props.defaultCSS && !localStorage.getItem("css")) {
+        //     style = outputStyle + JSON.parse(JSON.stringify(props.defaultCSS));
+        // } else if (localStorage.getItem("css")) {
+        //     style = outputStyle + JSON.parse(localStorage.getItem("css")!)
+        // }
 
-        // sass.compile(style, (result:any) => {
+        // console.log(style!);
+        // setCompileBusy(true);
+        // sass.compile(style!, (result: any) => {
+        //     setCompileBusy(false);
         //     console.log(result)
-        //   })
+        //     if (result.status === 1) {
+        //         setError(result)
+        //     }
+
+        //     if (result.text) {
+        //         setResultStyle(result.text);
+        //         //localStorage.setItem("css", JSON.stringify(result.text));
+        //         setError(null);
+        //         if (callback!) {
+        //             callback();
+        //         }
+        //     }
+        // })
+
 
     }
+
 
 
     return (
-        <div className="col-md-5">
-            <div>
+        <div className="row">
+            <div className="col-md-5">
                 <ThemeName
                     name={themeName}
                     onChange={(value: string) => { props.onChange(value) }}
@@ -168,6 +223,50 @@ export default function ThemesHome(props: any) {
                     />
                 )
                 }
+            </div>
+            <div className="col-md-7">
+                <div className="form-group">
+                    <TextFieldWithTimer
+                        type="textarea"
+                        className="form-control default"
+                        onChange={(value: any) => setCustomStyle(value)}
+                        placeholder={_("CUSTOM_STYLE_PLACEHOLDER")}
+                        spellCehck={false}
+                    />
+                    {
+                        error?.message &&
+                        <div className="container pl-0 pr-0 mt-1">
+                            <div className=" alert alert-danger">
+                                <button className="close" onClick={() => setError(null)}>&times;</button>
+
+                                <h4>{_("SOMETHING_WENT_WRONG")} 🤔</h4>
+                                <p style={{ whiteSpace: "pre-wrap" }}>
+                                    {_("COMPILE_ERROR_TXT")}
+                                </p>
+
+                                <p>
+                                    {_("THIS_IS_ERROR_MESSAGE")}
+                                    <code>{error.message}</code>
+                                </p>
+                            </div>
+                        </div>
+                    }
+                    <div className="mt-2 mb-2">
+                        <textarea
+                            className="form-control default"
+                            value={outputStyle}
+                            readOnly
+                            disabled
+                            placeholder={_("OUTPUT_STYLE_PLACEHOLDER")}
+                            style={{ minHeight: "200px", wordWrap: "inherit" }}
+                            spellCheck={false}
+                        />
+                    </div>
+                </div>
+                <Examples
+                    activeTab={activeTab}
+                    onClick={(i: any) => { setActiveTab(i); setHash() }}
+                />
             </div>
         </div>
     )
