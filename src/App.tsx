@@ -45,7 +45,6 @@ function App() {
 
 
                 setdefault_CSS(response);
-
             })
     }
 
@@ -75,6 +74,7 @@ function App() {
                             <HomePage
                                 user={user}
                                 access_token={access_token}
+                                defaultCSS={default_CSS}
                             />
                     },
                     {
@@ -112,6 +112,7 @@ function App() {
                         </>
                     }>
                     <MenuItem href="#/home" icon={<Brush />} label={_("CUSTOMIZER")} isHome />
+                    <MenuItem href="#/local-themes" icon={<Image />} label={_("LOCAL_THEME")} />
                     <MenuItem href="#/library" icon={<Collection />} label={_("LIBRARY")} />
                     <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label={_("BLUE_DOCUMENTATION")} />
                 </SidebarMenu>

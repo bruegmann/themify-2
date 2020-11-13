@@ -258,7 +258,6 @@ function HomePage(props: any) {
         }
     }
 
-
     return (
         <Page hasActions={true} >
             <Header>
@@ -315,6 +314,7 @@ function HomePage(props: any) {
                             <ThemesHome
                                 name={themeName}
                                 onChange={(value: string) => setThemeName(value)}
+                                defaultCSS={props.defaultCSS}
                             />
                             :
                             <ConfigHome

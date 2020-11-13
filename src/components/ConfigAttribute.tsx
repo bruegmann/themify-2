@@ -194,6 +194,7 @@ export default function ConfigAttribute(props: any) {
                         {type === "file" ?
                             <div className="custom-file">
                                 <CustomInput
+                                    {...props}
                                     onDoubleClick={() => { setValue(props.default) }}
                                     onChange={onChangeFile}
                                     type="file"
