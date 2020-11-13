@@ -23,6 +23,16 @@ export default function ConfigHome(props: any) {
     }, [props.user && props.access_token]);
 
     useEffect(() => {
+        if (props.value) {
+            console.log(props.value)
+            console.log(attribute)
+            console.log(selected)
+            attribute[selected] = props.value
+            setChange(!change);
+        }
+    }, [props.value])
+
+    useEffect(() => {
         var ls = String(localStorage.getItem("template"));
 
         if (ls !== "null" && props.user !== undefined) {
@@ -163,7 +173,7 @@ export default function ConfigHome(props: any) {
                         attribute={attribute[item]}
                         name={item}
                         selected={selected}
-                        onChange={(attr: string) => {
+                        onChange={(attr: string, type?:string) => {
                             props.onChange(attr)
                             console.log(attr)
                         }}

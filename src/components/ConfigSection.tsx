@@ -49,7 +49,8 @@ export default function ConfigSection(props: any) {
             "editable": true
         }
         attribute.push(temp);
-        setChange(!change)
+        setChange(!change);
+        props.onChange(JSON.stringify(attribute));
     }
 
 

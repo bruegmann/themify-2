@@ -26,10 +26,8 @@ function HomePage(props: any) {
         if (themeName === "") {
             try {
                 let hash = window.location.hash;
-                console.log(hash)
                 if (hash) {
                     let hashObject = JSON.parse(decodeURIComponent(hash.replace("#/home/", "")));
-                    console.log(hashObject)
                     setThemeName(hashObject.name);
                     setAccount(hashObject.account)
                 }
@@ -48,7 +46,6 @@ function HomePage(props: any) {
 
     useEffect(() => {
         if (hashTheme) {
-            console.log("h")
             setHash();
         }
     }, [hashTheme])
@@ -85,18 +82,26 @@ function HomePage(props: any) {
         let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
         let shaTheme = files.find((o: any) => o.name === "Theme.json");
         let config = {
-            "content": btoa(valueConfig),
+            "content": btoa(JSON.stringify(valueConfig)),
             "message": `Update ${themeName} config`,
             "branch": "main",
             "sha": shaConfig.sha
         }
 
+        console.log(valueConfig);
+
+        let jsonContent = {
+            "name": themeName,
+            "link": hashTheme
+        }
+
         let json = {
-            "content": btoa(valueTheme),
+            "content": btoa(JSON.stringify(jsonContent)),
             "message": `Update ${themeName} css`,
             "branch": "main",
             "sha": shaTheme.sha
         }
+
 
         await putFile(JSON.stringify(config), "AppSettings.config");
         await putFile(JSON.stringify(json), "Theme.json");
@@ -154,7 +159,7 @@ function HomePage(props: any) {
         }
     }
 
-    const onChangeThemeHome =  (type: string, value: string) => {
+    const onChangeThemeHome = (type: string, value: string) => {
         if (type === "name") {
             setThemeName(value);
         }
@@ -163,13 +168,14 @@ function HomePage(props: any) {
             setValueTheme(value);
         }
         else if (type === "hash") {
-             setHashTheme(value);
+            setHashTheme(value);
             //setHash();
         }
 
     }
 
     const onChangeConfigHome = (type: string, value: any) => {
+        console.log(value)
         if (type === "name") {
             //setThemeName(value);
         }
@@ -179,6 +185,13 @@ function HomePage(props: any) {
         else if (type === "hash") {
             //setHashTheme(value);
         }
+        else if (type === "add") {
+
+        }
+    }
+
+    const AddConfigAttribute = () => {
+
     }
 
     const setHash = () => {
@@ -249,7 +262,8 @@ function HomePage(props: any) {
                             <ConfigHome
                                 user={props.user}
                                 access_token={props.access_token}
-                                onChange={(value: string) => onChangeConfigHome("value", JSON.parse(value))}
+                                value={valueConfig}
+                                onChange={(value: string, type?: string) => onChangeConfigHome(type ? type : "value", JSON.parse(value))}
                             />
                         }
                     </div>
