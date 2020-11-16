@@ -14,13 +14,7 @@ export default function ConfigHome(props: any) {
         if (Object.keys(attribute).length === 0) {
             SetUp();
         }
-    }, [attribute])
-
-    useEffect(() => {
-        getAttributeTemplate(() => {
-
-        })
-    }, [props.user && props.access_token]);
+    }, [attribute, props])
 
     useEffect(() => {
         var ls = String(localStorage.getItem("template"));
@@ -34,69 +28,17 @@ export default function ConfigHome(props: any) {
 
     }, [props])
 
+
     const toggle = () => setDropdownOpen(!dropdownOpen);
 
-    const SetUp = async () => {
-        await setAttribute({ "none": [] });
-        getAttributeTemplate(() => {
+    const SetUp = () => {
+        let attr: any;
+        if (props.defaultTemplate) {
+            attr = JSON.parse(props.defaultTemplate.content);
+            attribute[props.defaultTemplate.org] = attr;
+            //setChange(!change); 
+            setAttribute({ "none": [], "Brügmann": attr });
             setStartValue();
-        })
-    }
-
-
-    const getAttributeTemplate = async (callback: any) => {
-        if (props.user && props.access_token) {
-            const res = await fetch(`${(window as any).proxy}${props.user.organizations_url}`, {
-                headers: {
-                    Authorization: `token ${props.access_token}`,
-                    method: "get",
-                    "Content-Type": "application/json"
-                }
-            });
-
-            await res
-                .json()
-                .then(async org => {
-                    for (var i = 0; i < org.length; i++) {
-                        var company = org[i].login;
-                        var repo = await fetch(`${(window as any).proxy}https://api.github.com/repos/${org[i].login}/themify-library/git/trees/main`, {
-                            headers: {
-                                Authorization: `token ${props.access_token}`,
-                                method: "get",
-                                "Content-Type": "application/json"
-                            }
-                        })
-
-                        await repo
-                            .json()
-                            .then(async files => {
-                                await files.tree.findIndex(async (item: any) => {
-                                    if (item.path === "themify-library-template.json") {
-                                        var file = await fetch(`${(window as any).proxy}${item.url}`, {
-                                            headers: {
-                                                Authorization: `token ${props.access_token}`,
-                                                method: "get",
-                                                "Content-Type": "application/json"
-                                            }
-                                        })
-
-                                        await file
-                                            .json()
-                                            .then((data) => {
-                                                var attr = JSON.parse(atob(data.content));
-                                                attribute[company] = attr;
-                                                setChange(!change);
-                                            }
-                                            );
-                                    }
-                                })
-                            })
-                    }
-                })
-        }
-
-        if (callback) {
-            callback();
         }
     }
 
@@ -134,7 +76,6 @@ export default function ConfigHome(props: any) {
             localStorage.removeItem("template");
         }
     }
-
 
     return (
         <div>
