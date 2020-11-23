@@ -92,17 +92,19 @@ export default function ThemesHome(props: any) {
             name: themeName,
             btHashVars
         }
+        console.log(btHashVars)
 
         //TODO: if activeTab >> HomePage.js
         //TODO: if customStyle >> HomePage.js
 
-        if (window.parent) {
-            const variablesChangeEvent = new CustomEvent("variablesChangeEvent", {
-                detail: hashObject
-            });
-            window.parent.document.dispatchEvent(variablesChangeEvent);
-        }
-        props.onChange("hash",  "/home/" + encodeURIComponent(JSON.stringify(hashObject)));
+        // if (window.parent) {
+        //     const variablesChangeEvent = new CustomEvent("variablesChangeEvent", {
+        //         detail: hashObject
+        //     });
+        //     window.parent.document.dispatchEvent(variablesChangeEvent);
+        // }
+       // props.onChange("hash",  "/home/" + encodeURIComponent(JSON.stringify(hashObject)));
+        props.onChange("value", btHashVars);
         //window.location.hash = "/home/" + encodeURIComponent(JSON.stringify(hashObject));
 
     }
@@ -130,12 +132,14 @@ export default function ThemesHome(props: any) {
             }
         })
 
+        console.log(tempOutputStyle)
         tempOutputStyle = customStyle + "\n\n" + tempOutputStyle;
 
         if (tempOutputStyle !== "") {
             tempOutputStyle = getComment() + tempOutputStyle
         }
-        props.onChange("value", tempOutputStyle.toString())
+
+        //props.onChange("value", tempOutputStyle.toString())
 
     }
 
@@ -180,6 +184,7 @@ export default function ThemesHome(props: any) {
                         GroupName={item}
                         items={Variables[item]}
                         onChange={async (value: any, key: any) => {
+                            console.log(value)
                             if (await value == "") {
                                 delete btVariables[item][key]
                                 delete btHashVars[key]

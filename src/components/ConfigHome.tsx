@@ -24,9 +24,6 @@ export default function ConfigHome(props: any) {
 
     useEffect(() => {
         if (props.value) {
-            console.log(props.value)
-            console.log(attribute)
-            console.log(selected)
             attribute[selected] = props.value
             setChange(!change);
         }
@@ -52,12 +49,7 @@ export default function ConfigHome(props: any) {
             setStartValue();
         })
     }
-
-    const setToValue = () => {
-        console.log(attribute)
-    }
-
-
+    
     const getAttributeTemplate = async (callback: any) => {
         if (props.user && props.access_token) {
             const res = await fetch(`${(window as any).proxy}${props.user.organizations_url}`, {
@@ -180,8 +172,6 @@ export default function ConfigHome(props: any) {
                     />
                 )
             }
-
-            <button onClick={() => console.log(attribute)}>log</button>
         </div>
     )
 }

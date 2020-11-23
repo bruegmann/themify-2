@@ -19,6 +19,7 @@ function HomePage(props: any) {
     const [valueConfig, setValueConfig] = useState<any>();
     const [valueTheme, setValueTheme] = useState<any>();
     const [hashTheme, setHashTheme] = useState<string>("");
+    const [hashConfig, setHashConfig] = useState<string>("");
 
     let files: any = [];
 
@@ -49,6 +50,15 @@ function HomePage(props: any) {
             setHash();
         }
     }, [hashTheme])
+
+    const changeHash = () =>{
+
+        console.log(valueTheme)
+        // const hashObject = {
+        //     name: themeName,
+        //     btHashVars
+        // }
+    }
 
 
     const getClassSelectedThemeConfig = (value: number) => {
@@ -159,18 +169,20 @@ function HomePage(props: any) {
         }
     }
 
-    const onChangeThemeHome = (type: string, value: string) => {
+    const onChangeThemeHome = async(type: string, value: any) => {
+        console.log(type, value)
         if (type === "name") {
             setThemeName(value);
         }
         else if (type === "value") {
-            console.log(value)
             setValueTheme(value);
         }
         else if (type === "hash") {
             setHashTheme(value);
             //setHash();
         }
+        changeHash();
+
 
     }
 
@@ -256,7 +268,7 @@ function HomePage(props: any) {
                             <ThemesHome
                                 name={themeName}
                                 value={valueTheme}
-                                onChange={(type: string, value: string) => onChangeThemeHome(type, value)}
+                                onChange={(type: string, value: any) => onChangeThemeHome(type, value)}
                             />
                             :
                             <ConfigHome
@@ -283,8 +295,8 @@ function HomePage(props: any) {
                     onChange={() => setModalSave(!modalSave)}
                     access_token={props.access_token}
                     title={_("SAVE_AS")}
-                    contentConfig="test"
-                    contentTheme="test22"
+                    contentConfig={valueConfig}
+                    contentTheme={{"name": themeName,"link":hashTheme}}
                     themeName={themeName}
                     account={account}
                 />
