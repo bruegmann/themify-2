@@ -10,6 +10,8 @@ export default function ConfigHome(props: any) {
     const [values, setValues] = useState<any>();
     const [change, setChange] = useState<boolean>(false);
 
+    const [test, setTest] = useState<any>({});
+
     useEffect(() => {
         if (Object.keys(attribute).length === 0) {
             SetUp();
@@ -23,11 +25,17 @@ export default function ConfigHome(props: any) {
     }, [props.user && props.access_token]);
 
     useEffect(() => {
-        if (props.value) {
-            attribute[selected] = props.value
-            setChange(!change);
-        }
+        attribute[selected] = props.value
+        setChange(!change);
+
+        console.log(props.value, selected, attribute)
     }, [props.value])
+
+    useEffect(()=>{
+        console.log(test)
+        setTest(props.test)
+    },[props.test])
+
 
     useEffect(() => {
         var ls = String(localStorage.getItem("template"));
@@ -49,7 +57,7 @@ export default function ConfigHome(props: any) {
             setStartValue();
         })
     }
-    
+
     const getAttributeTemplate = async (callback: any) => {
         if (props.user && props.access_token) {
             const res = await fetch(`${(window as any).proxy}${props.user.organizations_url}`, {
@@ -99,6 +107,8 @@ export default function ConfigHome(props: any) {
                             })
                     }
                 })
+
+                props.onChange(JSON.stringify(attribute), "test")
         }
 
         if (callback) {
@@ -129,7 +139,7 @@ export default function ConfigHome(props: any) {
         item = { appSettings, _declaration };
         setValues(item);
     }
-
+ 
     const setTemplate = (name: string) => {
         setSelected(name);
 
@@ -165,9 +175,10 @@ export default function ConfigHome(props: any) {
                         attribute={attribute[item]}
                         name={item}
                         selected={selected}
-                        onChange={(attr: string, type?:string) => {
+                        onChange={(attr: string, type?: string) => {
+                            attribute[selected].push(JSON.parse(attr))
+                            props.onChange(attr, attribute)
                             props.onChange(attr)
-                            console.log(attr)
                         }}
                     />
                 )

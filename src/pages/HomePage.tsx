@@ -11,7 +11,7 @@ import FileModal from "../components/FileModal";
 
 
 function HomePage(props: any) {
-    const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(0);
+    const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(1);
     const [modalNew, setModalNew] = useState<boolean>(false);
     const [modalSave, setModalSave] = useState<boolean>(false);
     const [themeName, setThemeName] = useState<string>("");
@@ -20,6 +20,8 @@ function HomePage(props: any) {
     const [valueTheme, setValueTheme] = useState<any>();
     const [hashTheme, setHashTheme] = useState<string>("");
     const [hashConfig, setHashConfig] = useState<string>("");
+
+    const [test, setTest] = useState<any>({});
 
     let files: any = [];
 
@@ -51,9 +53,8 @@ function HomePage(props: any) {
         }
     }, [hashTheme])
 
-    const changeHash = () =>{
+    const changeHash = () => {
 
-        console.log(valueTheme)
         // const hashObject = {
         //     name: themeName,
         //     btHashVars
@@ -97,8 +98,6 @@ function HomePage(props: any) {
             "branch": "main",
             "sha": shaConfig.sha
         }
-
-        console.log(valueConfig);
 
         let jsonContent = {
             "name": themeName,
@@ -169,8 +168,7 @@ function HomePage(props: any) {
         }
     }
 
-    const onChangeThemeHome = async(type: string, value: any) => {
-        console.log(type, value)
+    const onChangeThemeHome = async (type: string, value: any) => {
         if (type === "name") {
             setThemeName(value);
         }
@@ -187,7 +185,6 @@ function HomePage(props: any) {
     }
 
     const onChangeConfigHome = (type: string, value: any) => {
-        console.log(value)
         if (type === "name") {
             //setThemeName(value);
         }
@@ -200,6 +197,10 @@ function HomePage(props: any) {
         else if (type === "add") {
 
         }
+        else if(type == "test"){
+            console.log(value)
+            setTest(value);
+        }
     }
 
     const AddConfigAttribute = () => {
@@ -207,7 +208,6 @@ function HomePage(props: any) {
     }
 
     const setHash = () => {
-        console.log(hashTheme)
     }
 
 
@@ -259,7 +259,6 @@ function HomePage(props: any) {
                         <div className="btn-group" role="group" aria-label="Basic example">
                             <button type="button" className={"btn " + getClassSelectedThemeConfig(0)} onClick={() => { setSelectedThemeConfig(0) }}><Brush /> {_("THEME")}</button>
                             <button type="button" className={"btn " + getClassSelectedThemeConfig(1)} onClick={() => { setSelectedThemeConfig(1) }}><Gear /> {_("CONFIG")}</button>
-                            <button onClick={() => console.log(hashTheme)}>ccc</button>
                         </div>
                     </div>
                     <hr />
@@ -274,6 +273,7 @@ function HomePage(props: any) {
                             <ConfigHome
                                 user={props.user}
                                 access_token={props.access_token}
+                                test={test}
                                 value={valueConfig}
                                 onChange={(value: string, type?: string) => onChangeConfigHome(type ? type : "value", JSON.parse(value))}
                             />
@@ -296,7 +296,7 @@ function HomePage(props: any) {
                     access_token={props.access_token}
                     title={_("SAVE_AS")}
                     contentConfig={valueConfig}
-                    contentTheme={{"name": themeName,"link":hashTheme}}
+                    contentTheme={{ "name": themeName, "link": hashTheme }}
                     themeName={themeName}
                     account={account}
                 />

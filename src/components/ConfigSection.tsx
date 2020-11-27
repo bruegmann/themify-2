@@ -12,8 +12,8 @@ export default function ConfigSection(props: any) {
 
 
     useEffect(() => {
-
         setAttribute(props.attribute);
+        console.log(props.attribute)
     }, [props.attribute])
 
     const onChangeValue = (attrb: string, value: string, i: number) => {
@@ -35,7 +35,6 @@ export default function ConfigSection(props: any) {
             setChange(!change)
         }
 
-        console.log(attribute)
 
         props.onChange(JSON.stringify(attribute));
     }

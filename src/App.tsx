@@ -42,7 +42,6 @@ function App() {
                 return res.json();
             })
             .then(response => {
-                console.log(response);
 
 
                 setdefault_CSS(response);

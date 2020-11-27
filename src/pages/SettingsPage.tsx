@@ -94,7 +94,6 @@ function SettingsPage(props: any) {
         localStorage.setItem("version", e.target.value);
         const changedCSS = "//"
         getCSS(e.target.value, changedCSS);
-        console.log(localStorage.getItem("version"));
     }
 
 

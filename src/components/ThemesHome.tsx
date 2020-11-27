@@ -35,7 +35,6 @@ export default function ThemesHome(props: any) {
             Object.keys(tempbtVariable).map((item: any) => {
                 tempbtVariable[item] = {}
             })
-            console.log(JSON.stringify(ThemeName))
 
             setVarType();
             setVariables(varibales);
@@ -49,7 +48,6 @@ export default function ThemesHome(props: any) {
     }, [props.value])
 
     useEffect(() => {
-        console.log("js")
         compile();
     }, [outputStyle])
 
@@ -92,7 +90,6 @@ export default function ThemesHome(props: any) {
             name: themeName,
             btHashVars
         }
-        console.log(btHashVars)
 
         //TODO: if activeTab >> HomePage.js
         //TODO: if customStyle >> HomePage.js
@@ -121,7 +118,6 @@ export default function ThemesHome(props: any) {
             const section = btVariables[i];
 
             if (Object.keys(section).length > 0) {
-                console.log(section)
                 tempOutputStyle += `// ${i}\n//\n\n`;
 
                 Object.keys(section).map((key: any) => {
@@ -132,7 +128,6 @@ export default function ThemesHome(props: any) {
             }
         })
 
-        console.log(tempOutputStyle)
         tempOutputStyle = customStyle + "\n\n" + tempOutputStyle;
 
         if (tempOutputStyle !== "") {
@@ -164,7 +159,6 @@ export default function ThemesHome(props: any) {
 
     const compile = () => {
        // var style = await outputStyle.toString()
-       console.log("f")
         let version = localStorage.getItem("version")
         getCSS(version, outputStyle);
     }
@@ -184,7 +178,6 @@ export default function ThemesHome(props: any) {
                         GroupName={item}
                         items={Variables[item]}
                         onChange={async (value: any, key: any) => {
-                            console.log(value)
                             if (await value == "") {
                                 delete btVariables[item][key]
                                 delete btHashVars[key]
