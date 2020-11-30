@@ -4,7 +4,7 @@ import ThemeName from "./ThemeName";
 import TextFieldWithTimer from "./TextFieldWithTimer";
 import Examples from "./Examples";
 import { getPhrase as _ } from "../shared";
-import { Utilities } from "blue-react";
+import { Search, Utilities } from "blue-react";
 
 
 
@@ -34,6 +34,7 @@ export default function ThemesHome(props: any) {
     const [activeTab, setActiveTab] = useState<number>(0);
     const [error, setError] = useState<any>();
     const [resultStyle, setResultStyle] = useState<any>();
+    const [searchValue, setSearchValue] = useState<any>();
 
     useEffect(() => {
         if (Variables.length === 0) {
@@ -195,13 +196,18 @@ export default function ThemesHome(props: any) {
     }
 
 
-
     return (
         <div className="row">
             <div className="col-md-5">
                 <ThemeName
                     name={themeName}
                     onChange={(value: string) => { props.onChange(value) }}
+                />
+
+                <Search className="mt-1 mb-1"
+                    value={searchValue}
+                    onChange={(e: any) => setSearchValue(e.target.value)}
+                    placeholder="Search..."
                 />
 
                 {Object.keys(Variables).map((item: any) =>
@@ -220,6 +226,7 @@ export default function ThemesHome(props: any) {
                             }
                             afterValueChange();
                         }}
+                        search={searchValue}
                     />
                 )
                 }
