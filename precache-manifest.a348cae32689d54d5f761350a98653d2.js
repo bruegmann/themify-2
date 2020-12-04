@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/themify-2/editor.worker.js"
   },
   {
-    "revision": "b8ef33f1efac7137f67f6cd7a01eef39",
+    "revision": "07f9f961e0a037fb492993ee68d4b299",
     "url": "/themify-2/index.html"
   },
   {
@@ -36,12 +36,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/themify-2/static/js/5.3031035d.chunk.js"
   },
   {
-    "revision": "d19686aa7ae81755ccf4",
-    "url": "/themify-2/static/js/main.7f1a3a54.chunk.js"
+    "revision": "f8f8c862d61e70657bf3",
+    "url": "/themify-2/static/js/main.62f20ec9.chunk.js"
   },
   {
     "revision": "52e9030e87de04486e49657ed68dde0a",
-    "url": "/themify-2/static/js/main.7f1a3a54.chunk.js.LICENSE.txt"
+    "url": "/themify-2/static/js/main.62f20ec9.chunk.js.LICENSE.txt"
   },
   {
     "revision": "36aee7ff71d4bbd0fa94",
