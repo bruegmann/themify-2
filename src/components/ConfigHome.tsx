@@ -10,7 +10,7 @@ export default function ConfigHome(props: any) {
     const [values, setValues] = useState<any>();
     const [change, setChange] = useState<boolean>(false);
 
-    const [test, setTest] = useState<any>({});
+    const [valueConfig, setValueConfig] = useState<any>({});
 
     // useEffect(() => {
     //     if (Object.keys(attribute).length === 0) {
@@ -19,10 +19,10 @@ export default function ConfigHome(props: any) {
     // }, [attribute])
 
     useEffect(() => {
-        if (Object.keys(test).length === 0) {
-            SetUpTest();
+        if (Object.keys(valueConfig).length === 0) {
+            SetUp();
         }
-    }, [test])
+    }, [valueConfig])
     
 
     useEffect(() => {
@@ -32,16 +32,16 @@ export default function ConfigHome(props: any) {
     }, [props.user && props.access_token]);
 
     useEffect(() => {
-        test[selected] = props.value
+        valueConfig[selected] = props.value
         setChange(!change);
 
         console.log(props.value, selected, attribute)
     }, [props.value])
 
     useEffect(()=>{
-        console.log(test)
-        setTest(props.test)
-    },[props.test])
+        console.log(valueConfig)
+        setValueConfig(props.config)
+    },[props.config])
 
 
     useEffect(() => {
@@ -65,8 +65,8 @@ export default function ConfigHome(props: any) {
     //     })
     // }
 
-    const SetUpTest = async () => {
-        await setTest({ "none": [] });
+    const SetUp = async () => {
+        await setValueConfig({ "none": [] });
         getAttributeTemplate(() => {
             setStartValue();
         })
@@ -112,7 +112,7 @@ export default function ConfigHome(props: any) {
                                             .json()
                                             .then((data) => {
                                                 var attr = JSON.parse(atob(data.content));
-                                                test[company] = attr;
+                                                valueConfig[company] = attr;
                                                 setChange(!change);
                                             }
                                             );
@@ -122,7 +122,7 @@ export default function ConfigHome(props: any) {
                     }
                 })
 
-                props.onChange(JSON.stringify(test), "test")
+                props.onChange(JSON.stringify(valueConfig), "config")
         }
 
         if (callback) {
@@ -135,9 +135,9 @@ export default function ConfigHome(props: any) {
         var add = [];
         var appSettings = {};
 
-        for (var i = 0; i < Object.keys(test).length; i++) {
+        for (var i = 0; i < Object.keys(valueConfig).length; i++) {
             var temp = {
-                "name": Object.keys(test)[i],
+                "name": Object.keys(valueConfig)[i],
                 "value": "",
                 "description": "",
             }
@@ -175,7 +175,7 @@ export default function ConfigHome(props: any) {
                     </DropdownToggle>
                     <DropdownMenu>
                         {
-                            Object.keys(test).map((item: any) =>
+                            Object.keys(valueConfig).map((item: any) =>
                                 <DropdownItem onClick={() => setTemplate(item)}>{item}</DropdownItem>
                             )
                         }
@@ -183,15 +183,15 @@ export default function ConfigHome(props: any) {
                 </InputGroupButtonDropdown >
             </div>
             {
-                Object.keys(test).map((item: any, i: number) =>
+                Object.keys(valueConfig).map((item: any, i: number) =>
                     <ConfigSection
                         keys={i}
-                        attribute={test[item]}
+                        attribute={valueConfig[item]}
                         name={item}
                         selected={selected}
                         onChange={(attr: string, type?: string) => {
-                            test[selected].push(JSON.parse(attr))
-                            props.onChange(attr, test)
+                            valueConfig[selected].push(JSON.parse(attr))
+                            props.onChange(attr, valueConfig)
                             props.onChange(attr)
                         }}
                     />

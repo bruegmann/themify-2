@@ -21,7 +21,7 @@ function HomePage(props: any) {
     const [hashTheme, setHashTheme] = useState<string>("");
     const [hashConfig, setHashConfig] = useState<string>("");
 
-    const [test, setTest] = useState<any>({});
+    const [valueConf, setValueConf] = useState<any>({});
 
     let files: any = [];
 
@@ -197,9 +197,9 @@ function HomePage(props: any) {
         else if (type === "add") {
 
         }
-        else if(type == "test"){
+        else if(type == "config"){
             console.log(value)
-            setTest(value);
+            setValueConf(value);
         }
     }
 
@@ -263,6 +263,7 @@ function HomePage(props: any) {
                     </div>
                     <hr />
                     <div>
+                        <button onClick={() => console.log(valueConf)}>lll</button>
                         {SelectedThemeConfig === 0 ?
                             <ThemesHome
                                 name={themeName}
@@ -273,7 +274,7 @@ function HomePage(props: any) {
                             <ConfigHome
                                 user={props.user}
                                 access_token={props.access_token}
-                                test={test}
+                                config={valueConf}
                                 value={valueConfig}
                                 onChange={(value: string, type?: string) => onChangeConfigHome(type ? type : "value", JSON.parse(value))}
                             />
