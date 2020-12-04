@@ -12,11 +12,11 @@ export default function ConfigHome(props: any) {
 
     const [test, setTest] = useState<any>({});
 
-    useEffect(() => {
-        if (Object.keys(attribute).length === 0) {
-            SetUp();
-        }
-    }, [attribute])
+    // useEffect(() => {
+    //     if (Object.keys(attribute).length === 0) {
+    //         SetUp();
+    //     }
+    // }, [attribute])
 
     useEffect(() => {
         if (Object.keys(test).length === 0) {
@@ -32,7 +32,7 @@ export default function ConfigHome(props: any) {
     }, [props.user && props.access_token]);
 
     useEffect(() => {
-        attribute[selected] = props.value
+        test[selected] = props.value
         setChange(!change);
 
         console.log(props.value, selected, attribute)
@@ -58,12 +58,12 @@ export default function ConfigHome(props: any) {
 
     const toggle = () => setDropdownOpen(!dropdownOpen);
 
-    const SetUp = async () => {
-        await setAttribute({ "none": [] });
-        getAttributeTemplate(() => {
-            setStartValue();
-        })
-    }
+    // const SetUp = async () => {
+    //     await setAttribute({ "none": [] });
+    //     getAttributeTemplate(() => {
+    //         setStartValue();
+    //     })
+    // }
 
     const SetUpTest = async () => {
         await setTest({ "none": [] });
@@ -112,7 +112,7 @@ export default function ConfigHome(props: any) {
                                             .json()
                                             .then((data) => {
                                                 var attr = JSON.parse(atob(data.content));
-                                                attribute[company] = attr;
+                                                test[company] = attr;
                                                 setChange(!change);
                                             }
                                             );
@@ -122,7 +122,7 @@ export default function ConfigHome(props: any) {
                     }
                 })
 
-                props.onChange(JSON.stringify(attribute), "test")
+                props.onChange(JSON.stringify(test), "test")
         }
 
         if (callback) {
@@ -135,9 +135,9 @@ export default function ConfigHome(props: any) {
         var add = [];
         var appSettings = {};
 
-        for (var i = 0; i < Object.keys(attribute).length; i++) {
+        for (var i = 0; i < Object.keys(test).length; i++) {
             var temp = {
-                "name": Object.keys(attribute)[i],
+                "name": Object.keys(test)[i],
                 "value": "",
                 "description": "",
             }
@@ -175,7 +175,7 @@ export default function ConfigHome(props: any) {
                     </DropdownToggle>
                     <DropdownMenu>
                         {
-                            Object.keys(attribute).map((item: any) =>
+                            Object.keys(test).map((item: any) =>
                                 <DropdownItem onClick={() => setTemplate(item)}>{item}</DropdownItem>
                             )
                         }
@@ -183,15 +183,15 @@ export default function ConfigHome(props: any) {
                 </InputGroupButtonDropdown >
             </div>
             {
-                Object.keys(attribute).map((item: any, i: number) =>
+                Object.keys(test).map((item: any, i: number) =>
                     <ConfigSection
                         keys={i}
                         attribute={test[item]}
                         name={item}
                         selected={selected}
                         onChange={(attr: string, type?: string) => {
-                            attribute[selected].push(JSON.parse(attr))
-                            props.onChange(attr, attribute)
+                            test[selected].push(JSON.parse(attr))
+                            props.onChange(attr, test)
                             props.onChange(attr)
                         }}
                     />

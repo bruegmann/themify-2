@@ -13,7 +13,7 @@ export default function ConfigSection(props: any) {
 
 
     useEffect(() => {
-        console.log(props.attribute)
+        console.log(props.attribute)    
         setAttribute(props.attribute);
     }, [props.attribute])
 
