@@ -15,7 +15,7 @@ function SettingsPage(props: any) {
     })
 
     const getVersions = () => {
-        fetch((window as any).themify_proxy + "versionen", {
+        fetch((window as any).themify_service + "versions", {
         })
             .then(res => {
                 return res.json();
@@ -72,7 +72,7 @@ function SettingsPage(props: any) {
 
     const getCSS = (version: any, css: any, callback?: (e?: any) => void) => {
 
-        fetch((window as any).themify_proxy + "scss_to_css?version=" + version + "&css=" + css, {
+        fetch((window as any).themify_service + "scssToCss?version=" + version + "&css=" + css, {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         })

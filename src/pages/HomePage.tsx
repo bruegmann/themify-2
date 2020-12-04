@@ -59,7 +59,7 @@ function HomePage(props: any) {
 
         let array: any;
 
-        const res = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/Library/${themeName}`, {
+        const res = await fetch(`${(window as any).themify_service}https://api.github.com/repos/${org}/Themify_DB/contents/Library/${themeName}`, {
             headers: {
                 Authorization: `token ${props.access_token}`,
                 method: "get",
@@ -85,7 +85,7 @@ function HomePage(props: any) {
 
                 folder = zip.folder(array[i].name);
 
-                const response = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/${array[i].path}`, {
+                const response = await fetch(`${(window as any).themify_service}https://api.github.com/repos/${org}/Themify_DB/contents/${array[i].path}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -107,7 +107,7 @@ function HomePage(props: any) {
             }
             else {
 
-                const response = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/${array[i].path}`, {
+                const response = await fetch(`${(window as any).themify_service}https://api.github.com/repos/${org}/Themify_DB/contents/${array[i].path}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -127,7 +127,7 @@ function HomePage(props: any) {
 
         for (let k = 0; k < arr1.length; k++) {
 
-            const get = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/${arr1[k].path}`, {
+            const get = await fetch(`${(window as any).themify_service}https://api.github.com/repos/${org}/Themify_DB/contents/${arr1[k].path}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -146,7 +146,7 @@ function HomePage(props: any) {
 
         for (let j = 0; j < arr2.length; j++) {
 
-            const get = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${org}/Themify_DB/contents/${arr2[j].path}`, {
+            const get = await fetch(`${(window as any).themify_service}https://api.github.com/repos/${org}/Themify_DB/contents/${arr2[j].path}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
