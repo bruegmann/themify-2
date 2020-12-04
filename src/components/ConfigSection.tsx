@@ -8,12 +8,13 @@ import ConfigAttribute from './ConfigAttribute';
 export default function ConfigSection(props: any) {
 
     const [attribute, setAttribute] = useState<any>([]);
+    const [test, setTest] = useState<any>([]);
     const [change, setChange] = useState<boolean>(false);
 
 
     useEffect(() => {
-        setAttribute(props.attribute);
         console.log(props.attribute)
+        setAttribute(props.attribute);
     }, [props.attribute])
 
     const onChangeValue = (attrb: string, value: string, i: number) => {

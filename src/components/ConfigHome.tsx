@@ -19,6 +19,13 @@ export default function ConfigHome(props: any) {
     }, [attribute])
 
     useEffect(() => {
+        if (Object.keys(test).length === 0) {
+            SetUpTest();
+        }
+    }, [test])
+    
+
+    useEffect(() => {
         getAttributeTemplate(() => {
 
         })
@@ -53,6 +60,13 @@ export default function ConfigHome(props: any) {
 
     const SetUp = async () => {
         await setAttribute({ "none": [] });
+        getAttributeTemplate(() => {
+            setStartValue();
+        })
+    }
+
+    const SetUpTest = async () => {
+        await setTest({ "none": [] });
         getAttributeTemplate(() => {
             setStartValue();
         })
@@ -172,7 +186,7 @@ export default function ConfigHome(props: any) {
                 Object.keys(attribute).map((item: any, i: number) =>
                     <ConfigSection
                         keys={i}
-                        attribute={attribute[item]}
+                        attribute={test[item]}
                         name={item}
                         selected={selected}
                         onChange={(attr: string, type?: string) => {
