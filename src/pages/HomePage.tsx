@@ -22,7 +22,7 @@ function HomePage(props: any) {
 
     const [valueConf, setValueConf] = useState<any>({});
 
-    let tempConfig:any;
+    let tempConfig: any;
 
     let files: any = [];
 
@@ -58,7 +58,7 @@ function HomePage(props: any) {
     }, [valueTheme])
 
     useEffect(() => {
-            changeHash()
+        changeHash()
     }, [valueConf])
 
     const changeHash = () => {
@@ -192,18 +192,20 @@ function HomePage(props: any) {
 
     const onChangeConfigHome = (type: string, value: any) => {
         console.log(value)
-        if (type === "name") {
-            setThemeName(value);
-        }
-        else if (type === "value") {
-           // setValueConfig(value);
-        }
-        else if (type === "add") {
+        if (Object.keys(value).length > 0) {
+            if (type === "name") {
+                setThemeName(value);
+            }
+            else if (type === "value") {
+                // setValueConfig(value);
+            }
+            else if (type === "add") {
 
-        }
-        else if (type == "config") {
-            console.log(value)
-            setValueConf(value);
+            }
+            else if (type == "config") {
+                console.log(value)
+                setValueConf(value);
+            }
         }
     }
 

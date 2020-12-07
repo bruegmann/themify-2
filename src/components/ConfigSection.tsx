@@ -19,25 +19,17 @@ export default function ConfigSection(props: any) {
 
     const onChangeValue = (attrb: string, value: string, i: number) => {
         if (attrb === "delete") {
-            attribute.splice(i, 1);
-            setChange(!change)
+            props.onChange(JSON.stringify(attribute),JSON.stringify({"attr":"delete", "index":i}));
         }
         else if (attrb === "value") {
-            if (value !== "") {
-                attribute[i].value = value;
-            }
-            else {
-                delete attribute[i].value;
-            }
-            setChange(!change)
+            props.onChange(JSON.stringify(attribute),JSON.stringify({"attr":"value", "value":value, "index":i}));
         }
         else {
-            attribute[i][attrb] = value;
-            setChange(!change)
+            props.onChange(JSON.stringify(attribute),JSON.stringify({"attr":"name", "attrb":attrb, "value":value,"index":i}));
         }
 
 
-        props.onChange(JSON.stringify(attribute));
+        
     }
 
     const AddAttribute = async () => {
@@ -55,7 +47,7 @@ export default function ConfigSection(props: any) {
 
         // setChange(!change);
         // console.log(attribute)
-       props.onChange(JSON.stringify(temp));
+       props.onChange(JSON.stringify(temp),JSON.stringify({"attr":"add"}));
     }
 
 

@@ -227,7 +227,6 @@ export default function ConfigHome(props: any) {
     const [attribute, setAttribute] = useState<any>({});
     const [selected, setSelected] = useState<string>("none");
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-    //     const [values, setValues] = useState<any>();
     const [change, setChange] = useState<boolean>(false);
 
     useEffect(() => {
@@ -238,18 +237,11 @@ export default function ConfigHome(props: any) {
         }
         else {
             if (JSON.stringify(attribute) !== JSON.stringify(props.config)) {
-                setAttribute(props.config);
+                setAttribute({ ...props.config });
             }
         }
 
     }, [props.config]);
-
-    // useEffect(() => {
-    //     console.log(props.config)
-    //     if (Object.keys(attribute).length ===0 ) {
-    //         SetUp();
-    //     }
-    // }, [attribute])
 
     useEffect(() => {
         getAttributeTemplate(() => {
@@ -357,9 +349,28 @@ export default function ConfigHome(props: any) {
                     attribute={attribute[item]}
                     name={item}
                     selected={selected}
-                    onChange={async (attr: string, type?: string) => {
-                        await attribute[selected].push(JSON.parse(attr));
-                        props.onChange(JSON.stringify(attribute), "config")
+                    onChange={async (value: string, attr: string, type?: string) => {
+                        let objAttr = JSON.parse(attr)
+                        console.log(attr)
+                        if (objAttr.attr === "add") {
+                            await attribute[selected].push(JSON.parse(value));
+                        }
+                        else if (objAttr.attr === "delete") {
+                            console.log(objAttr.index)
+                            await attribute[selected].splice(objAttr.index, 1);
+                        }
+                        else if (objAttr.attr === "value") {
+                            if (objAttr.value !== "") {
+                                attribute[selected][objAttr.index].value = objAttr.value;
+                            }
+                            else {
+                                delete attribute[selected][objAttr.index].value;
+                            }
+                        }
+                        else if (objAttr.attr === "name"){
+                             attribute[selected][objAttr.index][objAttr.attrb] = objAttr.value;
+                        }
+                        props.onChange(JSON.stringify(attribute), "config");
                     }}
                 />
             )
