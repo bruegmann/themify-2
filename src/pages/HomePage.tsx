@@ -31,7 +31,6 @@ function HomePage(props: any) {
             try {
                 let hash = window.location.hash;
                 hash.replace("#/home/", "")
-                console.log(hash)
                 if (hash != "") {
                     let hashObject = JSON.parse(decodeURIComponent(hash));
                     setThemeName(hashObject.name);
@@ -62,9 +61,7 @@ function HomePage(props: any) {
     }, [valueConf])
 
     const changeHash = () => {
-
         window.location.hash = "/home/" + encodeURIComponent(JSON.stringify({ "name": themeName, "account": account, "theme": valueTheme, "config": valueConf }))
-        console.log(window.location.hash)
     }
 
 
@@ -191,19 +188,11 @@ function HomePage(props: any) {
     }
 
     const onChangeConfigHome = (type: string, value: any) => {
-        console.log(value)
         if (Object.keys(value).length > 0) {
             if (type === "name") {
                 setThemeName(value);
             }
-            else if (type === "value") {
-                // setValueConfig(value);
-            }
-            else if (type === "add") {
-
-            }
             else if (type == "config") {
-                console.log(value)
                 setValueConf(value);
             }
         }
@@ -261,7 +250,6 @@ function HomePage(props: any) {
                     </div>
                     <hr />
                     <div>
-                        <button onClick={() => console.log(valueConf)}>lll</button>
                         {SelectedThemeConfig === 0 ?
                             <ThemesHome
                                 name={themeName}

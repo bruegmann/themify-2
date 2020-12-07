@@ -13,7 +13,6 @@ export default function ConfigSection(props: any) {
 
 
     useEffect(() => {
-        console.log(props.attribute)
         setAttribute(props.attribute);
     }, [props.attribute])
 
@@ -40,13 +39,6 @@ export default function ConfigSection(props: any) {
             "default": "",
             "editable": true
         }
-        //attribute.push(temp);
-        // let attrtemp = attribute;
-        // await attrtemp.push(temp);
-        // console.log(attribute, attrtemp)
-
-        // setChange(!change);
-        // console.log(attribute)
        props.onChange(JSON.stringify(temp),JSON.stringify({"attr":"add"}));
     }
 
