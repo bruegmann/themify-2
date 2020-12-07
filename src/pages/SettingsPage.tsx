@@ -62,7 +62,7 @@ function SettingsPage(props: any) {
                     array2.push(<option key={index} value={v[0]}>{v[0]}</option>);
                 })
 
-
+                array2.push(<option value="latest">latest</option>);
 
                 setBlueReactVersionen(array2);
 
