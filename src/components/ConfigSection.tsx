@@ -13,7 +13,7 @@ export default function ConfigSection(props: any) {
 
 
     useEffect(() => {
-        console.log(props.attribute)    
+        console.log(props.attribute)
         setAttribute(props.attribute);
     }, [props.attribute])
 
@@ -40,7 +40,7 @@ export default function ConfigSection(props: any) {
         props.onChange(JSON.stringify(attribute));
     }
 
-    const AddAttribute = () => {
+    const AddAttribute = async () => {
         var temp = {
             "name": "Attribute",
             "type": "",
@@ -48,9 +48,14 @@ export default function ConfigSection(props: any) {
             "default": "",
             "editable": true
         }
-        attribute.push(temp);
-        setChange(!change);
-        props.onChange(JSON.stringify(attribute));
+        //attribute.push(temp);
+        // let attrtemp = attribute;
+        // await attrtemp.push(temp);
+        // console.log(attribute, attrtemp)
+
+        // setChange(!change);
+        // console.log(attribute)
+       props.onChange(JSON.stringify(temp));
     }
 
 
@@ -75,7 +80,6 @@ export default function ConfigSection(props: any) {
                                     )
                                     :
                                     <p className="text-center">{_("NO_ATTRIBUTES")}</p>
-
                                 }
                                 <button className="btn btn-outline-primary mb-3 mt-3" onClick={() => AddAttribute()}><Plus /> {_("ADD")}</button>
                             </div>
@@ -83,7 +87,6 @@ export default function ConfigSection(props: any) {
                     </div>
                 </div>
             }
-
         </div>
     )
 }

@@ -42,10 +42,7 @@ function App() {
                 return res.json();
             })
             .then(response => {
-
-
                 setdefault_CSS(response);
-
             })
     }
 

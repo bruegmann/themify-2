@@ -19,9 +19,10 @@ function HomePage(props: any) {
     const [valueConfig, setValueConfig] = useState<any>();
     const [valueTheme, setValueTheme] = useState<any>();
     const [hashTheme, setHashTheme] = useState<string>("");
-    const [hashConfig, setHashConfig] = useState<string>("");
 
     const [valueConf, setValueConf] = useState<any>({});
+
+    let tempConfig:any;
 
     let files: any = [];
 
@@ -29,8 +30,10 @@ function HomePage(props: any) {
         if (themeName === "") {
             try {
                 let hash = window.location.hash;
-                if (hash) {
-                    let hashObject = JSON.parse(decodeURIComponent(hash.replace("#/home/", "")));
+                hash.replace("#/home/", "")
+                console.log(hash)
+                if (hash != "") {
+                    let hashObject = JSON.parse(decodeURIComponent(hash));
                     setThemeName(hashObject.name);
                     setAccount(hashObject.account)
                 }
@@ -47,18 +50,21 @@ function HomePage(props: any) {
 
     }, [themeName])
 
+
     useEffect(() => {
-        if (hashTheme) {
-            setHash();
+        if (themeName != "") {
+            changeHash()
         }
-    }, [hashTheme])
+    }, [valueTheme])
+
+    useEffect(() => {
+            changeHash()
+    }, [valueConf])
 
     const changeHash = () => {
 
-        // const hashObject = {
-        //     name: themeName,
-        //     btHashVars
-        // }
+        window.location.hash = "/home/" + encodeURIComponent(JSON.stringify({ "name": themeName, "account": account, "theme": valueTheme, "config": valueConf }))
+        console.log(window.location.hash)
     }
 
 
@@ -93,7 +99,7 @@ function HomePage(props: any) {
         let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
         let shaTheme = files.find((o: any) => o.name === "Theme.json");
         let config = {
-            "content": btoa(JSON.stringify(valueConfig)),
+            "content": btoa(JSON.stringify(valueConf)),
             "message": `Update ${themeName} config`,
             "branch": "main",
             "sha": shaConfig.sha
@@ -185,31 +191,21 @@ function HomePage(props: any) {
     }
 
     const onChangeConfigHome = (type: string, value: any) => {
+        console.log(value)
         if (type === "name") {
-            //setThemeName(value);
+            setThemeName(value);
         }
         else if (type === "value") {
-            setValueConfig(value);
-        }
-        else if (type === "hash") {
-            //setHashTheme(value);
+           // setValueConfig(value);
         }
         else if (type === "add") {
 
         }
-        else if(type == "config"){
+        else if (type == "config") {
             console.log(value)
             setValueConf(value);
         }
     }
-
-    const AddConfigAttribute = () => {
-
-    }
-
-    const setHash = () => {
-    }
-
 
     return (
         <Page hasActions={true} >
@@ -296,8 +292,8 @@ function HomePage(props: any) {
                     onChange={() => setModalSave(!modalSave)}
                     access_token={props.access_token}
                     title={_("SAVE_AS")}
-                    contentConfig={valueConfig}
-                    contentTheme={{ "name": themeName, "link": hashTheme }}
+                    contentConfig={JSON.stringify(valueConf)}
+                    contentTheme={JSON.stringify({ "name": themeName, "link": hashTheme })}
                     themeName={themeName}
                     account={account}
                 />
