@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { DropdownItem, DropdownMenu, DropdownToggle, InputGroupButtonDropdown } from 'reactstrap';
-import ConfigSection from './ConfigSection';
 import { getPhrase as _ } from '../shared';
+import ConfigSection from './ConfigSection';
+
 
 export default function ConfigHome(props: any) {
     const [attribute, setAttribute] = useState<any>({});
     const [selected, setSelected] = useState<string>("none");
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-    const [values, setValues] = useState<any>();
     const [change, setChange] = useState<boolean>(false);
 
     useEffect(() => {
-        if (Object.keys(attribute).length === 0) {
-            SetUp();
+        if (Object.keys(props.config).length === 0) {
+            if (Object.keys(attribute).length === 0) {
+                SetUp();
+            }
         }
-    }, [attribute])
+        else {
+            if (JSON.stringify(attribute) !== JSON.stringify(props.config)) {
+                setAttribute({ ...props.config });
+            }
+        }
+
+    }, [props.config]);
 
     useEffect(() => {
         getAttributeTemplate(() => {
@@ -22,27 +30,38 @@ export default function ConfigHome(props: any) {
         })
     }, [props.user && props.access_token]);
 
-    useEffect(() => {
-        var ls = String(localStorage.getItem("template"));
-
-        if (ls !== "null" && props.user !== undefined) {
-            setSelected(ls);
-        }
-        else {
-            setSelected("none");
-        }
-
-    }, [props])
-
     const toggle = () => setDropdownOpen(!dropdownOpen);
+
 
     const SetUp = async () => {
         await setAttribute({ "none": [] });
         getAttributeTemplate(() => {
-            setStartValue();
         })
     }
 
+    //const setStartValue = () => {
+    // var item = {};
+    // var add = [];
+    // var appSettings = {};
+
+    // for (var i = 0; i < Object.keys(valueConfig).length; i++) {
+    //     var temp = {
+    //         "name": Object.keys(valueConfig)[i],
+    //         "value": "",
+    //         "description": "",
+    //     }
+    //     add.push(temp);
+    // }
+    // var _declaration = {
+    //     "_attributes": {
+    //         "version": "1.0",
+    //         "encoding": "utf-8"
+    //     }
+    // }
+    // appSettings = { add };
+    // item = { appSettings, _declaration };
+    // setValues(item);
+    // console.log(item)
 
     const getAttributeTemplate = async (callback: any) => {
         if (props.user && props.access_token) {
@@ -93,35 +112,12 @@ export default function ConfigHome(props: any) {
                             })
                     }
                 })
+            props.onChange(JSON.stringify(attribute), "config")
         }
 
         if (callback) {
             callback();
         }
-    }
-
-    const setStartValue = () => {
-        var item = {};
-        var add = [];
-        var appSettings = {};
-
-        for (var i = 0; i < Object.keys(attribute).length; i++) {
-            var temp = {
-                "name": Object.keys(attribute)[i],
-                "value": "",
-                "description": "",
-            }
-            add.push(temp);
-        }
-        var _declaration = {
-            "_attributes": {
-                "version": "1.0",
-                "encoding": "utf-8"
-            }
-        }
-        appSettings = { add };
-        item = { appSettings, _declaration };
-        setValues(item);
     }
 
     const setTemplate = (name: string) => {
@@ -142,8 +138,7 @@ export default function ConfigHome(props: any) {
                 <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggle} >
                     <DropdownToggle caret color="outline-primary">
                         {_("TEMPLATE")}: {selected}
-                    </DropdownToggle>
-                    <DropdownMenu>
+                    </DropdownToggle>                     <DropdownMenu>
                         {
                             Object.keys(attribute).map((item: any) =>
                                 <DropdownItem onClick={() => setTemplate(item)}>{item}</DropdownItem>
@@ -152,15 +147,35 @@ export default function ConfigHome(props: any) {
                     </DropdownMenu>
                 </InputGroupButtonDropdown >
             </div>
-            {
-                Object.keys(attribute).map((item: any, i: number) =>
-                    <ConfigSection
-                        keys={i}
-                        attribute={attribute[item]}
-                        name={item}
-                        selected={selected}
-                    />
-                )
+            {Object.keys(attribute).map((item: any, i: number) =>
+                <ConfigSection
+                    keys={i}
+                    attribute={attribute[item]}
+                    name={item}
+                    selected={selected}
+                    onChange={async (value: string, attr: string, type?: string) => {
+                        let objAttr = JSON.parse(attr)
+                        if (objAttr.attr === "add") {
+                            await attribute[selected].push(JSON.parse(value));
+                        }
+                        else if (objAttr.attr === "delete") {
+                            await attribute[selected].splice(objAttr.index, 1);
+                        }
+                        else if (objAttr.attr === "value") {
+                            if (objAttr.value !== "") {
+                                attribute[selected][objAttr.index].value = objAttr.value;
+                            }
+                            else {
+                                delete attribute[selected][objAttr.index].value;
+                            }
+                        }
+                        else if (objAttr.attr === "name") {
+                            attribute[selected][objAttr.index][objAttr.attrb] = objAttr.value;
+                        }
+                        props.onChange(JSON.stringify(attribute), "config");
+                    }}
+                />
+            )
             }
         </div>
     )

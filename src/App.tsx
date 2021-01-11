@@ -41,9 +41,6 @@ function App() {
                 return res.json();
             })
             .then(response => {
-                console.log(response);
-
-
                 setdefault_CSS(response);
             })
     }
@@ -92,12 +89,6 @@ function App() {
                     }
 
                 ]}
-                statusIcons={{
-                    danger: <XCircleFill />,
-                    info: <InfoCircleFill />,
-                    success: <CheckCircleFill />,
-                    warning: <ExclamationCircleFill />
-                }}
             >
                 <SidebarMenu
                     bottomContent={

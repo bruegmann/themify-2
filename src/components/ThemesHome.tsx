@@ -28,7 +28,7 @@ export default function ThemesHome(props: any) {
     const [btVariables, setbtVariables] = useState<any[]>([]);
     const [outputStyle, setOutputStyle] = useState<string>("");
     const [customStyle, setCustomStyle] = useState<string>("");
-    const [btHashVars, setbtHashVars] = useState<any[]>([]);
+    const [btHashVars, setbtHashVars] = useState<any>({});
     const [compileBusy, setCompileBusy] = useState<Boolean>(false);
     const [themeName, setThemeName] = useState<String>("");
     const [activeTab, setActiveTab] = useState<number>(0);
@@ -41,7 +41,6 @@ export default function ThemesHome(props: any) {
             Object.keys(tempbtVariable).map((item: any) => {
                 tempbtVariable[item] = {}
             })
-            console.log(JSON.stringify(ThemeName))
 
             setVarType();
             setVariables(varibales);
@@ -50,6 +49,16 @@ export default function ThemesHome(props: any) {
         }
 
     }, [Variables])
+
+    useEffect(() => {
+        if(Object.keys(props.value).length > 0){
+            setbtHashVars(props.value);
+        }
+    }, [props.value])
+
+    useEffect(() => {
+        compile();
+    }, [outputStyle])
 
     useEffect(() => {
         setThemeName(props.name);
@@ -90,12 +99,12 @@ export default function ThemesHome(props: any) {
     }
 
     const afterValueChange = async () => {
-        setHash();
+        await setHash();
         await jsVarToSass();
-        compile();
+       // await compile();
     }
 
-    const setHash = () => {
+    const setHash = async () => {
         let tempbtVar: any = {};
 
         Object.keys(btVariables).map((i: any) => {
@@ -107,7 +116,7 @@ export default function ThemesHome(props: any) {
 
         const hashObject: any = {
             name: themeName,
-            btHashVars: btHashVars
+            btHashVars
         }
 
         if (activeTab != 0) {
@@ -118,30 +127,30 @@ export default function ThemesHome(props: any) {
             hashObject.customStyle = customStyle;
         }
 
-        if (window.parent) {
-            const variablesChangeEvent = new CustomEvent("variablesChangeEvent", {
-                detail: hashObject
-            });
-            window.parent.document.dispatchEvent(variablesChangeEvent);
-        }
-
-        window.location.hash = "/home/" + encodeURIComponent(JSON.stringify(hashObject));
+        // if (window.parent) {
+        //     const variablesChangeEvent = new CustomEvent("variablesChangeEvent", {
+        //         detail: hashObject
+        //     });
+        //     window.parent.document.dispatchEvent(variablesChangeEvent);
+        // }
+       // props.onChange("hash",  "/home/" + encodeURIComponent(JSON.stringify(hashObject)));
+        props.onChange("value", btHashVars);
+        //window.location.hash = "/home/" + encodeURIComponent(JSON.stringify(hashObject));
 
     }
 
     const getComment = () => {
-        return `/*\nOpen the following link to edit this config on Themify\n${window.location.href}\n*/\n`;
+        return `//\nOpen the following link to edit this config on Themify\n//${window.location.href}\n\n`;
     }
 
-    const jsVarToSass = async (callback?: any) => {
-        setOutputStyle("");
+    const jsVarToSass = async () => {
+        props.onChange("value", "")
         var tempOutputStyle: string = "";
 
         Object.keys(btVariables).map((i: any) => {
             const section = btVariables[i];
 
             if (Object.keys(section).length > 0) {
-                console.log(section)
                 tempOutputStyle += `// ${i}\n//\n\n`;
 
                 Object.keys(section).map((key: any) => {
@@ -157,41 +166,34 @@ export default function ThemesHome(props: any) {
         if (tempOutputStyle !== "") {
             tempOutputStyle = getComment() + tempOutputStyle
         }
-        await setOutputStyle(tempOutputStyle)
-        if (callback!) {
-            callback();
-        }
+
+        //props.onChange("value", tempOutputStyle.toString())
 
     }
 
-    const compile = (callback?: any) => {
-        // let style: string;
-        // if (props.defaultCSS && !localStorage.getItem("css")) {
-        //     style = outputStyle + JSON.parse(JSON.stringify(props.defaultCSS));
-        // } else if (localStorage.getItem("css")) {
-        //     style = outputStyle + JSON.parse(localStorage.getItem("css")!)
-        // }
+    const getCSS = (version: any, css: any, callback?: (e?: any) => void) => {
 
-        // console.log(style!);
-        // setCompileBusy(true);
-        // sass.compile(style!, (result: any) => {
-        //     setCompileBusy(false);
-        //     console.log(result)
-        //     if (result.status === 1) {
-        //         setError(result)
-        //     }
+        fetch((window as any).themify_proxy + "scss_to_css?version=" + version + "&css=" + css, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" }
+        })
+            .then(res => {
+                return res.json();
+            })
+            .then(response => {
+                Utilities.startLoading();
+                localStorage.setItem("css", JSON.stringify(response));
+                
+                callback!(
+                    window.location.reload()
+                )
+            })
+    }
 
-        //     if (result.text) {
-        //         setResultStyle(result.text);
-        //         //localStorage.setItem("css", JSON.stringify(result.text));
-        //         setError(null);
-        //         if (callback!) {
-        //             callback();
-        //         }
-        //     }
-        // })
-
-
+    const compile = () => {
+       // var style = await outputStyle.toString()
+        let version = localStorage.getItem("version")
+        getCSS(version, outputStyle);
     }
 
 
@@ -201,16 +203,19 @@ export default function ThemesHome(props: any) {
             <div className="col-md-5">
                 <ThemeName
                     name={themeName}
-                    onChange={(value: string) => { props.onChange(value) }}
+                    onChange={(value: string) => { props.onChange("name", value) }}
                 />
+
+
 
                 {Object.keys(Variables).map((item: any) =>
                     <VariableGroup
                         key={item}
                         GroupName={item}
                         items={Variables[item]}
-                        onChange={(value: any, key: any) => {
-                            if (value == "") {
+                        hashVar={btHashVars}
+                        onChange={async (value: any, key: any) => {
+                            if (await value == "") {
                                 delete btVariables[item][key]
                                 delete btHashVars[key]
                             }
@@ -218,7 +223,7 @@ export default function ThemesHome(props: any) {
                                 btVariables[item][key] = { "value": value }
                                 btHashVars[key] = value;
                             }
-                            afterValueChange();
+                            await afterValueChange();
                         }}
                     />
                 )
