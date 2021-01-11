@@ -28,8 +28,10 @@ export default function VariableItem(props: any) {
     }
 
     useEffect(() => {
-        if (Object.keys(props.value).length > 0) {
-            setValue(props.value[props.name])
+        if (props.value !== undefined) {
+            if (Object.keys(props.value).length > 0) {
+                setValue(props.value[props.name])
+            }
         }
     }, [props.value])
 
