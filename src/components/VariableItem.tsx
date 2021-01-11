@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { InfoCircle, DropletHalf, CodeSlash } from "react-bootstrap-icons"
 import { SketchPicker } from "react-color";
 
@@ -7,7 +7,7 @@ export default function VariableItem(props: any) {
     const [showColorPicker, setColorPicker] = useState<boolean>(false);
 
     const setDefaultValue = async () => {
-        if (value === "") {
+        if (value === "" || value === undefined) {
             const tValue = await (props.items.value).replace(" !default", "")
             setStateValue(tValue);
         }
@@ -27,14 +27,21 @@ export default function VariableItem(props: any) {
         }
     }
 
+    useEffect(() => {
+        if (Object.keys(props.value).length > 0) {
+            setValue(props.value[props.name])
+        }
+    }, [props.value])
+
     const getInputFeld = () => {
         if (props.items.type === "boolean") {
             return (
                 <div className="input-group mb-3 ">
+
                     <input
                         className="form-control default"
                         value={value}
-                        onChange={(event) => {setValue(event.target.value)}}
+                        onChange={(event) => { setValue(event.target.value) }}
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"></input>
                     <div className="input-group-prepend">

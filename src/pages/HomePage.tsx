@@ -11,14 +11,16 @@ import FileModal from "../components/FileModal";
 
 
 function HomePage(props: any) {
-    const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(1);
+    const [SelectedThemeConfig, setSelectedThemeConfig] = useState<number>(0);
     const [modalNew, setModalNew] = useState<boolean>(false);
     const [modalSave, setModalSave] = useState<boolean>(false);
     const [themeName, setThemeName] = useState<string>("");
     const [account, setAccount] = useState<string>("");
     const [valueConfig, setValueConfig] = useState<any>();
-    const [valueTheme, setValueTheme] = useState<any>();
+    const [valueTheme, setValueTheme] = useState<any>({});
     const [hashTheme, setHashTheme] = useState<string>("");
+    const [temphash, setTemphash] = useState<string>("");
+    const [load, setLoad] = useState<boolean>(false);
 
     const [valueConf, setValueConf] = useState<any>({});
 
@@ -26,7 +28,34 @@ function HomePage(props: any) {
 
     let files: any = [];
 
+
     useEffect(() => {
+        setTemphash(window.location.hash);
+    })
+
+    useEffect(() => {
+        if (temphash === "") {
+            setLoad(true);
+        }
+        else {
+            let reloadHash = temphash.replace("#/home/", "");
+            let hashObject = JSON.parse(decodeURIComponent(reloadHash));
+            if (Object.keys(hashObject.config).length > 0) {
+                setValueConf(hashObject.config);
+            }
+
+            if (Object.keys(hashObject.theme).length > 0) {
+                setValueTheme(hashObject.theme);
+            }
+
+            setLoad(true);
+
+        }
+    }, [temphash])
+
+
+    useEffect(() => {
+
         if (themeName === "") {
             try {
                 let hash = window.location.hash;
@@ -42,18 +71,14 @@ function HomePage(props: any) {
 
             }
             catch { }
-            //Example from Themify (1)
-            //console.log(JSON.parse(decodeURIComponent(`%7B"name"%3A"hallo"%2C"btHashVars"%3A%7B"%24theme"%3A"%23923434"%2C"%24fluent-halo-color"%3A"white"%2C"%24shimmering"%3A".9"%7D%7D`)))
-
         }
+
 
     }, [themeName])
 
 
     useEffect(() => {
-        if (themeName != "") {
-            changeHash()
-        }
+        changeHash()
     }, [valueTheme])
 
     useEffect(() => {
@@ -61,7 +86,9 @@ function HomePage(props: any) {
     }, [valueConf])
 
     const changeHash = () => {
-        window.location.hash = "/home/" + encodeURIComponent(JSON.stringify({ "name": themeName, "account": account, "theme": valueTheme, "config": valueConf }))
+        if (load === true) {
+            window.location.hash = "/home/" + encodeURIComponent(JSON.stringify({ "name": themeName, "account": account, "theme": valueTheme, "config": valueConf }))
+        }
     }
 
 
@@ -172,19 +199,15 @@ function HomePage(props: any) {
     }
 
     const onChangeThemeHome = async (type: string, value: any) => {
-        if (type === "name") {
-            setThemeName(value);
+        if (value) {
+            if (type === "name") {
+                setThemeName(value);
+            }
+            else if (type === "value") {
+                setValueTheme(value);
+                changeHash();
+            }
         }
-        else if (type === "value") {
-            setValueTheme(value);
-        }
-        else if (type === "hash") {
-            setHashTheme(value);
-            //setHash();
-        }
-        changeHash();
-
-
     }
 
     const onChangeConfigHome = (type: string, value: any) => {
@@ -194,6 +217,7 @@ function HomePage(props: any) {
             }
             else if (type == "config") {
                 setValueConf(value);
+                changeHash();
             }
         }
     }
@@ -261,7 +285,6 @@ function HomePage(props: any) {
                                 user={props.user}
                                 access_token={props.access_token}
                                 config={valueConf}
-                                value={valueConfig}
                                 onChange={(value: string, type?: string) => onChangeConfigHome(type ? type : "value", JSON.parse(value))}
                             />
                         }

@@ -44,7 +44,9 @@ export default function ThemesHome(props: any) {
     }, [Variables])
 
     useEffect(() => {
-        setOutputStyle(props.value);
+        if(Object.keys(props.value).length > 0){
+            setbtHashVars(props.value);
+        }
     }, [props.value])
 
     useEffect(() => {
@@ -172,11 +174,14 @@ export default function ThemesHome(props: any) {
                     onChange={(value: string) => { props.onChange("name", value) }}
                 />
 
+
+
                 {Object.keys(Variables).map((item: any) =>
                     <VariableGroup
                         key={item}
                         GroupName={item}
                         items={Variables[item]}
+                        hashVar={btHashVars}
                         onChange={async (value: any, key: any) => {
                             if (await value == "") {
                                 delete btVariables[item][key]

@@ -136,7 +136,6 @@ export default function FileModal(props: any) {
         }
         else {
             try {
-                console.log(props.contentConfig)
                 let config = {
                     "content": btoa(props.contentConfig),
                     "message": `Add ${themeName} config`,

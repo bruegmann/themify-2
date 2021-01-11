@@ -6,8 +6,10 @@ export default function VariableGroup(props: any) {
 
     const [showGroupItem, setShowGroupItem] = useState<Boolean>(true);
 
+
     return (
         <div className="card mb-3">
+           
             <div className="card-body">
                 <a
                     href="javascript:void(0)"
@@ -23,6 +25,7 @@ export default function VariableGroup(props: any) {
                     Object.keys(props.items).map((item: any) =>
                         <VariableItem
                             key={item}
+                            value={props.hashVar}
                             name={item}
                             items={props.items[item]}
                             onChange={(value: string) => {
