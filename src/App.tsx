@@ -33,7 +33,7 @@ function App() {
     }
 
     const defaultCSS = () => {
-        fetch((window as any).themify_proxy + "defaultCSS", {
+        fetch((window as any).themify_proxy + "defaultCss", {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         })
