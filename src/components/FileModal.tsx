@@ -90,8 +90,17 @@ export default function FileModal(props: any) {
     const editFile = async () => {
         let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
         let shaTheme = files.find((o: any) => o.name === "Theme.json");
+
+        const blueVersion = [{ "name": "BlueReactVersion", type: "text", description: "Blue-React Version to be used", default: "latest", editable: false, value: localStorage.getItem("version") }];
+        let content: any;
+        let obj = JSON.parse(props.contentConfig);
+
+        Object.keys(obj).map((key: any) => {
+            content = Object.assign(obj[key], blueVersion);
+        })
+
         let config = {
-            "content": btoa(props.contentConfig),
+            "content": btoa(JSON.stringify(content)),
             "message": `Update ${themeName} config`,
             "branch": "main",
             "sha": shaConfig.sha
@@ -136,8 +145,16 @@ export default function FileModal(props: any) {
         }
         else {
             try {
+                const blueVersion = [{ "name": "BlueReactVersion", type: "text", description: "Blue-React Version to be used", default: "latest", editable: false, value: localStorage.getItem("version") }];
+                let content: any;
+                let obj = JSON.parse(props.contentConfig);
+
+                Object.keys(obj).map((key: any) => {
+                    content = Object.assign(obj[key], blueVersion);
+                });
+
                 let config = {
-                    "content": btoa(props.contentConfig),
+                    "content": btoa(JSON.stringify(content)),
                     "message": `Add ${themeName} config`,
                     "branch": "main"
                 }
@@ -277,7 +294,7 @@ export default function FileModal(props: any) {
                                 <DropdownItem onClick={() => onChangeAccount(props.user.login)}><img className="rounded-circle align-middle mr-2" alt={props.user?.login} src={props.user?.avatar_url} style={{ width: "30px", height: "30px" }} />{props.user?.login}</DropdownItem>
                                 {
                                     organizations.map((item: any) =>
-                                        <DropdownItem onClick={() => onChangeAccount(item.login)}><img className="rounded-circle align-middle mr-2" alt={item.login} src={item.avatar_url} style={{ width: "30px", height: "30px" }}/>{item.login}</DropdownItem>
+                                        <DropdownItem onClick={() => onChangeAccount(item.login)}><img className="rounded-circle align-middle mr-2" alt={item.login} src={item.avatar_url} style={{ width: "30px", height: "30px" }} />{item.login}</DropdownItem>
                                     )
                                 }
                             </DropdownMenu>

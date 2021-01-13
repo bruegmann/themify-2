@@ -7,7 +7,6 @@ import { getPhrase as _ } from './shared';
 import HomePage from "./pages/HomePage";
 import LibraryPage from "./pages/LibraryPage";
 import GithubLogin from "./components/GithubLogin";
-import SettingsPage from "./pages/SettingsPage";
 
 
 function App() {
@@ -75,11 +74,6 @@ function App() {
                             />
                     },
                     {
-                        name: "settings",
-                        component:
-                            <SettingsPage />
-                    },
-                    {
                         name: "library",
                         component:
                             <LibraryPage
@@ -93,7 +87,6 @@ function App() {
                 <SidebarMenu
                     bottomContent={
                         <>
-                            <MenuItem href="#/settings" icon={<Gear />} label="Settings" />
                             <GithubLogin
                                 onChange={(usr: any, token: string) => {
                                     setUser(usr);
