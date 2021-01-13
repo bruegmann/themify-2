@@ -13,12 +13,17 @@ export default function ConfigHome(props: any) {
 
     const [orgs, setOrgs] = useState<any>();
     const [orgTemplate, setOrgTemplate] = useState<any>([]);
+    const [userTemplate, setUserTemplate] = useState<any>([]);
 
 
 
     useEffect(() => {
         if (!orgs && props.user) {
             getOrgs(props.user?.login);
+        }
+
+        if(props.user && props.access_token){
+            getTemplateUser();
         }
     })
 
@@ -27,10 +32,7 @@ export default function ConfigHome(props: any) {
             getTemplateOrgs();
         }
     }, [orgs])
-
-
-
-
+    
     useEffect(() => {
         if (Object.keys(attribute).length === 0) {
             SetUp();
@@ -107,7 +109,7 @@ export default function ConfigHome(props: any) {
                                     "Content-Type": "application/json",
                                     "Accept": "application/json",
                                     "Authorization": `token ${props.access_token}`
-                                } 
+                                }
                             })
                                 .then(res => res.json())
                                 .then((f_config: any) => {
@@ -139,7 +141,57 @@ export default function ConfigHome(props: any) {
     }
 
     const getTemplateUser = () => {
-
+        if (props.user) {
+            fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${props.user.login}/Themify_DB/git/trees/main`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "Authorization": `token ${props.access_token}`
+                }
+            })
+                .then(res => res.json())
+                .then((repo: any) => {
+                    for (let t = 0; t < repo.tree.length; t++) {
+                        if (repo.tree[t].path === "config") {
+                            fetch(`${(window as any).themify_proxy}${repo.tree[t].url}`, {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Accept": "application/json",
+                                    "Authorization": `token ${props.access_token}`
+                                }
+                            })
+                                .then(res => res.json())
+                                .then((f_config: any) => {
+                                    for (let x = 0; x < f_config.tree.length; x++) {
+                                        if (f_config.tree[x].path === "template") {
+                                            fetch(`${(window as any).themify_proxy}${f_config.tree[x].url}`, {
+                                                method: "GET",
+                                                headers: {
+                                                    "Content-Type": "application/json",
+                                                    "Accept": "application/json",
+                                                    "Authorization": `token ${props.access_token}`
+                                                }
+                                            })
+                                                .then(res => res.json())
+                                                .then((f_template: any) => {
+                                                    if (userTemplate.length <= 0) {
+                                                        for (let j = 0; j < f_template.tree.length; j++) {
+                                                            userTemplate.push({ "name": f_template.tree[j].path, "org": props.user.login, "url": f_template.tree[j].url, "template": [] })
+                                                        }
+                                                    }
+                                                })
+                                        }
+                                    }
+                                })
+                        }
+                    }
+                })
+                .catch((e)=>{
+                    console.log(e)
+                })
+        }
     }
 
 
@@ -205,7 +257,7 @@ export default function ConfigHome(props: any) {
                 )
             }
 
-            <button onClick={() => console.log(orgTemplate)}>click</button>
+            <button onClick={() => console.log(orgTemplate, userTemplate)}>click</button>
         </div>
     )
 }
