@@ -59,14 +59,14 @@ export default function ConfigSection(props: any) {
             })
             .then(response => {
                 let array = [] as any[];
-                console.log("vvve");
+
                 const json = response;
                 Object.keys(json.time).forEach((key, index) => {
                     if (key !== "modified" && key !== "created" || key !== "created" && key !== "modified") {
                         array.push(key);
                     }
                 })
-                console.log(array);
+
                 let currentNumber = undefined as any;
                 let currentTempArr = [] as any;
                 const sortedArray = array.reduce((tempArr: any, value: any) => {
