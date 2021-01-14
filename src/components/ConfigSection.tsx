@@ -155,24 +155,21 @@ export default function ConfigSection(props: any) {
                                 }
                                 <button className="btn btn-outline-primary mb-3 mt-3" onClick={() => AddAttribute()}><Plus /> {_("ADD")}</button>
 
-                                <div className="row mb-1">
-                                    <div className="col-md-5 d-flex align-items-center">
-                                        <p className="mb-0">Blue-React Version</p>
-                                    </div>
-                                    <div className="col-md-7">
-                                        <div className="input-group d-block">
-                                            <div className="input-group-append">
-                                                <select value={localStorage.getItem("version")!} onChange={(e: any) => { installBlueReact(e) }} className="custom-select" id="inputGroupSelect01">
-                                                    {BlueReactVersionen?.map((item: any) => (
-                                                        item
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
 
                             </div>
+
+                            <div className="input-group mb-3 mt-3 w-25 mx-auto">
+                                <div className="input-group-prepend">
+                                    <label className="input-group-text" htmlFor="inputGroupSelect01">Blue React Version</label>
+                                </div>
+                                <select value={localStorage.getItem("version")!} onChange={(e: any) => { installBlueReact(e) }} className="custom-select" id="inputGroupSelect01">
+                                    {BlueReactVersionen?.map((item: any) => (
+                                        item
+                                    ))}
+                                </select>
+                            </div>
+
                         </div>
                     </div>
                 </div>
