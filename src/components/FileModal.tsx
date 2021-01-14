@@ -91,16 +91,16 @@ export default function FileModal(props: any) {
         let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
         let shaTheme = files.find((o: any) => o.name === "Theme.json");
 
-        const blueVersion = [{ "name": "BlueReactVersion", type: "text", description: "Blue-React Version to be used", default: "latest", editable: false, value: localStorage.getItem("version") }];
-        let content: any;
+        const blueVersion = { "name": "BlueReactVersion", type: "text", description: "Blue-React Version to be used", default: "latest", editable: false, value: localStorage.getItem("version") };
+
         let obj = JSON.parse(props.contentConfig);
 
         Object.keys(obj).map((key: any) => {
-            content = Object.assign(obj[key], blueVersion);
+            obj[key].push(blueVersion);
         })
 
         let config = {
-            "content": btoa(JSON.stringify(content)),
+            "content": btoa(JSON.stringify(obj)),
             "message": `Update ${themeName} config`,
             "branch": "main",
             "sha": shaConfig.sha
@@ -145,16 +145,16 @@ export default function FileModal(props: any) {
         }
         else {
             try {
-                const blueVersion = [{ "name": "BlueReactVersion", type: "text", description: "Blue-React Version to be used", default: "latest", editable: false, value: localStorage.getItem("version") }];
-                let content: any;
+                const blueVersion = { "name": "BlueReactVersion", type: "text", description: "Blue-React Version to be used", default: "latest", editable: false, value: localStorage.getItem("version") };
+
                 let obj = JSON.parse(props.contentConfig);
 
                 Object.keys(obj).map((key: any) => {
-                    content = Object.assign(obj[key], blueVersion);
-                });
+                    obj[key].push(blueVersion);
+                })
 
                 let config = {
-                    "content": btoa(JSON.stringify(content)),
+                    "content": btoa(JSON.stringify(obj)),
                     "message": `Add ${themeName} config`,
                     "branch": "main"
                 }
