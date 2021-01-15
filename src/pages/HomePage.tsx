@@ -420,7 +420,7 @@ function HomePage(props: any) {
                     access_token={props.access_token}
                     title={_("SAVE_AS")}
                     contentConfig={JSON.stringify(valueConf)}
-                    contentTheme={JSON.stringify({ "name": themeName, "link": hashTheme })}
+                    contentTheme={JSON.stringify({ "name": themeName, "link": temphash })}
                     themeName={themeName}
                     account={account}
                 />
