@@ -110,7 +110,7 @@ function App() {
                 <style
                     type="text/css"
                     dangerouslySetInnerHTML={{
-                        __html: `${!localStorage.getItem("css") ? default_CSS : JSON.parse(localStorage.getItem("css") as string)}`
+                        __html: `${!localStorage.getItem("css") ? default_CSS : JSON.parse(localStorage.getItem("css") as string).cssOutput}`
 
                     }}
                 />

@@ -72,7 +72,7 @@ function SettingsPage(props: any) {
 
     const getCSS = (version: any, css: any, callback?: (e?: any) => void) => {
 
-        fetch((window as any).themify_service + "scssToCss?version=" + version + "&css=" + css, {
+        fetch((window as any).themify_service + "scssToCss?version=" + version + "&scss=" + css, {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         })
@@ -92,7 +92,7 @@ function SettingsPage(props: any) {
 
     const installBlueReact = (e: any) => {
         localStorage.setItem("version", e.target.value);
-        const changedCSS = "//"
+        const changedCSS = ""
         getCSS(e.target.value, changedCSS);
     }
 
