@@ -16,6 +16,7 @@ export default function VariableGroup(props: any) {
                     array.push(<VariableItem
                         key={item}
                         name={item}
+                        value={props.hashVar}
                         items={props.items[item]}
                         onChange={(value: string) => {
                             props.onChange(value, item)
