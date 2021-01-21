@@ -8,8 +8,6 @@ export default function FileModal(props: any) {
     const [account, setAccount] = useState<string>("");
     const [load, setLoad] = useState<boolean>(false);
     const [themeName, setThemeName] = useState<string>("");
-    // const [contentConfig, setContentConfig] = useState<string>("");
-    // const [contentTheme, setContentTheme] = useState<string>("");
 
 
     let files: any = [];
@@ -37,18 +35,6 @@ export default function FileModal(props: any) {
             setAccount(props.user.login);
         }
     }, [props.user])
-
-    // useEffect(() => {
-    //     if (contentConfig === "") {
-    //         setContentConfig(props.contentConfig);
-    //     }
-    // }, [props.contentConfig])
-
-    // useEffect(() => {
-    //     if (contentTheme === "") {
-    //         setContentTheme(props.contentTheme);
-    //     }
-    // }, [props.contentTheme])
 
 
 
@@ -276,8 +262,8 @@ export default function FileModal(props: any) {
                             <DropdownMenu>
                                 <DropdownItem onClick={() => onChangeAccount(props.user.login)}><img className="rounded-circle align-middle mr-2" alt={props.user?.login} src={props.user?.avatar_url} style={{ width: "30px", height: "30px" }} />{props.user?.login}</DropdownItem>
                                 {
-                                    organizations.map((item: any) =>
-                                        <DropdownItem onClick={() => onChangeAccount(item.login)}><img className="rounded-circle align-middle mr-2" alt={item.login} src={item.avatar_url} style={{ width: "30px", height: "30px" }}/>{item.login}</DropdownItem>
+                                    organizations.map((item: any, key: any) =>
+                                        <DropdownItem key={key} onClick={() => onChangeAccount(item.login)}><img className="rounded-circle align-middle mr-2" alt={item.login} src={item.avatar_url} style={{ width: "30px", height: "30px" }} />{item.login}</DropdownItem>
                                     )
                                 }
                             </DropdownMenu>
