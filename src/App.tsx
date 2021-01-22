@@ -107,13 +107,13 @@ function App() {
                     <MenuItem href="#/library" icon={<Collection />} label={_("LIBRARY")} />
                     <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label={_("BLUE_DOCUMENTATION")} />
                 </SidebarMenu>
-                <style
+                {/* <style
                     type="text/css"
                     dangerouslySetInnerHTML={{
                         __html: `${!localStorage.getItem("css") ? default_CSS : JSON.parse(localStorage.getItem("css") as string).cssOutput}`
 
                     }}
-                />
+                /> */}
             </Grid>
             :
             <></>

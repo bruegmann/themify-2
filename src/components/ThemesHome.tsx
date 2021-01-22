@@ -38,6 +38,9 @@ export default function ThemesHome(props: any) {
     const [cahngeVar, setChangeVar] = useState<boolean>(false);
 
 
+    const [testStyle, settestStyle] = useState<string>("");
+
+
     const [CSS, setCSS] = useState<any>();
 
     useEffect(() => {
@@ -188,6 +191,7 @@ export default function ThemesHome(props: any) {
 
 
         let version = localStorage.getItem("version")
+        console.log(bluevar)
 
         getCSS(version, bluevar);
 
@@ -196,8 +200,8 @@ export default function ThemesHome(props: any) {
     }
 
     const getCSS = (version: any, css: any, callback?: (e?: any) => void) => {
-
-        fetch((window as any).themify_service + "scssToCss?version=" + version + "&css=" + css, {
+        console.log(css);
+        fetch((window as any).themify_service + "scssToCss?version=" + version + "&scss=" + css, {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         })
@@ -205,23 +209,43 @@ export default function ThemesHome(props: any) {
                 return res.json();
             })
             .then(response => {
-                // Utilities.startLoading();
-                //localStorage.setItem("css", JSON.stringify(response));
-                setCSS(response);
                 console.log(response)
-
-
-                // if (cahngeVar === true) {
-                //    setChangeVar(false);
-                //     // callback!(
-                //     //     window.location.reload()
-                //     // )
-                // }
-            })
-            .then(() => {
-                // Utilities.finishLoading();
+                // Utilities.startLoading();
+                // localStorage.setItem("css", JSON.stringify(response));
+                setCSS(response);
+                // callback!(
+                //     window.location.reload()
+                // )
             })
     }
+
+    // const getCSS = (version: any, css: any, callback?: (e?: any) => void) => {
+
+    //     fetch((window as any).themify_service + "scssToCss?version=" + version + "&css=" + css, {
+    //         method: "GET",
+    //         headers: { "Content-Type": "application/json" }
+    //     })
+    //         .then(res => {
+    //             return res.json();
+    //         })
+    //         .then(response => {
+    //             // Utilities.startLoading();
+    //             //localStorage.setItem("css", JSON.stringify(response));
+    //             setCSS(response);
+    //             console.log(response)
+
+
+    //             // if (cahngeVar === true) {
+    //             //    setChangeVar(false);
+    //             //     // callback!(
+    //             //     //     window.location.reload()
+    //             //     // )
+    //             // }
+    //         })
+    //         .then(() => {
+    //             // Utilities.finishLoading();
+    //         })
+    // }
 
     const compile = () => {
         // var style = await outputStyle.toString()
@@ -234,17 +258,24 @@ export default function ThemesHome(props: any) {
 
     const test = () => {
         let version = localStorage.getItem("version")
-        let csstest =  "$theme: $danger;";
+        let csstest = "h1{color: red}";
         console.log(csstest)
         getCSS(version, csstest);
 
+    }
+
+    const changetest = (e: any) => {
+        settestStyle(e.target.value);
     }
 
 
     return (
         <div className="row">
             <style>
-                {CSS}
+                {CSS?.cssOutput}
+            </style>
+            <style>
+                {testStyle}
             </style>
             <div className="col-md-5">
                 <ThemeName
@@ -252,8 +283,11 @@ export default function ThemesHome(props: any) {
                     onChange={(value: string) => { props.onChange("name", value) }}
                 />
 
-                <button onClick={() => test()}>Click</button>
+                <button onClick={() => console.log(CSS)}>Click</button>
+                <input onChange={changetest}></input>
 
+                <h1>h1</h1>
+                <p>p</p>
                 <Search className="mt-1 mb-1"
                     value={searchValue}
                     onChange={(e: any) => setSearchValue(e.target.value)}
