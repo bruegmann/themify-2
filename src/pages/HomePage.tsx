@@ -32,8 +32,7 @@ function HomePage(props: any) {
     useEffect(() => {
         if (temphash === "") {
             setLoad(true);
-            //setThemeName("Theme Name");
-            console.log("themeName");
+            setThemeName("Theme Name");
         }
         else {
             let reloadHash = temphash.replace("#/home/", "");
@@ -58,17 +57,13 @@ function HomePage(props: any) {
             try {
                 let hash = window.location.hash;
                 hash.replace("#/home/", "")
-                console.log(hash);
                 if (hash != "") {
                     let hashObject = JSON.parse(decodeURIComponent(hash));
                     setThemeName(hashObject.name);
                     setAccount(hashObject.account)
-                    console.log(hash);
-                    console.log(hashObject);
                 }
                 else {
                     setThemeName("Theme Name");
-                    console.log(themeName);
                 }
 
             }
@@ -95,7 +90,6 @@ function HomePage(props: any) {
     const changeHash = () => {
         if (load === true) {
             window.location.hash = "/home/" + encodeURIComponent(JSON.stringify({ "name": themeName, "account": account, "theme": valueTheme, "config": valueConf }))
-            console.log(themeName);
         }
     }
 
@@ -249,7 +243,6 @@ function HomePage(props: any) {
             }
             else if (type === "value") {
                 setValueTheme(value);
-                console.log(value);
                 changeHash();
             }
             changeHash();
