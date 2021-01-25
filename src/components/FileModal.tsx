@@ -8,8 +8,8 @@ export default function FileModal(props: any) {
     const [account, setAccount] = useState<string>("");
     const [load, setLoad] = useState<boolean>(false);
     const [themeName, setThemeName] = useState<string>("");
-    const [contentConfig, setContentConfig] = useState<string>("");
-    const [contentTheme, setContentTheme] = useState<string>("");
+    // const [contentConfig, setContentConfig] = useState<string>("");
+    // const [contentTheme, setContentTheme] = useState<string>("");
 
 
     let files: any = [];
@@ -38,17 +38,17 @@ export default function FileModal(props: any) {
         }
     }, [props.user])
 
-    useEffect(() => {
-        if (contentConfig === "") {
-            setContentConfig(props.contentConfig);
-        }
-    }, [props.contentConfig])
+    // useEffect(() => {
+    //     if (contentConfig === "") {
+    //         setContentConfig(props.contentConfig);
+    //     }
+    // }, [props.contentConfig])
 
-    useEffect(() => {
-        if (contentTheme === "") {
-            setContentTheme(props.contentTheme);
-        }
-    }, [props.contentTheme])
+    // useEffect(() => {
+    //     if (contentTheme === "") {
+    //         setContentTheme(props.contentTheme);
+    //     }
+    // }, [props.contentTheme])
 
 
 
@@ -91,14 +91,14 @@ export default function FileModal(props: any) {
         let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
         let shaTheme = files.find((o: any) => o.name === "Theme.json");
         let config = {
-            "content": btoa(contentConfig),
+            "content": btoa(props.contentConfig),
             "message": `Update ${themeName} config`,
             "branch": "main",
             "sha": shaConfig.sha
         }
 
         let json = {
-            "content": btoa(contentTheme),
+            "content": btoa(props.contentTheme),
             "message": `Update ${themeName} css`,
             "branch": "main",
             "sha": shaTheme.sha
@@ -137,13 +137,13 @@ export default function FileModal(props: any) {
         else {
             try {
                 let config = {
-                    "content": btoa(contentConfig),
+                    "content": btoa(props.contentConfig),
                     "message": `Add ${themeName} config`,
                     "branch": "main"
                 }
 
                 let json = {
-                    "content": btoa(contentTheme),
+                    "content": btoa(props.contentTheme),
                     "message": `Add ${themeName} css`,
                     "branch": "main"
                 }
@@ -274,10 +274,10 @@ export default function FileModal(props: any) {
                                 {_("ACCOUNT")}: {account}
                             </DropdownToggle>
                             <DropdownMenu>
-                                <DropdownItem onClick={() => onChangeAccount(props.user.login)}><img className="avatar mr-2" alt={props.user?.login} src={props.user?.avatar_url} />{props.user?.login}</DropdownItem>
+                                <DropdownItem onClick={() => onChangeAccount(props.user.login)}><img className="rounded-circle align-middle mr-2" alt={props.user?.login} src={props.user?.avatar_url} style={{ width: "30px", height: "30px" }} />{props.user?.login}</DropdownItem>
                                 {
                                     organizations.map((item: any) =>
-                                        <DropdownItem onClick={() => onChangeAccount(item.login)}><img className="avatar mr-2" alt={item.login} src={item.avatar_url} />{item.login}</DropdownItem>
+                                        <DropdownItem onClick={() => onChangeAccount(item.login)}><img className="rounded-circle align-middle mr-2" alt={item.login} src={item.avatar_url} style={{ width: "30px", height: "30px" }}/>{item.login}</DropdownItem>
                                     )
                                 }
                             </DropdownMenu>

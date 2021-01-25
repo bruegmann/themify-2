@@ -11,7 +11,7 @@ export const phrases: IPhrases = {
     "RESET_TO_DEFAULT": ["Reset to default", "Zurücksetzen"],
     "SHARE_THIS_CONFIG": ["Share this config", "Diese Konfig teilen"],
     "SAVE_TO_LIB": ["Save to Library", "Speichern in Library"],
-    "SAVE":["Save", "Speichern"],
+    "SAVE": ["Save", "Speichern"],
     "EXPORT_ZIP": ["Export as zip", "Als Zip exportieren"],
     "IMPORT_CONFIG": ["Import config", "Konfig importieren"],
     "EXPORT": ["Export ... ", "Exportieren ... "],
@@ -40,7 +40,21 @@ export const phrases: IPhrases = {
     "BLUE_DOCUMENTATION": ["Blue Documentation", "Blue Dokumentation"],
     "NO_DATABASE": ["There doesn't seem to be a database yet. Do you want to create a database?", "Es scheint noch keine Datenbank vorhande zu sein. Wollen sie eine Datenbank erstellen?"],
     "ORG_THEME": ["Organisation Themes", "Organisations Themes"],
-    "THEMES": ["Themes", "Themes"]
+    "THEMES": ["Themes", "Themes"],
+    "OUTPUT_STYLE_PLACEHOLDER": [
+        "No compiled stylesheet yet. Change some variables and see what will happen.",
+        "Noch kein kompilierter Stylesheet. Ändere ein paar Variablen und sieh, was passiert."
+    ],
+    "SOMETHING_WENT_WRONG": ["Something went wrong while compiling", "Beim Kompilieren gab es einen Fehler"],
+    "COMPILE_ERROR_TXT": [
+        "This might happen when you use variables without defining them before.\nBy the way: You can use the default value of a variable when you double-click on it's input field.",
+        "Das kann passieren, wenn du Variablen nutzt, ohne sie vorher zu definieren.\nÜbrigens: Du kannst den Standardwert einer Variable nutzen, indem du auf dessen Eingabefeld doppelklickst."
+    ],
+    "THIS_IS_ERROR_MESSAGE": ["This is the error message:", "Das ist die Fehlermeldung:"],
+    "CUSTOM_STYLE_PLACEHOLDER": [
+        "Here you can insert custom CSS, for example to import a webfont.",
+        "Hier kannst du zusätzliches CSS einfügen, z.B. um eine Webfont zu importieren."
+    ],
 };
 
 export function getPhrase(keyword: string, countryCode: string | undefined = undefined, _phrases: IPhrases | undefined = undefined) {

@@ -5,9 +5,35 @@ import VariableItem from './VariableItem'
 export default function VariableGroup(props: any) {
 
     const [showGroupItem, setShowGroupItem] = useState<Boolean>(true);
+    const [children, setChildren] = useState<any>();
 
+    useEffect(() => {
+        if (props.search !== "" && props.search !== null && props.search !== undefined) {
+            let array: any[] = [];
+            Object.keys(props.items).map((item: any) => {
+                const val = item.replace("$", "");
+                if (val.toLowerCase().includes(props.search.toLowerCase()) && val !== "") {
+                    array.push(<VariableItem
+                        key={item}
+                        name={item}
+                        value={props.hashVar}
+                        items={props.items[item]}
+                        onChange={(value: string) => {
+                            props.onChange(value, item)
+
+                        }} />);
+                }
+            })
+
+
+            setChildren(array);
+        } else {
+            setChildren("");
+        }
+    }, [props])
     return (
-        <div className="card mb-3">
+
+        <div className={props.search !== "" && props.search !== undefined && props.search !== null && (Array.isArray(children) && children.length === 0 || children === undefined || children === null) ? "card mb-3 d-none" : "card mb-3"}>
             <div className="card-body">
                 <a
                     href="javascript:void(0)"
@@ -18,11 +44,14 @@ export default function VariableGroup(props: any) {
                         {props.GroupName}
                     </h5>
                 </a>
-
-                {showGroupItem === true &&
+                {props.search !== "" && props.search !== undefined && props.search !== null ?
+                    children
+                    :
+                    showGroupItem === true && (props.search === undefined || props.search === "") &&
                     Object.keys(props.items).map((item: any) =>
                         <VariableItem
                             key={item}
+                            value={props.hashVar}
                             name={item}
                             items={props.items[item]}
                             onChange={(value: string) => {
@@ -33,8 +62,8 @@ export default function VariableGroup(props: any) {
 
                     )
                 }
-            </div>
 
+            </div>
         </div>
     )
 }

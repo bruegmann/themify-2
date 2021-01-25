@@ -8,35 +8,30 @@ import ConfigAttribute from './ConfigAttribute';
 export default function ConfigSection(props: any) {
 
     const [attribute, setAttribute] = useState<any>([]);
+    const [test, setTest] = useState<any>([]);
     const [change, setChange] = useState<boolean>(false);
 
 
     useEffect(() => {
-
         setAttribute(props.attribute);
     }, [props.attribute])
 
     const onChangeValue = (attrb: string, value: string, i: number) => {
         if (attrb === "delete") {
-            attribute.splice(i, 1);
-            setChange(!change)
+            props.onChange(JSON.stringify(attribute),JSON.stringify({"attr":"delete", "index":i}));
         }
         else if (attrb === "value") {
-            if (value !== "") {
-                attribute[i].value = value;
-            }
-            else {
-                delete attribute[i].value;
-            }
-            setChange(!change)
+            props.onChange(JSON.stringify(attribute),JSON.stringify({"attr":"value", "value":value, "index":i}));
         }
         else {
-            attribute[i][attrb] = value;
-            setChange(!change)
+            props.onChange(JSON.stringify(attribute),JSON.stringify({"attr":"name", "attrb":attrb, "value":value,"index":i}));
         }
+
+
+        
     }
 
-    const AddAttribute = () => {
+    const AddAttribute = async () => {
         var temp = {
             "name": "Attribute",
             "type": "",
@@ -44,8 +39,7 @@ export default function ConfigSection(props: any) {
             "default": "",
             "editable": true
         }
-        attribute.push(temp);
-        setChange(!change)
+       props.onChange(JSON.stringify(temp),JSON.stringify({"attr":"add"}));
     }
 
 
@@ -70,7 +64,6 @@ export default function ConfigSection(props: any) {
                                     )
                                     :
                                     <p className="text-center">{_("NO_ATTRIBUTES")}</p>
-
                                 }
                                 <button className="btn btn-outline-primary mb-3 mt-3" onClick={() => AddAttribute()}><Plus /> {_("ADD")}</button>
                             </div>
@@ -78,7 +71,6 @@ export default function ConfigSection(props: any) {
                     </div>
                 </div>
             }
-
         </div>
     )
 }

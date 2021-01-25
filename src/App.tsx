@@ -33,7 +33,7 @@ function App() {
     }
 
     const defaultCSS = () => {
-        fetch((window as any).themify_proxy + "defaultCss", {
+        fetch((window as any).themify_service + "defaultCss", {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         })
@@ -41,16 +41,12 @@ function App() {
                 return res.json();
             })
             .then(response => {
-                console.log(response);
-
-
                 setdefault_CSS(response);
-
             })
     }
 
     const defaultVersion = () => {
-        fetch((window as any).themify_proxy + "defaultVersion", {
+        fetch((window as any).themify_service + "defaultVersion", {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         })
@@ -75,6 +71,7 @@ function App() {
                             <HomePage
                                 user={user}
                                 access_token={access_token}
+                                defaultCSS={default_CSS}
                             />
                     },
                     {
@@ -92,12 +89,6 @@ function App() {
                     }
 
                 ]}
-                statusIcons={{
-                    danger: <XCircleFill />,
-                    info: <InfoCircleFill />,
-                    success: <CheckCircleFill />,
-                    warning: <ExclamationCircleFill />
-                }}
             >
                 <SidebarMenu
                     bottomContent={
@@ -112,13 +103,14 @@ function App() {
                         </>
                     }>
                     <MenuItem href="#/home" icon={<Brush />} label={_("CUSTOMIZER")} isHome />
+                    <MenuItem href="#/local-themes" icon={<Image />} label={_("LOCAL_THEME")} />
                     <MenuItem href="#/library" icon={<Collection />} label={_("LIBRARY")} />
                     <MenuItem onClick={() => openBlueDocs()} icon={<FileText />} label={_("BLUE_DOCUMENTATION")} />
                 </SidebarMenu>
                 <style
                     type="text/css"
                     dangerouslySetInnerHTML={{
-                        __html: `${!localStorage.getItem("css") ? default_CSS : JSON.parse(localStorage.getItem("css") as string)}`
+                        __html: `${!localStorage.getItem("css") ? default_CSS : JSON.parse(localStorage.getItem("css") as string).cssOutput}`
 
                     }}
                 />

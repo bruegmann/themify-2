@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { DropdownItem, DropdownMenu, DropdownToggle, InputGroupButtonDropdown } from 'reactstrap';
-import ConfigSection from './ConfigSection';
 import { getPhrase as _ } from '../shared';
+import ConfigSection from './ConfigSection';
+
 
 export default function ConfigHome(props: any) {
     const [attribute, setAttribute] = useState<any>({});
     const [selected, setSelected] = useState<string>("none");
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
-    const [values, setValues] = useState<any>();
     const [change, setChange] = useState<boolean>(false);
 
 
@@ -65,6 +65,29 @@ export default function ConfigHome(props: any) {
         }
     }
 
+    //const setStartValue = () => {
+    // var item = {};
+    // var add = [];
+    // var appSettings = {};
+
+    // for (var i = 0; i < Object.keys(valueConfig).length; i++) {
+    //     var temp = {
+    //         "name": Object.keys(valueConfig)[i],
+    //         "value": "",
+    //         "description": "",
+    //     }
+    //     add.push(temp);
+    // }
+    // var _declaration = {
+    //     "_attributes": {
+    //         "version": "1.0",
+    //         "encoding": "utf-8"
+    //     }
+    // }
+    // appSettings = { add };
+    // item = { appSettings, _declaration };
+    // setValues(item);
+    // console.log(item)
 
     const getOrgs = async (username: any) => {
 
@@ -137,6 +160,7 @@ export default function ConfigHome(props: any) {
                         }
                     }
                 })
+            props.onChange(JSON.stringify(attribute), "config")
         }
     }
 
@@ -216,7 +240,7 @@ export default function ConfigHome(props: any) {
         }
         appSettings = { add };
         item = { appSettings, _declaration };
-        setValues(item);
+        //setValues(item);
     }
 
     const setTemplate = (name: string) => {
@@ -236,8 +260,7 @@ export default function ConfigHome(props: any) {
                 <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggle} >
                     <DropdownToggle caret color="outline-primary">
                         {_("TEMPLATE")}: {selected}
-                    </DropdownToggle>
-                    <DropdownMenu>
+                    </DropdownToggle>                     <DropdownMenu>
                         {
                             Object.keys(attribute).map((item: any) =>
                                 <DropdownItem onClick={() => setTemplate(item)}>{item}</DropdownItem>
@@ -246,15 +269,35 @@ export default function ConfigHome(props: any) {
                     </DropdownMenu>
                 </InputGroupButtonDropdown >
             </div>
-            {
-                Object.keys(attribute).map((item: any, i: number) =>
-                    <ConfigSection
-                        keys={i}
-                        attribute={attribute[item]}
-                        name={item}
-                        selected={selected}
-                    />
-                )
+            {Object.keys(attribute).map((item: any, i: number) =>
+                <ConfigSection
+                    keys={i}
+                    attribute={attribute[item]}
+                    name={item}
+                    selected={selected}
+                    onChange={async (value: string, attr: string, type?: string) => {
+                        let objAttr = JSON.parse(attr)
+                        if (objAttr.attr === "add") {
+                            await attribute[selected].push(JSON.parse(value));
+                        }
+                        else if (objAttr.attr === "delete") {
+                            await attribute[selected].splice(objAttr.index, 1);
+                        }
+                        else if (objAttr.attr === "value") {
+                            if (objAttr.value !== "") {
+                                attribute[selected][objAttr.index].value = objAttr.value;
+                            }
+                            else {
+                                delete attribute[selected][objAttr.index].value;
+                            }
+                        }
+                        else if (objAttr.attr === "name") {
+                            attribute[selected][objAttr.index][objAttr.attrb] = objAttr.value;
+                        }
+                        props.onChange(JSON.stringify(attribute), "config");
+                    }}
+                />
+            )
             }
 
             <button onClick={() => console.log(orgTemplate, userTemplate)}>click</button>

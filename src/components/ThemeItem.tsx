@@ -33,7 +33,7 @@ export default function ThemeItem(props: any) {
     const del = async (res: any, username: any) => {
         Utilities.startLoading();
         for (let i = 0; i < res.length; i++) {
-            const dele = await fetch(`${(window as any).themify_proxy}delete?newUrl=https://api.github.com/repos/${username}/Themify_DB/contents/${res[i].path}&sha=${res[i].sha}&token=${props.access_token}`, {
+            const dele = await fetch(`${(window as any).themify_service}delete?newUrl=https://api.github.com/repos/${username}/Themify_DB/contents/${res[i].path}&sha=${res[i].sha}&token=${props.access_token}`, {
             })
             await dele
                 .json()
