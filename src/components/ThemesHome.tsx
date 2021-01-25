@@ -35,6 +35,20 @@ export default function ThemesHome(props: any) {
     const [error, setError] = useState<any>();
     const [resultStyle, setResultStyle] = useState<any>();
     const [searchValue, setSearchValue] = useState<any>();
+    const [iscompiled, setIsCompiled] = useState<boolean>(false);
+    const [cahngeVar, setChangeVar] = useState<boolean>(false);
+
+
+    const [testStyle, settestStyle] = useState<string>("");
+
+
+    const [CSS, setCSS] = useState<any>();
+
+    useEffect(() => {
+        if (!CSS) {
+            jsVarToSass();
+        }
+    })
 
     useEffect(() => {
         if (Variables.length === 0) {
@@ -52,25 +66,22 @@ export default function ThemesHome(props: any) {
     }, [Variables])
 
     useEffect(() => {
-        if(Object.keys(props.value).length > 0){
+        if (Object.keys(props.value).length > 0) {
             setbtHashVars(props.value);
         }
     }, [props.value])
 
     useEffect(() => {
-        compile();
-    }, [outputStyle])
-
-    useEffect(() => {
         setThemeName(props.name);
     }, [props.name])
+
 
     useEffect(() => {
         if (customStyle) {
             setCustomStyle(customStyle);
-            afterValueChange();
+            // afterValueChange(false);
         } else {
-            afterValueChange();
+            //afterValueChange(false);
         }
     }, [customStyle])
 
@@ -102,7 +113,7 @@ export default function ThemesHome(props: any) {
     const afterValueChange = async () => {
         await setHash();
         await jsVarToSass();
-       // await compile();
+
     }
 
     const setHash = async () => {
@@ -134,72 +145,61 @@ export default function ThemesHome(props: any) {
         //     });
         //     window.parent.document.dispatchEvent(variablesChangeEvent);
         // }
-       // props.onChange("hash",  "/home/" + encodeURIComponent(JSON.stringify(hashObject)));
+        // props.onChange("hash",  "/home/" + encodeURIComponent(JSON.stringify(hashObject)));
         props.onChange("value", btHashVars);
         //window.location.hash = "/home/" + encodeURIComponent(JSON.stringify(hashObject));
 
     }
 
     const getComment = () => {
-        return `//\nOpen the following link to edit this config on Themify\n//${window.location.href}\n\n`;
+        return `//Open the following link to edit this config on Themify\n//${window.location.href}\n\n`;
     }
 
     const jsVarToSass = async () => {
-        props.onChange("value", "")
-        var tempOutputStyle: string = "";
 
-        Object.keys(btVariables).map((i: any) => {
-            const section = btVariables[i];
+        let bluevar = "// Blue variables\n//\n\n";
+        let output: string = "";
 
-            if (Object.keys(section).length > 0) {
-                tempOutputStyle += `// ${i}\n//\n\n`;
-
-                Object.keys(section).map((key: any) => {
-                    tempOutputStyle += key + ": " + section[key].value + ";\n";
-                });
-
-                tempOutputStyle += "\n\n";
-            }
+        Object.keys(props.value).map((i: any) => {
+            bluevar += i + ": " + props.value[i] + ";\n";
         })
 
-        tempOutputStyle = customStyle + "\n\n" + tempOutputStyle;
+        output = localStorage.getItem("css") + getComment() + bluevar;
 
-        if (tempOutputStyle !== "") {
-            tempOutputStyle = getComment() + tempOutputStyle
-        }
+        let version = localStorage.getItem("version")
 
-        //props.onChange("value", tempOutputStyle.toString())
-
+        getCSS(version, output);
     }
 
     const getCSS = (version: any, css: any, callback?: (e?: any) => void) => {
+        if (css) {
+            fetch((window as any).themify_service + "scssToCss?version=" + version + "&scss=" + encodeURIComponent(css), {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
 
-        fetch((window as any).themify_proxy + "scss_to_css?version=" + version + "&css=" + css, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" }
-        })
-            .then(res => {
-                return res.json();
             })
-            .then(response => {
-                Utilities.startLoading();
-                localStorage.setItem("css", JSON.stringify(response));
-                
-                callback!(
-                    window.location.reload()
-                )
-            })
+                .then(res => {
+                    return res.json();
+                })
+                .then(response => {
+                    // Utilities.startLoading();
+                    localStorage.setItem("css", JSON.stringify(response));
+                    setCSS(response);
+                    if (callback) {
+                        callback();
+                    }
+                })
+        }
     }
-
-    const compile = () => {
-       // var style = await outputStyle.toString()
-        let version = localStorage.getItem("version")
-        getCSS(version, outputStyle);
-    }
-
 
     return (
         <div className="row">
+            <style>
+                {CSS?.cssOutput}
+            </style>
+            <style>
+                {testStyle}
+            </style>
             <div className="col-md-5">
                 <ThemeName
                     name={themeName}
