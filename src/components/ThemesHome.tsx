@@ -35,6 +35,7 @@ export default function ThemesHome(props: any) {
     const [error, setError] = useState<any>();
     const [resultStyle, setResultStyle] = useState<any>();
     const [searchValue, setSearchValue] = useState<any>();
+    const [iscompiled, setIsCompiled] = useState<boolean>(false);
     const [cahngeVar, setChangeVar] = useState<boolean>(false);
 
 
@@ -42,6 +43,12 @@ export default function ThemesHome(props: any) {
 
 
     const [CSS, setCSS] = useState<any>();
+
+    useEffect(() => {
+        if (!CSS) {
+            jsVarToSass();
+        }
+    })
 
     useEffect(() => {
         if (Variables.length === 0) {
@@ -65,12 +72,9 @@ export default function ThemesHome(props: any) {
     }, [props.value])
 
     useEffect(() => {
-        compile();
-    }, [outputStyle])
-
-    useEffect(() => {
         setThemeName(props.name);
     }, [props.name])
+
 
     useEffect(() => {
         if (customStyle) {
@@ -152,31 +156,6 @@ export default function ThemesHome(props: any) {
     }
 
     const jsVarToSass = async () => {
-        // props.onChange("value", "")
-        // var tempOutputStyle: string = "";
-
-        // Object.keys(btVariables).map((i: any) => {
-        //     const section = btVariables[i];
-
-        //     if (Object.keys(section).length > 0) {
-        //         tempOutputStyle += `// ${i}\n//\n\n`;
-
-        //         Object.keys(section).map((key: any) => {
-        //             tempOutputStyle += key + ": " + section[key].value + ";\n";
-        //         });
-
-        //         tempOutputStyle += "\n\n";
-        //     }
-        // })
-
-        // tempOutputStyle = customStyle + "\n\n" + tempOutputStyle;
-
-        // if (tempOutputStyle !== "") {
-        //     tempOutputStyle = getComment() + tempOutputStyle
-        // }
-
-        //console.log(JSON.stringify(props.value))
-        //console.log(tempOutputStyle)
 
         let bluevar = "// Blue variables\n//\n\n";
         let output: string = "";
@@ -187,87 +166,31 @@ export default function ThemesHome(props: any) {
 
         output = localStorage.getItem("css") + getComment() + bluevar;
 
-        // console.log(output)
-
-
         let version = localStorage.getItem("version")
-        console.log(bluevar)
 
-        getCSS(version, bluevar);
-
-        //props.onChange("value", tempOutputStyle.toString())
-
+        getCSS(version, output);
     }
 
     const getCSS = (version: any, css: any, callback?: (e?: any) => void) => {
-        console.log(css);
-        fetch((window as any).themify_service + "scssToCss?version=" + version + "&scss=" + css, {
-            method: "GET",
-            headers: { "Content-Type": "application/json" }
-        })
-            .then(res => {
-                return res.json();
+        if (css) {
+            fetch((window as any).themify_service + "scssToCss?version=" + version + "&scss=" + encodeURIComponent(css), {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+
             })
-            .then(response => {
-                console.log(response)
-                // Utilities.startLoading();
-                // localStorage.setItem("css", JSON.stringify(response));
-                setCSS(response);
-                // callback!(
-                //     window.location.reload()
-                // )
-            })
+                .then(res => {
+                    return res.json();
+                })
+                .then(response => {
+                    // Utilities.startLoading();
+                    localStorage.setItem("css", JSON.stringify(response));
+                    setCSS(response);
+                    if (callback) {
+                        callback();
+                    }
+                })
+        }
     }
-
-    // const getCSS = (version: any, css: any, callback?: (e?: any) => void) => {
-
-    //     fetch((window as any).themify_service + "scssToCss?version=" + version + "&css=" + css, {
-    //         method: "GET",
-    //         headers: { "Content-Type": "application/json" }
-    //     })
-    //         .then(res => {
-    //             return res.json();
-    //         })
-    //         .then(response => {
-    //             // Utilities.startLoading();
-    //             //localStorage.setItem("css", JSON.stringify(response));
-    //             setCSS(response);
-    //             console.log(response)
-
-
-    //             // if (cahngeVar === true) {
-    //             //    setChangeVar(false);
-    //             //     // callback!(
-    //             //     //     window.location.reload()
-    //             //     // )
-    //             // }
-    //         })
-    //         .then(() => {
-    //             // Utilities.finishLoading();
-    //         })
-    // }
-
-    const compile = () => {
-        // var style = await outputStyle.toString()
-        let version = localStorage.getItem("version")
-
-        //  console.log(outputStyle)
-        //getCSS(version, outputStyle);
-    }
-
-
-    const test = () => {
-        let version = localStorage.getItem("version")
-        let csstest = "h1{color: red}";
-        console.log(csstest)
-        getCSS(version, csstest);
-
-    }
-
-    const changetest = (e: any) => {
-        settestStyle(e.target.value);
-    }
-
 
     return (
         <div className="row">
@@ -283,11 +206,6 @@ export default function ThemesHome(props: any) {
                     onChange={(value: string) => { props.onChange("name", value) }}
                 />
 
-                <button onClick={() => console.log(CSS)}>Click</button>
-                <input onChange={changetest}></input>
-
-                <h1>h1</h1>
-                <p>p</p>
                 <Search className="mt-1 mb-1"
                     value={searchValue}
                     onChange={(e: any) => setSearchValue(e.target.value)}
