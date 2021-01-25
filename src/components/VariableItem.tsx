@@ -43,7 +43,7 @@ export default function VariableItem(props: any) {
                     <input
                         className="form-control default"
                         value={value}
-                        onChange={(event) => { setValue(event.target.value) }}
+                        onChange={(event) => { setStateValue(event.target.value) }}
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"></input>
                     <div className="input-group-prepend">
@@ -51,7 +51,7 @@ export default function VariableItem(props: any) {
                             <input
                                 type="checkbox" aria-label="Checkbox for following text input"
                                 checked={getBool(value)}
-                                onChange={(event) => { setValue(event.target.checked.toString()) }}
+                                onChange={(event) => { setStateValue(event.target.checked.toString()) }}
                             />
                         </div>
                     </div>
@@ -68,7 +68,7 @@ export default function VariableItem(props: any) {
                             id="exampleInputEmail1"
                             aria-describedby="emailHelp"
                             value={value}
-                            onChange={(event) => { setValue(event.target.value) }}
+                            onChange={(event) => { setStateValue(event.target.value) }}
                             placeholder={`/* ${props.items.value} */`}
                             onDoubleClick={() => { setDefaultValue() }}
                         />
