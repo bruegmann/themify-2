@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react"
 import { X, Check, Pen } from "react-bootstrap-icons"
-import { getPhrase } from '../shared';
+import { getPhrase } from "../shared"
 
 export default function ThemeName(props: any) {
 
