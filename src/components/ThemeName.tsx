@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { X, Check } from "react-bootstrap-icons"
+import { X, Check, Pen } from "react-bootstrap-icons"
+import { getPhrase } from '../shared';
 
 export default function ThemeName(props: any) {
 
@@ -13,31 +14,32 @@ export default function ThemeName(props: any) {
         }
     }, [props.name])
 
-    const Submit = () =>{
+    const Submit = () => {
         setEdit(false);
         props.onChange(name);
     }
 
-    const Cancel = () =>{
+    const Cancel = () => {
         setEdit(false);
         setName(props.name);
     }
 
-    const PressKey = (key: number) =>{
-        if(key === 13){
+    const PressKey = (key: number) => {
+        if (key === 13) {
             Submit();
         }
     }
 
     return (
-        <div className="mb-3 mt-3">
+        <div className={`mb-${edit ? "4" : "3"} mt-3`}>
             {edit === true ?
                 <div className="input-group input-group-lg">
                     <input
                         className="form-control"
                         value={name}
                         onChange={(event) => { setName(event.target.value) }}
-                        onKeyDown={(event) => PressKey(event.keyCode )}
+                        onKeyDown={(event) => PressKey(event.keyCode)}
+                        autoFocus
                     />
 
                     <div className="input-group-append">
@@ -57,12 +59,19 @@ export default function ThemeName(props: any) {
                     </div>
                 </div>
                 :
-                <h1
-                    title="Rename Theme"
-                    onClick={() => setEdit(true)}
+                <div
+                    className="d-flex align-items-center"
                 >
-                    {name}
-                </h1>
+                    <h1>{name}</h1>
+
+                    <button
+                        className="btn btn-link"
+                        onClick={() => setEdit(true)}
+                        title={getPhrase("RENAME_THEME")}
+                    >
+                        <Pen />
+                    </button>
+                </div>
             }
         </div>
     )

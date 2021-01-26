@@ -55,6 +55,7 @@ export const phrases: IPhrases = {
         "Here you can insert custom CSS, for example to import a webfont.",
         "Hier kannst du zusätzliches CSS einfügen, z.B. um eine Webfont zu importieren."
     ],
+    "RENAME_THEME": ["Rename theme", "Theme umbenennen"]
 };
 
 export function getPhrase(keyword: string, countryCode: string | undefined = undefined, _phrases: IPhrases | undefined = undefined) {
