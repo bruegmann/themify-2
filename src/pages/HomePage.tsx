@@ -18,26 +18,21 @@ function HomePage(props: any) {
     const [modalSave, setModalSave] = useState<boolean>(false);
     const [themeName, setThemeName] = useState<string>("");
     const [account, setAccount] = useState<string>("");
-    const [valueConfig, setValueConfig] = useState<any>();
     const [valueTheme, setValueTheme] = useState<any>({});
-    const [hashTheme, setHashTheme] = useState<string>("");
     const [temphash, setTemphash] = useState<string>("");
     const [load, setLoad] = useState<boolean>(false);
-
     const [valueConf, setValueConf] = useState<any>({});
 
-    let tempConfig: any;
-
-    let files: any = [];
 
 
     useEffect(() => {
         setTemphash(window.location.hash);
-    })
+    }, [temphash])
 
     useEffect(() => {
         if (temphash === "") {
             setLoad(true);
+            setThemeName("Theme Name");
         }
         else {
             let reloadHash = temphash.replace("#/home/", "");
@@ -86,6 +81,11 @@ function HomePage(props: any) {
     useEffect(() => {
         changeHash()
     }, [valueConf])
+
+    useEffect(() => {
+
+        changeHash();
+    }, [themeName])
 
     const changeHash = () => {
         if (load === true) {
@@ -219,51 +219,6 @@ function HomePage(props: any) {
         }
     }
 
-    const putFile = async (body: string, file: string) => {
-        let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}/${file}`, {
-            method: "PUT",
-            headers: {
-                Authorization: `token ${props.access_token}`,
-                "Content-Type": "application/json",
-                "Accept": "application/vnd.github.v3+json"
-            },
-            body: body
-
-        });
-        let res = await response.json()
-    }
-
-    const editFile = async () => {
-        let shaConfig = files.find((o: any) => o.name === "AppSettings.config");
-        let shaTheme = files.find((o: any) => o.name === "Theme.json");
-        let config = {
-            "content": btoa(JSON.stringify(valueConf)),
-            "message": `Update ${themeName} config`,
-            "branch": "main",
-            "sha": shaConfig.sha
-        }
-
-        let jsonContent = {
-            "name": themeName,
-            "link": hashTheme
-        }
-
-        let json = {
-            "content": btoa(JSON.stringify(jsonContent)),
-            "message": `Update ${themeName} css`,
-            "branch": "main",
-            "sha": shaTheme.sha
-        }
-
-
-        await putFile(JSON.stringify(config), "AppSettings.config");
-        await putFile(JSON.stringify(json), "Theme.json");
-
-        Utilities.finishLoading();
-        Utilities.showSuccess();
-        setTimeout(Utilities.hideSuccess, 2000);
-    }
-
 
     const changeNewModel = (themename: string, account: string) => {
         if (themename && account) {
@@ -280,47 +235,17 @@ function HomePage(props: any) {
         }
     }
 
-    const checkFileExist = async () => {
-        let response = await fetch(`https://api.github.com/repos/${account}/Themify_DB/contents/Library/${themeName}`, {
-            method: "GET",
-            headers: {
-                Authorization: `token ${props.access_token}`,
-                "Content-Type": "application/json",
-                "Accept": "application/vnd.github.v3+json"
-            }
-
-        });
-
-        let res = await response.json();
-        if (response.status === 404) {
-            return false;
-        }
-        else {
-            files = res;
-            return true;
-        }
-    }
-
-    const save = async () => {
-        Utilities.startLoading();
-        if (account !== "" && themeName !== "" && await checkFileExist() === true) {
-            editFile();
-        }
-        else {
-            Utilities.finishLoading();
-            setModalSave(!modalSave);
-        }
-    }
-
     const onChangeThemeHome = async (type: string, value: any) => {
         if (value) {
             if (type === "name") {
                 setThemeName(value);
+
             }
             else if (type === "value") {
                 setValueTheme(value);
                 changeHash();
             }
+            changeHash();
         }
     }
 
@@ -360,7 +285,7 @@ function HomePage(props: any) {
                 <MenuItem
                     icon={<CloudUpload />}
                     label={_("SAVE")}
-                    onClick={() => save()}
+                    onClick={() => setModalSave(!modalSave)}
                 />
                 <MenuItem
                     icon={<CloudUpload />}
@@ -420,7 +345,7 @@ function HomePage(props: any) {
                     access_token={props.access_token}
                     title={_("SAVE_AS")}
                     contentConfig={JSON.stringify(valueConf)}
-                    contentTheme={JSON.stringify({ "name": themeName, "link": hashTheme })}
+                    contentTheme={JSON.stringify({ "name": themeName, "link": temphash })}
                     themeName={themeName}
                     account={account}
                 />
