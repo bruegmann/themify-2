@@ -206,7 +206,9 @@ export default function ThemesHome(props: any) {
                     onChange={(value: string) => { props.onChange("name", value) }}
                 />
 
-                <Search className="mt-1 mb-1"
+                <Search
+                    body
+                    className="mt-1 mb-1"
                     value={searchValue}
                     onChange={(e: any) => setSearchValue(e.target.value)}
                     placeholder="Search..."
