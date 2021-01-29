@@ -87,7 +87,7 @@ export default function VariableItem(props: any) {
                             showColorPicker === true &&
                             <SketchPicker
                                 color={value}
-                                onChangeComplete={(color: any) => setValue(color.hex)}
+                                onChangeComplete={(color: any) => setStateValue(color.hex)}
                             />
                         }
                     </div>
