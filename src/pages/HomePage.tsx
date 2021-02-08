@@ -332,26 +332,26 @@ function HomePage(props: any) {
     }
 
     const getTemplateContent = async () => {
-        if (account !== "" && account !== undefined) {
-            const get = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${account}/Themify_DB/contents/LibraryTemplate/themify-library-template.json`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "Authorization": `token ${props.access_token}`
-                }
-            })
-                .then((res: any) => {
-                    return res.json();
-                })
-                .then((response: any) => {
-                  //  console.log(response)
-                    setDefaultTemplate({
-                        org: "Brügmann",
-                        content: atob(response.content)
-                    })
-                })
-        }
+        // if (account !== "" && account !== undefined) {
+        //     const get = await fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${account}/Themify_DB/contents/LibraryTemplate/themify-library-template.json`, {
+        //         method: "GET",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //             "Accept": "application/json",
+        //             "Authorization": `token ${props.access_token}`
+        //         }
+        //     })
+        //         .then((res: any) => {
+        //             return res.json();
+        //         })
+        //         .then((response: any) => {
+        //           //  console.log(response)
+        //             setDefaultTemplate({
+        //                 org: "Brügmann",
+        //                 content: atob(response.content)
+        //             })
+        //         })
+        // }
 
     }
 

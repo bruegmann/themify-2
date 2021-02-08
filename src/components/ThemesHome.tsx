@@ -168,7 +168,7 @@ export default function ThemesHome(props: any) {
 
         let version = localStorage.getItem("version")
 
-        getCSS(version, output);
+        getCSS(version, bluevar);
     }
 
     const getCSS = (version: any, css: any, callback?: (e?: any) => void) => {

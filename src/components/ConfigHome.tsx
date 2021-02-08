@@ -22,7 +22,7 @@ export default function ConfigHome(props: any) {
             getOrgs(props.user?.login);
         }
 
-        if(props.user && props.access_token){
+        if (props.user && props.access_token) {
             getTemplateUser();
         }
     })
@@ -32,7 +32,7 @@ export default function ConfigHome(props: any) {
             getTemplateOrgs();
         }
     }, [orgs])
-    
+
     useEffect(() => {
         if (Object.keys(attribute).length === 0) {
             SetUp();
@@ -89,8 +89,36 @@ export default function ConfigHome(props: any) {
     // setValues(item);
     // console.log(item)
 
-    const getOrgs = async (username: any) => {
+    const getTemplateValue = async (objTemplate: any, account: string, index:number) => {
+        console.log(objTemplate);
+        if (objTemplate.template.length == 0) {
+            const res = await fetch(`${(window as any).proxy}${objTemplate.url}`, {
+                headers: {
+                    Authorization: `token ${props.access_token}`,
+                    method: "get",
+                    "Content-Type": "application/json",
+                }
+            });
+    
+            await res
+                .json()
+                .then((res:any) => {
+                    console.log(JSON.parse(atob(res.content)));
+                    if(account === "user"){
+                        userTemplate[index].template = JSON.parse(atob(res.content));
+                    }
+                    else if(account === "org"){
 
+                    }
+                })
+        }
+        else {
+            console.log("hat")
+        }
+    }
+
+    const getOrgs = async (username: any) => {
+        console.log("getOrgs")
         const res = await fetch(`${(window as any).proxy}https://api.github.com/users/${username}/orgs`, {
             headers: {
                 Authorization: `token ${props.access_token}`,
@@ -114,7 +142,7 @@ export default function ConfigHome(props: any) {
 
     const getTemplateOrgs = () => {
         for (let i = 0; i < orgs.length; i++) {
-            fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${orgs[i]}/Themify_DB/git/trees/main`, {
+            fetch(`${(window as any).proxy}https://api.github.com/repos/${orgs[i]}/Themify_DB/git/trees/main`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -126,7 +154,7 @@ export default function ConfigHome(props: any) {
                 .then((repo: any) => {
                     for (let t = 0; t < repo.tree.length; t++) {
                         if (repo.tree[t].path === "config") {
-                            fetch(`${(window as any).themify_proxy}${repo.tree[t].url}`, {
+                            fetch(`${(window as any).proxy}${repo.tree[t].url}`, {
                                 method: "GET",
                                 headers: {
                                     "Content-Type": "application/json",
@@ -138,7 +166,7 @@ export default function ConfigHome(props: any) {
                                 .then((f_config: any) => {
                                     for (let x = 0; x < f_config.tree.length; x++) {
                                         if (f_config.tree[x].path === "template") {
-                                            fetch(`${(window as any).themify_proxy}${f_config.tree[x].url}`, {
+                                            fetch(`${(window as any).proxy}${f_config.tree[x].url}`, {
                                                 method: "GET",
                                                 headers: {
                                                     "Content-Type": "application/json",
@@ -166,7 +194,7 @@ export default function ConfigHome(props: any) {
 
     const getTemplateUser = () => {
         if (props.user) {
-            fetch(`${(window as any).themify_proxy}https://api.github.com/repos/${props.user.login}/Themify_DB/git/trees/main`, {
+            fetch(`${(window as any).proxy}https://api.github.com/repos/${props.user.login}/Themify_DB/git/trees/main`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -178,7 +206,7 @@ export default function ConfigHome(props: any) {
                 .then((repo: any) => {
                     for (let t = 0; t < repo.tree.length; t++) {
                         if (repo.tree[t].path === "config") {
-                            fetch(`${(window as any).themify_proxy}${repo.tree[t].url}`, {
+                            fetch(`${(window as any).proxy}${repo.tree[t].url}`, {
                                 method: "GET",
                                 headers: {
                                     "Content-Type": "application/json",
@@ -190,7 +218,7 @@ export default function ConfigHome(props: any) {
                                 .then((f_config: any) => {
                                     for (let x = 0; x < f_config.tree.length; x++) {
                                         if (f_config.tree[x].path === "template") {
-                                            fetch(`${(window as any).themify_proxy}${f_config.tree[x].url}`, {
+                                            fetch(`${(window as any).proxy}${f_config.tree[x].url}`, {
                                                 method: "GET",
                                                 headers: {
                                                     "Content-Type": "application/json",
@@ -212,7 +240,7 @@ export default function ConfigHome(props: any) {
                         }
                     }
                 })
-                .catch((e)=>{
+                .catch((e) => {
                     console.log(e)
                 })
         }
@@ -262,8 +290,14 @@ export default function ConfigHome(props: any) {
                         {_("TEMPLATE")}: {selected}
                     </DropdownToggle>                     <DropdownMenu>
                         {
-                            Object.keys(attribute).map((item: any) =>
-                                <DropdownItem onClick={() => setTemplate(item)}>{item}</DropdownItem>
+                            Object.keys(userTemplate).map((item: any) =>
+                                <DropdownItem onClick={() => getTemplateValue(userTemplate[item], "user",item)}>{userTemplate[item].org}/{userTemplate[item].name}</DropdownItem>
+                            )
+
+                        }
+                        {
+                            Object.keys(orgTemplate).map((item: any) =>
+                                <DropdownItem onClick={() => getTemplateValue(orgTemplate[item], "org",item)}>{orgTemplate[item].org}/{orgTemplate[item].name}</DropdownItem>
                             )
                         }
                     </DropdownMenu>
