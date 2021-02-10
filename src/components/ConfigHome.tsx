@@ -56,12 +56,16 @@ export default function ConfigHome(props: any) {
 
     const SetUp = () => {
         let attr: any;
+        console.log(props.defaultTemplate)
         if (props.defaultTemplate) {
             attr = JSON.parse(props.defaultTemplate.content);
             attribute[props.defaultTemplate.org] = attr;
             //setChange(!change); 
-            setAttribute({ "none": [], "Brügmann": attr });
+            setAttribute({ "none": [] });
             setStartValue();
+        }
+        else{
+            setAttribute({ "none": [] });
         }
     }
 
@@ -105,6 +109,29 @@ export default function ConfigHome(props: any) {
                 .then((res:any) => {
                     console.log(JSON.parse(atob(res.content)));
                     if(account === "user"){
+                        setSelected(objTemplate.name)
+                        var temp = JSON.parse(atob(res.content));
+                        var name = objTemplate.name.replace(".json", "");
+
+                        if(!attribute[name] && temp){
+                            console.log("nein", objTemplate.name.replace(".json", ""))
+                            var addAttribute = [];
+
+                            attribute[name] = temp;
+
+                            // for(var i = 0; i < temp.length; i++){
+                            //     addAttribute.push({name: temp[i].name, type: temp[i].type, description: temp[i].description, default: temp[i].default, editable: false})
+                            // }
+
+                            // console.log(addAttribute)
+
+                        }
+
+                        for(var i = 0; i < temp.length; i++){
+                            console.log(temp[i]);
+                        }
+
+
                         userTemplate[index].template = JSON.parse(atob(res.content));
                     }
                     else if(account === "org"){
@@ -115,6 +142,11 @@ export default function ConfigHome(props: any) {
         else {
             console.log("hat")
         }
+    }
+
+    const setTemplateToAttribute = () =>{
+        console.log(selected);
+        console.log(userTemplate);
     }
 
     const getOrgs = async (username: any) => {
@@ -334,7 +366,7 @@ export default function ConfigHome(props: any) {
             )
             }
 
-            <button onClick={() => console.log(orgTemplate, userTemplate)}>click</button>
+            <button onClick={() => console.log(attribute)}>click</button>
         </div>
     )
 }
