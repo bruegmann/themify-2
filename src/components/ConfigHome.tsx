@@ -14,8 +14,6 @@ export default function ConfigHome(props: any) {
     const [template, SetTemplate] = useState<any>([{ "name": "none" }]);
 
     const [orgs, setOrgs] = useState<any>([]);
-    const [orgTemplate, setOrgTemplate] = useState<any>([]);
-    const [userTemplate, setUserTemplate] = useState<any>([]);
 
     useEffect(() => {
         if (Object.keys(props.config).length === 0) {
@@ -32,29 +30,14 @@ export default function ConfigHome(props: any) {
     }, [props.config]);
 
     useEffect(() => {
-        // getAttributeTemplate(() => {
-
-        // })
-
         if (orgs.length == 0) {
             getOrganisations();
         }
         if (props.user) {
             getUserTemplate();
         }
-
-
-
-
     }, [props.user && props.access_token]);
 
-    // useEffect(()=>{
-    //     console.log(template)
-    //     console.log(template.indexOf("none"))
-    //     if(template.indexOf("none") == -1){
-    //         template["none"] = [];
-    //     }
-    // },[template])
 
     useEffect(() => {
         console.log(orgs)
@@ -68,35 +51,9 @@ export default function ConfigHome(props: any) {
 
     const SetUp = async () => {
         await setAttribute({ "none": [] });
-        //  await template.push({ "name": "none" })
         getAttributeTemplate(() => {
         })
     }
-
-    //const setStartValue = () => {
-    // var item = {};
-    // var add = [];
-    // var appSettings = {};
-
-    // for (var i = 0; i < Object.keys(valueConfig).length; i++) {
-    //     var temp = {
-    //         "name": Object.keys(valueConfig)[i],
-    //         "value": "",
-    //         "description": "",
-    //     }
-    //     add.push(temp);
-    // }
-    // var _declaration = {
-    //     "_attributes": {
-    //         "version": "1.0",
-    //         "encoding": "utf-8"
-    //     }
-    // }
-    // appSettings = { add };
-    // item = { appSettings, _declaration };
-    // setValues(item);
-    // console.log(item)
-
 
     const getOrganisations = async () => {
         const res = await fetch(`${(window as any).proxy}${props.user.organizations_url}`, {
@@ -160,12 +117,8 @@ export default function ConfigHome(props: any) {
                                                 .json()
                                                 .then(async configtree => {
                                                     for (var t = 0; t < configtree.tree.length; t++) {
-                                                        console.log(configtree.tree[t]);
-                                                        orgTemplate.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url, "user": orgs[i] });
+                                                        //orgTemplate.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url, "user": orgs[i] });
                                                         await template.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url, "user": orgs[i] });
-                                                        //  var attr = { [configtree.tree[t].path.replace(".json", "")]: [] }
-                                                        //  attribute.push(attr);
-                                                        //  console.log(attr);
                                                     }
                                                 })
                                         }
@@ -217,9 +170,7 @@ export default function ConfigHome(props: any) {
                                             .json()
                                             .then(async configtree => {
                                                 for (var t = 0; t < configtree.tree.length; t++) {
-                                                    userTemplate.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url })
                                                     await template.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url, "user": props.user.login })
-                                                    // setAttribute({ ...attribute, [configtree.tree[t].path.replace(".json", "")]: [] })
                                                 }
                                             })
                                     }
