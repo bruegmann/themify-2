@@ -11,7 +11,7 @@ export default function ConfigHome(props: any) {
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
     const [change, setChange] = useState<boolean>(false);
 
-    const [template, SetTemplate] = useState<any>([]);
+    const [template, SetTemplate] = useState<any>([{ "name": "none" }]);
 
     const [orgs, setOrgs] = useState<any>([]);
     const [orgTemplate, setOrgTemplate] = useState<any>([]);
@@ -48,6 +48,14 @@ export default function ConfigHome(props: any) {
 
     }, [props.user && props.access_token]);
 
+    // useEffect(()=>{
+    //     console.log(template)
+    //     console.log(template.indexOf("none"))
+    //     if(template.indexOf("none") == -1){
+    //         template["none"] = [];
+    //     }
+    // },[template])
+
     useEffect(() => {
         console.log(orgs)
         if (orgs.length > 0) {
@@ -60,7 +68,7 @@ export default function ConfigHome(props: any) {
 
     const SetUp = async () => {
         await setAttribute({ "none": [] });
-        await template.push({ "name": "none" })
+        //  await template.push({ "name": "none" })
         getAttributeTemplate(() => {
         })
     }
@@ -154,7 +162,7 @@ export default function ConfigHome(props: any) {
                                                     for (var t = 0; t < configtree.tree.length; t++) {
                                                         console.log(configtree.tree[t]);
                                                         orgTemplate.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url, "user": orgs[i] });
-                                                        template.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url, "user": orgs[i] });
+                                                        await template.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url, "user": orgs[i] });
                                                         //  var attr = { [configtree.tree[t].path.replace(".json", "")]: [] }
                                                         //  attribute.push(attr);
                                                         //  console.log(attr);
@@ -209,9 +217,8 @@ export default function ConfigHome(props: any) {
                                             .json()
                                             .then(async configtree => {
                                                 for (var t = 0; t < configtree.tree.length; t++) {
-                                                    console.log("yeag")
                                                     userTemplate.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url })
-                                                    template.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url, "user": props.user.login })
+                                                    await template.push({ "name": configtree.tree[t].path.replace(".json", ""), "url": configtree.tree[t].url, "user": props.user.login })
                                                     // setAttribute({ ...attribute, [configtree.tree[t].path.replace(".json", "")]: [] })
                                                 }
                                             })
@@ -300,37 +307,34 @@ export default function ConfigHome(props: any) {
                     console.log(atob(res.content))
                     attribute[name] = JSON.parse(atob(res.content))
                 })
-                .catch(() =>{
-                    Utilities.setAlertMessage(_("ERROR_TEMPLATE_FORMAT"),"danger", true)
+                .catch(() => {
+                    Utilities.setAlertMessage(_("ERROR_TEMPLATE_FORMAT"), "danger", true)
                 })
         }
 
         setSelected(name);
 
-        // if (name !== "none") {
-        //     localStorage.setItem("template", name);
-        // }
-        // else {
-        //     localStorage.removeItem("template");
-        // }
+        if (name !== "none") {
+            localStorage.setItem("template", name);
+        }
+        else {
+            localStorage.removeItem("template");
+        }
     }
 
 
     return (
         <div>
-            <button onClick={() => console.log(attribute)}>template</button>
             <div className="d-flex justify-content-center">
                 <InputGroupButtonDropdown addonType="append" isOpen={dropdownOpen} toggle={toggle} >
                     <DropdownToggle caret color="outline-primary">
                         {_("TEMPLATE")}: {selected}
-                    </DropdownToggle>                     <DropdownMenu>
+                    </DropdownToggle>
+                    <DropdownMenu>
                         {
-                            // Object.keys(attribute).map((item: any) =>
-                            //     <DropdownItem onClick={() => setTemplate(item)}>{item}</DropdownItem>
-                            // )
 
                             template.map((item: any) =>
-                                <DropdownItem onClick={() => setTemplate(item.name, item?.url)}>{item.name}</DropdownItem>
+                                <DropdownItem onClick={() => setTemplate(item.name, item?.url)}>{item?.user}/{item.name}</DropdownItem>
                             )
                         }
                     </DropdownMenu>
