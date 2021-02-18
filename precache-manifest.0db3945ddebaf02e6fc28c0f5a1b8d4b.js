@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/themify-2/editor.worker.js"
   },
   {
-    "revision": "65807920c7578a9c39f19df92a96d5e8",
+    "revision": "e7e7a78e08e62817531f6cb1cf9d8659",
     "url": "/themify-2/index.html"
   },
   {
