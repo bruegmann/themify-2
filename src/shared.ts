@@ -87,3 +87,31 @@ export function createPhrase(keywords: any) {
 
     return phrases.join(" ");
 }
+
+export interface ApiConfigEnv {
+    oauth: string
+    proxy: string
+    themify_service: string
+}
+
+export const apiConfig: { development: ApiConfigEnv, production: ApiConfigEnv } = {
+    development: {
+        oauth: "https://github-proxy.patorg.de/login/oauth/access_token",
+        proxy: "https://github-proxy.patorg.de/fetch/",
+        themify_service: "http://localhost:5000/"
+    },
+    production: {
+        oauth: "https://github-proxy.patorg.de/login/oauth/access_token",
+        proxy: "https://github-proxy.patorg.de/fetch/",
+        themify_service: "https://themify-service.patorg.de/"
+    }
+}
+
+export function getApiConfig() {
+    if (process.env.NODE_ENV === "production") {
+        return apiConfig.production
+    }
+    else {
+        return apiConfig.development
+    }
+}
